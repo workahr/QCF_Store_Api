@@ -6,9 +6,10 @@ import '../../constants/app_assets.dart';
 import '../../constants/app_colors.dart';
 import '../../services/nam_food_api_service.dart';
 import '../../widgets/custom_text_field.dart';
+import '../admin_panel/pages/add_store_page.dart';
+import '../admin_panel/pages/admindashboardpage.dart';
 import 'auth_validations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -24,7 +25,7 @@ class _LoginPageState extends State<LoginPage> {
   AuthValidation authValidation = AuthValidation();
   final NamFoodApiService apiService = NamFoodApiService();
 
-   var obscureText = true;
+  var obscureText = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -84,45 +85,47 @@ class _LoginPageState extends State<LoginPage> {
                   //         AppAssets.passwordEye) // Set +91 as prefixText
                   //     ),
 
-
-                       CustomeTextField(
-                        obscureText: obscureText,
-                        labelText: 'Password',
-                        control: passwordCtrl,
-                        validator: authValidation
-                            .errValidatePasswordForLogin(passwordCtrl.text),
-                        prefixIcon: Image.asset(AppAssets.passwordImg),
-                        suffixIcon: IconButton(
-                          onPressed: () {
-                            setState(() {
-                              obscureText = !obscureText;
-                            });
-                          },
-                          icon: obscureText
-                              ? Icon(
-                                  MdiIcons.eye,
-                                  color: AppColors.red,
-                                )
-                              : Icon(
-                                  MdiIcons.eyeOff,
-                                  color: AppColors.red
-                                ),
-                        ),
-                        width: MediaQuery.of(context).size.width / 1.1,
-                      ),
+                  CustomeTextField(
+                    obscureText: obscureText,
+                    labelText: 'Password',
+                    control: passwordCtrl,
+                    validator: authValidation
+                        .errValidatePasswordForLogin(passwordCtrl.text),
+                    prefixIcon: Image.asset(AppAssets.passwordImg),
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          obscureText = !obscureText;
+                        });
+                      },
+                      icon: obscureText
+                          ? Icon(
+                              MdiIcons.eye,
+                              color: AppColors.red,
+                            )
+                          : Icon(MdiIcons.eyeOff, color: AppColors.red),
+                    ),
+                    width: MediaQuery.of(context).size.width / 1.1,
+                  ),
 
                   const SizedBox(height: 10.0),
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) => MainContainer(
+
+                        //     ),
+                        //   ),
+                        // );
+
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => MainContainer(
-                              
-                            ),
-                          ),
+                              builder: (context) => AdminMainContainer()),
                         );
                         //login();
                         print(

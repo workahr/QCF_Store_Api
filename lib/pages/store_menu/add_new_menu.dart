@@ -235,7 +235,7 @@ class _AddNewMenuState extends State<AddNewMenu> {
               ),
               SizedBox(height: 16),
               OutlineBtnWidget(
-                  title: 'Upload Image of Car',
+                  title: 'Upload Image of Dish',
                   titleColor: Color(0xFF2C54D6),
                   fillColor: Color(0xFFF3F6FF),
                   iconColor: Color(0xFF2C54D6),

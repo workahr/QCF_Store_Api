@@ -70,7 +70,7 @@ class CustomeTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: margin ?? const EdgeInsets.symmetric(horizontal: 4, vertical: 10),
+      margin: margin ?? const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
       width: width ?? 201,
       height: height,
       decoration: BoxDecoration(

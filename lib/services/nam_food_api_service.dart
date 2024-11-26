@@ -3,8 +3,15 @@ import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../constants/constants.dart';
+import '../pages/admin_panel/json_data/admin_orderdetails_json.dart';
+import '../pages/admin_panel/json_data/delivery_person_json.dart';
+import '../pages/admin_panel/json_data/delivery_person_list_json.dart';
+import '../pages/admin_panel/json_data/individual_order_details_json.dart';
+import '../pages/admin_panel/json_data/payments_page_json.dart';
+import '../pages/admin_panel/json_data/store_list_json.dart';
 import '../pages/json_data/dashboard_orderlist_json.dart';
 import '../pages/json_data/menu_details_json.dart';
+import '../pages/json_data/order_list_json.dart';
 import '../pages/json_data/orderdetails_json.dart';
 
 class NamFoodApiService {
@@ -1523,6 +1530,81 @@ class NamFoodApiService {
       return jsonEncode(result);
     } catch (e) {
       // Handle any errors
+      throw Exception('Failed to retrieve OrderDetails: $e');
+    }
+  }
+
+  // Orderlist
+
+  Future getorderlist() async {
+    try {
+      var result = await getorderlistPageJsonData();
+      return jsonEncode(result);
+    } catch (e) {
+      throw Exception('Failed to retrieve OrderDetails: $e');
+    }
+  }
+
+// Admin panel :
+
+  // Dashboard Order Details
+
+  Future getdashboardorderdetailslist() async {
+    try {
+      var result = await getadmindashboradorderdetailsJsonData();
+      return jsonEncode(result);
+    } catch (e) {
+      throw Exception('Failed to retrieve OrderDetails: $e');
+    }
+  }
+
+  // Dashboard Order Details
+
+  Future getstoredetailslist() async {
+    try {
+      var result = await getadminstorelistJsonData();
+      return jsonEncode(result);
+    } catch (e) {
+      throw Exception('Failed to retrieve OrderDetails: $e');
+    }
+  }
+  // admindeliveryperson
+
+  Future getdeliveryperson() async {
+    try {
+      var result = await getdeliverypersonJsonData();
+      return jsonEncode(result);
+    } catch (e) {
+      throw Exception('Failed to retrieve OrderDetails: $e');
+    }
+  }
+  // admindeliverypersonlist
+
+  Future getdeliverypersonlist() async {
+    try {
+      var result = await getdeliverypersonlistJsonData();
+      return jsonEncode(result);
+    } catch (e) {
+      throw Exception('Failed to retrieve OrderDetails: $e');
+    }
+  }
+  // adminIndividualorderdetails
+
+  Future getindividualorderdetails() async {
+    try {
+      var result = await getindividualorderdetailsJsonData();
+      return jsonEncode(result);
+    } catch (e) {
+      throw Exception('Failed to retrieve OrderDetails: $e');
+    }
+  }
+  // adminpayments
+
+  Future getpaymentspage() async {
+    try {
+      var result = await getpaymentspageJsonData();
+      return jsonEncode(result);
+    } catch (e) {
       throw Exception('Failed to retrieve OrderDetails: $e');
     }
   }

@@ -103,6 +103,7 @@ class AppColors {
   static const Color n_black = Color(0xFF000000);
   static const Color white = Color(0xFFFFFFFF);
   static const Color green = Color(0xFF48B94C);
+  static const Color n_blue = Color(0xFF2C54D6);
 
   Color loadingGrey = Colors.grey[300]!;
   Color loadingGrey2 = Colors.grey[100]!;

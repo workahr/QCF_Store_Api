@@ -305,61 +305,6 @@ class _OrderDetailsState extends State<OrderDetails> {
                         ),
                       ),
 
-                      // Container(
-                      //   decoration: BoxDecoration(
-                      //     color: AppColors.white,
-                      //     borderRadius: BorderRadius.circular(10),
-                      //     border: Border.all(width: 2, color: AppColors.grey1),
-                      //   ),
-                      //   height: 60,
-                      //   child: Row(
-                      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //     children: [
-                      //       GestureDetector(
-                      //         onTap: () {
-                      //           setState(() {
-                      //             if (_minutes > 0) _minutes -= 0.5; // Decrement by 0.5 mins
-                      //           });
-                      //         },
-                      //         child: Container(
-                      //           decoration: BoxDecoration(
-                      //             color: AppColors.lightred,
-                      //           ),
-                      //           height: 60,
-                      //           width: 80,
-                      //           child: Icon(
-                      //             Icons.remove,
-                      //             color: AppColors.red,
-                      //             size: 24,
-                      //           ),
-                      //         ),
-                      //       ),
-                      //       const Text(
-                      //         '${_minutes.toStringAsFixed(2)} mins',
-                      //         style: TextStyle(
-                      //           fontSize: 18,
-                      //           color: Colors.black,
-                      //           fontWeight: FontWeight.bold,
-                      //         ),
-                      //       ),
-                      //       GestureDetector(
-                      //         onTap: () {
-                      //           setState(() {});
-                      //         },
-                      //         child: Container(
-                      //           height: 60,
-                      //           width: 80,
-                      //           color: AppColors.lightred,
-                      //           child: Icon(
-                      //             Icons.add,
-                      //             color: AppColors.red,
-                      //             size: 24,
-                      //           ),
-                      //         ),
-                      //       ),
-                      //     ],
-                      //   ),
-                      // ),
                       const SizedBox(height: 8),
                       HeadingWidget(
                         title: 'Payment method',

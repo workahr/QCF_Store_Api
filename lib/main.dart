@@ -2,11 +2,14 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:namstore/pages/admin_panel/pages/orders_payment.dart';
 import 'package:namstore/pages/order-list/orderlist_page.dart';
 import 'controllers/base_controller.dart';
 import 'package:flutter/material.dart';
 import 'constants/constants.dart';
 import 'package:upgrader/upgrader.dart';
+import 'pages/admin_panel/pages/Individual order details.dart';
+import 'pages/admin_panel/pages/totalorder.dart';
 import 'pages/auth/login_page.dart';
 import 'pages/landing_page.dart';
 import 'pages/maincontainer.dart';
@@ -123,7 +126,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
                 child: MainContainer(),
               ),
         },
-        // home: const OrderlistPage(),
+        // home: const OrdersPayment(),
       ),
     );
   }
