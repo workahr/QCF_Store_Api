@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:namstore/pages/maincontainer.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../constants/app_assets.dart';
 import '../../constants/app_colors.dart';
+import '../../services/comFuncService.dart';
 import '../../services/nam_food_api_service.dart';
 import '../../widgets/custom_text_field.dart';
 import '../admin_panel/pages/add_store_page.dart';
 import '../admin_panel/pages/admindashboardpage.dart';
 import 'auth_validations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+
+import 'login_model.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -26,6 +30,56 @@ class _LoginPageState extends State<LoginPage> {
   final NamFoodApiService apiService = NamFoodApiService();
 
   var obscureText = true;
+
+
+  Future login() async {
+    try {
+       showInSnackBar(context, 'Processing...');
+
+      if (usernameCtrl.text != "" && passwordCtrl.text != "") {
+        Map<String, dynamic> postData = {
+         "username":usernameCtrl.text,
+         "password":passwordCtrl.text,
+         "mobile_push_id":""
+        };
+        var result = await apiService.storeLogin(postData);
+        LoginModel response = loginModelFromJson(result);
+
+        closeSnackBar(context: context);
+
+        if (response.status.toString() == 'SUCCESS') {
+       
+          final prefs = await SharedPreferences.getInstance();
+
+          //prefs.setString('fullname', response.fullname ?? '');
+
+            if(response.authToken != null){
+              Navigator.pushNamed(context, '/');
+              prefs.setString('auth_token', response.authToken ?? '');
+              prefs.setBool('isLoggedin', true);
+              prefs.setInt('role', response.role);
+
+
+               Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MainContainer(
+                            ),
+                          ),
+                        );
+            }
+
+         setState(() { });
+        } else {
+          showInSnackBar(context, response.message.toString());
+        }
+      } else {
+        showInSnackBar(context, "Please fill required fields");
+      }
+    } catch (error) {
+      showInSnackBar(context, error.toString());
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -122,12 +176,12 @@ class _LoginPageState extends State<LoginPage> {
                         //   ),
                         // );
 
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => AdminMainContainer()),
-                        );
-                        //login();
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //       builder: (context) => AdminMainContainer()),
+                        // );
+                        login();
                         print(
                             'Get OTP tapped with number: ${passwordCtrl.text}');
                       },
