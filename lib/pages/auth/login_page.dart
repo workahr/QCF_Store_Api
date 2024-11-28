@@ -60,13 +60,8 @@ class _LoginPageState extends State<LoginPage> {
               prefs.setInt('role', response.role);
 
 
-               Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => MainContainer(
-                            ),
-                          ),
-                        );
+                Navigator.pushNamedAndRemoveUntil(
+          context, '/home', ModalRoute.withName('/home'));
             }
 
          setState(() { });
