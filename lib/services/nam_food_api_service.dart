@@ -1628,4 +1628,63 @@ class NamFoodApiService {
       handleError();
     }
   }
+
+
+  // get All Store Orders
+   Future getAllStoreOrders() async {
+    try {
+      final url = Uri.parse('${liveApiPath}v1/getallorderbystore');
+      final response = await client.get(
+        url,
+        headers: headerData,
+      );
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        return response;
+      }
+    } catch (e) {
+      return e;
+    }
+  }
+
+
+   // Order Status Update
+  Future orderStatusUpdate(postData) async {
+    try {
+      final url = Uri.parse('${liveApiPath}v1/orderstatusupdate');
+      final response = await client.post(url,
+          headers: headerData, body: jsonEncode(postData));
+      if (response.statusCode == 200) {
+        final json = response.body;
+        return json;
+      } else {
+        throw Exception(
+            'Failed to login . Status code: ${response.statusCode} ${response.toString()}');
+      }
+    } catch (e) {
+      print('error $e');
+      handleError();
+    }
+  }
+
+
+  // Order Confirm
+  Future orderConfirm(postData) async {
+    try {
+      final url = Uri.parse('${liveApiPath}v1/orderconfirm');
+      final response = await client.post(url,
+          headers: headerData, body: jsonEncode(postData));
+      if (response.statusCode == 200) {
+        final json = response.body;
+        return json;
+      } else {
+        throw Exception(
+            'Failed to login . Status code: ${response.statusCode} ${response.toString()}');
+      }
+    } catch (e) {
+      print('error $e');
+      handleError();
+    }
+  }
 }

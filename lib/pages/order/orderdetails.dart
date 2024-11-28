@@ -7,10 +7,24 @@ import '../../constants/app_colors.dart';
 import '../../constants/constants.dart';
 import '../../services/comFuncService.dart';
 import '../../services/nam_food_api_service.dart';
+import '../dashboard/order_status_model.dart';
+import '../dashboard/store_order_list_model.dart';
 import '../models/orderdetails_model.dart';
+import '../order_confirm_page.dart';
 
 class OrderDetails extends StatefulWidget {
-  const OrderDetails({super.key});
+  final String orderId;
+  final String time;
+  final String totalPrice;
+  final String paymentMethod;
+  List<OrderItems> orderitems;
+  OrderDetails(
+      {super.key,
+      required this.orderitems,
+      required this.paymentMethod,
+      required this.orderId,
+      required this.time,
+      required this.totalPrice});
 
   @override
   State<OrderDetails> createState() => _OrderDetailsState();
@@ -22,60 +36,70 @@ class _OrderDetailsState extends State<OrderDetails> {
   @override
   void initState() {
     super.initState();
-
-    getorderdetails();
   }
 
-  //orderdetails
-  List<DetailList> orderdetail = [];
-  List<DetailList> orderdetailAll = [];
-  bool isLoading = false;
-
-  Future getorderdetails() async {
-    setState(() {
-      isLoading = true;
-    });
-
-    try {
-      var result = await apiService.getorderdetails();
-      var response = orderdetailsmodelFromJson(result);
-      if (response.status.toString() == 'SUCCESS') {
-        setState(() {
-          orderdetail = response.list;
-          orderdetailAll = orderdetail;
-          isLoading = false;
-        });
-      } else {
-        setState(() {
-          orderdetail = [];
-          orderdetailAll = [];
-          isLoading = false;
-        });
-        showInSnackBar(context, response.message.toString());
-      }
-    } catch (e) {
-      setState(() {
-        orderdetail = [];
-        orderdetailAll = [];
-        isLoading = false;
-      });
-      showInSnackBar(context, 'Error occurred: $e');
-    }
-
-    setState(() {});
-  }
-
-//totalCalculation
-  double calculateTotal() {
-    return orderdetail.fold(
-      0.0,
-      (total, item) =>
-          total + (int.parse(item.qty) * double.parse(item.amount)),
-    );
-  }
+// //totalCalculation
+//   double calculateTotal() {
+//     return orderdetail.fold(
+//       0.0,
+//       (total, item) =>
+//           total + (int.parse(item.qty) * double.parse(item.amount)),
+//     );
+//   }
 
   //timer
   double _minutes = 0.0;
+
+  Future orderStatusUpdate() async {
+    try {
+      Map<String, dynamic> postData = {
+        "order_id": widget.orderitems[0].orderId,
+        "order_status": "Cancelled"
+      };
+      var result = await apiService.orderStatusUpdate(postData);
+      OrderStatusModel response = orderStatusModelFromJson(result);
+
+      closeSnackBar(context: context);
+
+      if (response.status.toString() == 'SUCCESS') {
+        setState(() {});
+      } else {
+        showInSnackBar(context, response.message.toString());
+      }
+    } catch (error) {
+      showInSnackBar(context, error.toString());
+    }
+  }
+
+  Future orderConfirm() async {
+    try {
+      Map<String, dynamic> postData = {
+        "order_id": widget.orderitems[0].orderId,
+         "prepare_min": _minutes.toString()
+      };
+      var result = await apiService.orderConfirm(postData);
+      OrderStatusModel response = orderStatusModelFromJson(result);
+
+      closeSnackBar(context: context);
+
+      if (response.status.toString() == 'SUCCESS') {
+        setState(() {
+          Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => OrderConfirmPage(
+                              
+                            ),
+                          ),
+                        );
+        });
+      } else {
+        showInSnackBar(context, response.message.toString());
+      }
+    } catch (error) {
+      showInSnackBar(context, error.toString());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -129,15 +153,17 @@ class _OrderDetailsState extends State<OrderDetails> {
                         ],
                       ),
                       const SizedBox(height: 5),
-                      HeadingWidget(title: '#334343343'),
+                      HeadingWidget(title: widget.orderId.toString()),
                       const SizedBox(height: 5),
                       Row(
                         children: [
-                          SubHeadingWidget(title: '12:30 PM'),
+                          SubHeadingWidget(title: widget.time.toString()),
                           const SizedBox(width: 8),
                           const Text('|'),
                           const SizedBox(width: 8),
-                          SubHeadingWidget(title: '4 items'),
+                          SubHeadingWidget(
+                              title:
+                                  '${widget.orderitems.length.toString()} items'),
                         ],
                       ),
                     ],
@@ -158,9 +184,9 @@ class _OrderDetailsState extends State<OrderDetails> {
                       ListView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
-                        itemCount: orderdetail.length,
+                        itemCount: widget.orderitems.length,
                         itemBuilder: (context, index) {
-                          final e = orderdetail[index];
+                          final e = widget.orderitems[index];
                           return Column(
                             children: [
                               Row(
@@ -169,14 +195,14 @@ class _OrderDetailsState extends State<OrderDetails> {
                                 children: [
                                   Row(
                                     children: [
-                                      e.dishtype == "Non-Veg"
-                                          ? Image.asset(AppAssets.nonveg_icon,
-                                              width: 14, height: 14)
-                                          : Image.asset(AppAssets.veg_icon,
-                                              width: 14, height: 14),
+                                      // e.dishtype == "Non-Veg"
+                                      //     ? Image.asset(AppAssets.nonveg_icon,
+                                      //         width: 14, height: 14)
+                                      //     : Image.asset(AppAssets.veg_icon,
+                                      //         width: 14, height: 14),
                                       const SizedBox(width: 8),
                                       HeadingWidget(
-                                        title: e.dishname.toString(),
+                                        title: e.productName.toString(),
                                         color: Colors.black,
                                         fontSize: 20.0,
                                         fontWeight: FontWeight.w500,
@@ -186,7 +212,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                                   Row(
                                     children: [
                                       HeadingWidget(
-                                          title: e.qty.toString(),
+                                          title: e.quantity.toString(),
                                           fontSize: 20.0,
                                           fontWeight: FontWeight.w500),
                                       HeadingWidget(
@@ -194,7 +220,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                                           fontSize: 20.0,
                                           fontWeight: FontWeight.w500),
                                       HeadingWidget(
-                                          title: '₹${e.amount.toString()}',
+                                          title: '₹${e.price.toString()}',
                                           fontSize: 20.0,
                                           fontWeight: FontWeight.w500),
                                     ],
@@ -227,7 +253,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                             fontWeight: FontWeight.w500,
                           ),
                           HeadingWidget(
-                              title: '₹${calculateTotal().toStringAsFixed(2)}',
+                              title: '₹${widget.totalPrice}',
                               fontSize: 20.0,
                               fontWeight: FontWeight.w500),
                         ],
@@ -312,7 +338,9 @@ class _OrderDetailsState extends State<OrderDetails> {
                       ),
                       const SizedBox(height: 8),
                       HeadingWidget(
-                        title: 'Cash on delivery',
+                        title: widget.paymentMethod == "Cash"
+                            ? 'Cash on delivery'
+                            : "Online Payment",
                         fontWeight: FontWeight.w900,
                       ),
                     ],
@@ -332,7 +360,9 @@ class _OrderDetailsState extends State<OrderDetails> {
             Expanded(
               child: GestureDetector(
                 onTap: () {
-                  setState(() {});
+                  setState(() {
+                    orderStatusUpdate();
+                  });
                 },
                 child: Container(
                   height: 60,
@@ -349,7 +379,9 @@ class _OrderDetailsState extends State<OrderDetails> {
             Expanded(
               child: GestureDetector(
                 onTap: () {
-                  setState(() {});
+                  setState(() {
+                    orderConfirm();
+                  });
                 },
                 child: Container(
                   height: 60,

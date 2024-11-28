@@ -9,6 +9,8 @@ import '../../services/nam_food_api_service.dart';
 import '../../widgets/custom_text_field.dart';
 import '../../widgets/svgiconButtonWidget.dart';
 import '../models/dashboard_order_list_model.dart';
+import '../order/orderdetails.dart';
+import 'store_order_list_model.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -29,42 +31,47 @@ class _DashboardPageState extends State<DashboardPage> {
   void initState() {
     super.initState();
 
-    getDashboardOrderlist();
+    getAllStoreOrders();
   }
 
-  List<DashboardOrderList> orderList = [];
-  List<DashboardOrderList> orderListAll = [];
-  List<DashboardOrderList> pendingList = [];
-  List<DashboardOrderList> preparingList = [];
-  List<DashboardOrderList> readyList = [];
-
+ 
   bool isLoading = false;
-  double totalDiscountPrice = 0.0;
 
-  Future getDashboardOrderlist() async {
+
+
+  List<StoreOrderListData> orderList = [];
+  List<StoreOrderListData> orderListAll = [];
+  List<StoreOrderListData> pendingList = [];
+  List<StoreOrderListData> preparingList = [];
+  List<StoreOrderListData> readyList = [];
+
+  // double totalDiscountPrice = 0.0;
+
+  double totalEarning = 0;
+  double floatingBalance = 0;
+
+  Future getAllStoreOrders() async {
+    await apiService.getBearerToken();
     setState(() {
       isLoading = true;
     });
 
     try {
-      var result = await apiService.getDashboardOrderlist();
-      var response = dashboardOrderListModelFromJson(result);
+      var result = await apiService.getAllStoreOrders();
+      var response = storeOrderListModelFromJson(result);
       if (response.status.toString() == 'SUCCESS') {
         setState(() {
           orderList = response.list;
           orderListAll = orderList;
-          orderListAll.forEach((order) {
-            print("Order ID: ${order.orderId}, Status: ${order.orderStatus}");
-          });
           isLoading = false;
           print(orderListAll);
 
-          pendingList = filterOrdersByStatus("Pending");
+          pendingList = filterOrdersByStatus("Order Placed");
           print(
-              "Filtered Orders by 'Pending': ${filterOrdersByStatus("Pending")}");
-          preparingList = filterOrdersByStatus("Preparing");
+              "Filtered Orders by 'Pending': ${filterOrdersByStatus("Order Placed")}");
+          preparingList = filterOrdersByStatus("Order Processed");
           print(preparingList);
-          readyList = filterOrdersByStatus("Ready");
+          readyList = filterOrdersByStatus("Order Picked");
           print(readyList);
         });
       } else {
@@ -87,7 +94,8 @@ class _DashboardPageState extends State<DashboardPage> {
     setState(() {});
   }
 
-  List<DashboardOrderList> filterOrdersByStatus(String status) {
+
+  List<StoreOrderListData> filterOrdersByStatus(String status) {
     return orderListAll.where((entry) => entry.orderStatus == status).toList();
   }
 
@@ -164,9 +172,9 @@ class _DashboardPageState extends State<DashboardPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    _buildStatusTab('Pending', 0),
-                    _buildStatusTab('Preparing', 1),
-                    _buildStatusTab('Ready', 2),
+                    _buildStatusTab('Pending (${pendingList.length.toString()})', 0),
+                    _buildStatusTab('Preparing (${preparingList.length.toString()})', 1),
+                    _buildStatusTab('Ready (${readyList.length.toString()})', 2),
                   ],
                 ),
               ),
@@ -189,6 +197,18 @@ class _DashboardPageState extends State<DashboardPage> {
                         child: InkWell(
                           onTap: () {
                             // Handle order notification tap
+                             Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => OrderDetails(
+                              orderId: item.invoiceNumber.toString(),
+                              time: item.prepareMin.toString(),
+                              totalPrice: item.totalPrice.toString(),
+                              orderitems: item.items,
+                              paymentMethod: item.paymentMethod.toString(),
+                            ),
+                          ),
+                        );
                           },
                           child: Padding(
                             padding: const EdgeInsets.all(16.0),
@@ -276,7 +296,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                           ),
                                         ),
                                         Text(
-                                          item.orderId.toString(),
+                                          item.invoiceNumber.toString(),
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 18,
@@ -289,24 +309,24 @@ class _DashboardPageState extends State<DashboardPage> {
                                 const SizedBox(height: 8),
                                 // Order Time and Items Count
                                 Text(
-                                  '${item.time.toString()} pm | ${item.items.toString()} items',
+                                  '${item.prepareMin.toString()} pm | ${item.items.length.toString()} items',
                                   // '12.30 pm | 4 items',
                                   style: TextStyle(color: Colors.black),
                                 ),
                                 const SizedBox(height: 16),
                                 // Food Item Details
-                                ...item.dishes.map((dish) {
+                                ...item.items.map((dish) {
                                   return Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        '${dish.quantity.toString()} * ${dish.name.toString()}',
+                                        '${dish.quantity.toString()} * ${dish.productName.toString()}',
                                         // '2 X Chicken Biryani',
                                         style: TextStyle(fontSize: 16),
                                       ),
                                       Text(
-                                        '₹ ${dish.amount.toString()}.00',
+                                        '₹ ${dish.price.toString()}',
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold),
                                       ),
@@ -480,7 +500,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                           ),
                                         ),
                                         Text(
-                                          item.orderId.toString(),
+                                          item.invoiceNumber.toString(),
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 18,
@@ -493,24 +513,24 @@ class _DashboardPageState extends State<DashboardPage> {
                                 const SizedBox(height: 8),
                                 // Order Time and Items Count
                                 Text(
-                                  '${item.time.toString()} pm | ${item.items.toString()} items',
+                                  '${item.prepareMin.toString()} pm | ${item.items.length.toString()} items',
                                   // '12.30 pm | 4 items',
                                   style: TextStyle(color: Colors.black),
                                 ),
                                 const SizedBox(height: 16),
                                 // Food Item Details
-                                ...item.dishes.map((dish) {
+                                ...item.items.map((dish) {
                                   return Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        '${dish.quantity.toString()} * ${dish.name.toString()}',
+                                        '${dish.quantity.toString()} * ${dish.productName.toString()}',
                                         // '2 X Chicken Biryani',
                                         style: TextStyle(fontSize: 16),
                                       ),
                                       Text(
-                                        '₹ ${dish.amount.toString()}.00',
+                                        '₹ ${dish.price.toString()}',
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold),
                                       ),
@@ -588,7 +608,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                             ),
                                             SizedBox(height: 4),
                                             Text(
-                                              item.deliveryPerson.toString(),
+                                              item.deliveryBoyName.toString(),
                                               style: TextStyle(
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.bold,
@@ -654,7 +674,7 @@ class _DashboardPageState extends State<DashboardPage> {
       onTap: () {
         setState(() {
           selectedIndex = index;
-          getDashboardOrderlist();
+          getAllStoreOrders();
         });
       },
       child: Container(
@@ -668,7 +688,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   : Colors.grey.shade300),
         ),
         child: Text(
-          '$label (0)',
+          '$label',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             color: selectedIndex == index ? AppColors.blue : AppColors.black,
