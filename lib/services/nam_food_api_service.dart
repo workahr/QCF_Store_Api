@@ -7,6 +7,7 @@ import '../pages/admin_panel/json_data/admin_orderdetails_json.dart';
 import '../pages/admin_panel/json_data/delivery_person_json.dart';
 import '../pages/admin_panel/json_data/delivery_person_list_json.dart';
 import '../pages/admin_panel/json_data/individual_order_details_json.dart';
+import '../pages/admin_panel/json_data/orders_payment_json.dart';
 import '../pages/admin_panel/json_data/payments_page_json.dart';
 import '../pages/admin_panel/json_data/report_json.dart';
 import '../pages/admin_panel/json_data/screenshot_page_json.dart';
@@ -1713,6 +1714,105 @@ class NamFoodApiService {
       return jsonEncode(result);
     } catch (e) {
       throw Exception('Failed to retrieve OrderDetails: $e');
+    }
+  }
+
+  // Store Api
+
+  // Menu Lit
+  Future getmenuList() async {
+    try {
+      final url = Uri.parse('${liveApiPath}v1/getallitem');
+      final response = await client.get(
+        url,
+        headers: headerData,
+      );
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        return response;
+      }
+    } catch (e) {
+      return e;
+    }
+  }
+
+  //get MenuById
+  Future getMenuById(id) async {
+    try {
+      final url = Uri.parse('${liveApiPath}v1/getitembyid?id=$id');
+      final response = await client.get(
+        url,
+        headers: headerData,
+      );
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        return response;
+      }
+    } catch (e) {
+      return e;
+    }
+  }
+
+  //  Add Category
+
+  Future addcategory(postData) async {
+    try {
+      final url = Uri.parse('${liveApiPath}v1/createitemcategory');
+      print("test1 ");
+      final response = await client.post(
+        url,
+        headers: headerData,
+        body: jsonEncode(postData),
+      );
+      print("test2 ");
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        return response;
+      }
+    } catch (e) {
+      return e;
+    }
+  }
+
+  // Category List
+  Future getcategoryList() async {
+    try {
+      final url = Uri.parse('${liveApiPath}v1/getallitemcategory');
+      final response = await client.get(
+        url,
+        headers: headerData,
+      );
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        return response;
+      }
+    } catch (e) {
+      return e;
+    }
+  }
+
+  // update menu stock
+  Future updatemenustock(postData) async {
+    try {
+      final url = Uri.parse('${liveApiPath}v1/updateitem');
+      final response = await client.post(url,
+          headers: headerData, body: jsonEncode(postData));
+
+      if (response.statusCode == 200) {
+        final json = response.body;
+        return json;
+      } else {
+        print('error');
+        throw Exception(
+            'Failed. Status code: ${response.statusCode} ${response.toString()}');
+      }
+    } catch (e) {
+      print('catcherror ${e}');
+      return e;
     }
   }
 }
