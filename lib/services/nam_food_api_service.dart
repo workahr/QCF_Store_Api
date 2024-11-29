@@ -8,6 +8,8 @@ import '../pages/admin_panel/json_data/delivery_person_json.dart';
 import '../pages/admin_panel/json_data/delivery_person_list_json.dart';
 import '../pages/admin_panel/json_data/individual_order_details_json.dart';
 import '../pages/admin_panel/json_data/payments_page_json.dart';
+import '../pages/admin_panel/json_data/report_json.dart';
+import '../pages/admin_panel/json_data/screenshot_page_json.dart';
 import '../pages/admin_panel/json_data/store_list_json.dart';
 import '../pages/json_data/dashboard_orderlist_json.dart';
 import '../pages/json_data/menu_details_json.dart';
@@ -1609,8 +1611,7 @@ class NamFoodApiService {
     }
   }
 
-
-    // store Login
+  // store Login
   Future storeLogin(postData) async {
     try {
       final url = Uri.parse('${liveApiPath}v1/login');
@@ -1629,9 +1630,8 @@ class NamFoodApiService {
     }
   }
 
-
   // get All Store Orders
-   Future getAllStoreOrders() async {
+  Future getAllStoreOrders() async {
     try {
       final url = Uri.parse('${liveApiPath}v1/getallorderbystore');
       final response = await client.get(
@@ -1648,8 +1648,7 @@ class NamFoodApiService {
     }
   }
 
-
-   // Order Status Update
+  // Order Status Update
   Future orderStatusUpdate(postData) async {
     try {
       final url = Uri.parse('${liveApiPath}v1/orderstatusupdate');
@@ -1668,7 +1667,6 @@ class NamFoodApiService {
     }
   }
 
-
   // Order Confirm
   Future orderConfirm(postData) async {
     try {
@@ -1685,6 +1683,36 @@ class NamFoodApiService {
     } catch (e) {
       print('error $e');
       handleError();
+    }
+  }
+  // adminorderspayment
+
+  Future getorderspaymentpage() async {
+    try {
+      var result = await getorderspaymentJsonData();
+      return jsonEncode(result);
+    } catch (e) {
+      throw Exception('Failed to retrieve OrderDetails: $e');
+    }
+  }
+
+  // adminreports
+  Future getreportpage() async {
+    try {
+      var result = await getreportJsonData();
+      return jsonEncode(result);
+    } catch (e) {
+      throw Exception('Failed to retrieve OrderDetails: $e');
+    }
+  }
+
+  // adminscreenshot
+  Future getscreenshotpage() async {
+    try {
+      var result = await getscreenshotpageJsonData();
+      return jsonEncode(result);
+    } catch (e) {
+      throw Exception('Failed to retrieve OrderDetails: $e');
     }
   }
 }

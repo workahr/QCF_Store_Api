@@ -6,10 +6,13 @@ import 'package:namstore/widgets/button_widget.dart';
 
 import '../../../constants/app_assets.dart';
 import '../../../constants/app_colors.dart';
+import '../../../services/comFuncService.dart';
+import '../../../services/nam_food_api_service.dart';
 import '../../../widgets/custom_text_field.dart';
 import '../../../widgets/heading_widget.dart';
 import '../../../widgets/outline_btn_widget.dart';
 import '../../../widgets/sub_heading_widget.dart';
+import '../models/screenshotpage_model.dart';
 
 class ScreenshotPage extends StatefulWidget {
   const ScreenshotPage({super.key});
@@ -19,6 +22,52 @@ class ScreenshotPage extends StatefulWidget {
 }
 
 class _ScreenshotPageState extends State<ScreenshotPage> {
+  final NamFoodApiService apiService = NamFoodApiService();
+
+  @override
+  void initState() {
+    super.initState();
+    getscreenshotpage();
+  }
+
+  List<ScreeenShots> screenshotpage = [];
+  List<ScreeenShots> screenshotpageAll = [];
+  bool isLoading = false;
+
+  Future getscreenshotpage() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      var result = await apiService.getscreenshotpage();
+      var response = screenshotpagemodelFromJson(result);
+      if (response.status.toString() == 'SUCCESS') {
+        setState(() {
+          screenshotpage = response.list;
+          screenshotpageAll = screenshotpage;
+          isLoading = false;
+        });
+      } else {
+        setState(() {
+          screenshotpage = [];
+          screenshotpageAll = [];
+          isLoading = false;
+        });
+        showInSnackBar(context, response.message.toString());
+      }
+    } catch (e) {
+      setState(() {
+        screenshotpage = [];
+        screenshotpageAll = [];
+        isLoading = false;
+      });
+      showInSnackBar(context, 'Error occurred: $e');
+    }
+
+    setState(() {});
+  }
+
   String? selectedValue = 'cash_on_delivery';
 
   TextEditingController pickupDateCtrl = TextEditingController();
@@ -228,8 +277,9 @@ class _ScreenshotPageState extends State<ScreenshotPage> {
       body: Padding(
         padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
         child: ListView.builder(
-          itemCount: 1,
+          itemCount: screenshotpage.length,
           itemBuilder: (context, index) {
+            final e = screenshotpage[index];
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -356,15 +406,14 @@ class _ScreenshotPageState extends State<ScreenshotPage> {
                       Wrap(
                         children: [
                           HeadingWidget(
-                            title: 'Grill Chicken Arabian Restaurant',
+                            title: e.storename.toString(),
                             fontSize: 18.0,
                           ),
                           SizedBox(
                             height: 30,
                           ),
                           SubHeadingWidget(
-                            title:
-                                'No 37 Paranjothi Nagar Thylakoid, velour Nagar Trichy-620005',
+                            title: e.address.toString(),
                           ),
                         ],
                       ),
@@ -400,7 +449,7 @@ class _ScreenshotPageState extends State<ScreenshotPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 HeadingWidget(
-                                  title: 'Sulaiman',
+                                  title: e.name,
                                 ),
                                 SubHeadingWidget(
                                   title: '+91-9787921226',
@@ -433,7 +482,7 @@ class _ScreenshotPageState extends State<ScreenshotPage> {
                   height: 14,
                 ),
                 HeadingWidget(
-                  title: '29-Oct-2024',
+                  title: e.date.toString(),
                 ),
                 SizedBox(
                   height: 10,
@@ -456,7 +505,7 @@ class _ScreenshotPageState extends State<ScreenshotPage> {
                                   title: 'Amount',
                                 ),
                                 HeadingWidget(
-                                  title: "₹${300000}",
+                                  title: "₹${e.amount}",
                                 )
                               ],
                             ),
@@ -467,6 +516,7 @@ class _ScreenshotPageState extends State<ScreenshotPage> {
                                   borderRadius: BorderRadius.circular(10)),
                               child: SubHeadingWidget(
                                 title: 'Cash on delivery',
+                                color: AppColors.red,
                               ),
                             ),
                           ],
@@ -490,7 +540,7 @@ class _ScreenshotPageState extends State<ScreenshotPage> {
                             child: Row(
                               children: [
                                 Image.asset(
-                                  'images/payment.png',
+                                  e.image.toString(),
                                   height: 80,
                                   width: 100,
                                 ),
@@ -498,7 +548,7 @@ class _ScreenshotPageState extends State<ScreenshotPage> {
                                   width: 10,
                                 ),
                                 SubHeadingWidget(
-                                  title: '20241103_16.jpg',
+                                  title: e.imageno,
                                 )
                               ],
                             ),
@@ -513,7 +563,7 @@ class _ScreenshotPageState extends State<ScreenshotPage> {
                   height: 14,
                 ),
                 HeadingWidget(
-                  title: '29-Oct-2024',
+                  title: e.date,
                 ),
                 SizedBox(
                   height: 10,
@@ -536,7 +586,7 @@ class _ScreenshotPageState extends State<ScreenshotPage> {
                                   title: 'Amount',
                                 ),
                                 HeadingWidget(
-                                  title: "₹${300000}",
+                                  title: "₹${e.amount}",
                                 )
                               ],
                             ),
@@ -547,6 +597,7 @@ class _ScreenshotPageState extends State<ScreenshotPage> {
                                   borderRadius: BorderRadius.circular(10)),
                               child: SubHeadingWidget(
                                 title: 'Cash on delivery',
+                                color: AppColors.red,
                               ),
                             ),
                           ],
@@ -555,7 +606,7 @@ class _ScreenshotPageState extends State<ScreenshotPage> {
                           height: 10,
                         ),
                         Image.asset(
-                          'images/payment.png',
+                          e.image.toString(),
                           height: 180,
                           width: 200,
                         ),

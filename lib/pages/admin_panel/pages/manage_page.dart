@@ -30,6 +30,9 @@ class _ManagePageState extends State<ManagePage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            SizedBox(
+              height: 10,
+            ),
             ListTile(
               leading: Image.asset(
                 AppAssets.shop,
@@ -63,6 +66,18 @@ class _ManagePageState extends State<ManagePage> {
                 width: 18,
               ),
               title: const Text('Manage password'),
+              trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+              onTap: () {
+                // Add navigation or functionality here
+              },
+            ),
+            ListTile(
+              leading: Image.asset(
+                AppAssets.report,
+                height: 18,
+                width: 18,
+              ),
+              title: const Text('Report'),
               trailing: const Icon(Icons.arrow_forward_ios, size: 16),
               onTap: () {
                 // Add navigation or functionality here

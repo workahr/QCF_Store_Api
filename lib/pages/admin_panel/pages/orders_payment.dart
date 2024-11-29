@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:namstore/constants/app_assets.dart';
 import 'package:namstore/constants/app_colors.dart';
 
+import '../../../services/comFuncService.dart';
+import '../../../services/nam_food_api_service.dart';
+import '../models/orders_payment_model.dart';
+
 class OrdersPayment extends StatefulWidget {
   const OrdersPayment({super.key});
 
@@ -10,56 +14,52 @@ class OrdersPayment extends StatefulWidget {
 }
 
 class _OrdersPaymentState extends State<OrdersPayment> {
-  final List<Map<String, String>> orders = [
-    {
-      'id': '233352633356',
-      'items': '3 items',
-      'time': '10:32 am',
-      'date': '29-Oct-2024',
-      'payment': 'Cash on delivery',
-      'amount': '₹1,000.00',
-    },
-    {
-      'id': '233352633357',
-      'items': '3 items',
-      'time': '10:32 am',
-      'date': '29-Oct-2024',
-      'payment': 'Cash on delivery',
-      'amount': '₹1,000.00',
-    },
-    {
-      'id': '233352633357',
-      'items': '3 items',
-      'time': '10:32 am',
-      'date': '29-Oct-2024',
-      'payment': 'Cash on delivery',
-      'amount': '₹1,000.00',
-    },
-    {
-      'id': '233352633357',
-      'items': '3 items',
-      'time': '10:32 am',
-      'date': '29-Oct-2024',
-      'payment': 'Cash on delivery',
-      'amount': '₹1,000.00',
-    },
-    {
-      'id': '233352633357',
-      'items': '3 items',
-      'time': '10:32 am',
-      'date': '29-Oct-2024',
-      'payment': 'Cash on delivery',
-      'amount': '₹1,000.00',
-    },
-    {
-      'id': '233352633357',
-      'items': '3 items',
-      'time': '10:32 am',
-      'date': '29-Oct-2024',
-      'payment': 'Cash on delivery',
-      'amount': '₹1,000.00',
-    },
-  ];
+  final NamFoodApiService apiService = NamFoodApiService();
+  @override
+  void initState() {
+    super.initState();
+    getorderspaymentpage();
+  }
+
+  //Payments
+
+  List<OrdersPaymentList> orderpaymentpage = [];
+  List<OrdersPaymentList> orderpaymentpageAll = [];
+  bool isLoading = false;
+
+  Future getorderspaymentpage() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      var result = await apiService.getorderspaymentpage();
+      var response = orderspaymentmodelFromJson(result);
+      if (response.status.toString() == 'SUCCESS') {
+        setState(() {
+          orderpaymentpage = response.list;
+          orderpaymentpageAll = orderpaymentpage;
+          isLoading = false;
+        });
+      } else {
+        setState(() {
+          orderpaymentpage = [];
+          orderpaymentpageAll = [];
+          isLoading = false;
+        });
+        showInSnackBar(context, response.message.toString());
+      }
+    } catch (e) {
+      setState(() {
+        orderpaymentpage = [];
+        orderpaymentpageAll = [];
+        isLoading = false;
+      });
+      showInSnackBar(context, 'Error occurred: $e');
+    }
+
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -105,9 +105,10 @@ class _OrdersPaymentState extends State<OrdersPayment> {
           // const SizedBox(height: ),
           Expanded(
               child: ListView.builder(
-            itemCount: orders.length,
+            itemCount: orderpaymentpage.length,
             itemBuilder: (context, index) {
-              final order = orders[index];
+              final e = orderpaymentpage[index];
+
               return Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: 1.0, horizontal: 10.0),
@@ -118,7 +119,7 @@ class _OrdersPaymentState extends State<OrdersPayment> {
                       contentPadding: const EdgeInsets.only(
                           top: 0.0, left: 16.0, right: 16.0, bottom: 5),
                       title: Text(
-                        'Order ID #${order['id']}',
+                        'Order ID #${e.orderid}',
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
@@ -128,13 +129,13 @@ class _OrdersPaymentState extends State<OrdersPayment> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '${order['items']} | ${order['time']} | ${order['date']}',
+                            '${e.items}items | ${e.time} am | ${e.date}',
                             style: const TextStyle(
                                 fontSize: 14, color: Colors.grey),
                           ),
                           const SizedBox(height: 5),
                           Text(
-                            order['payment']!,
+                            e.delivery,
                             style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
@@ -154,7 +155,7 @@ class _OrdersPaymentState extends State<OrdersPayment> {
                             ),
                           ),
                           Text(
-                            order['amount']!,
+                            "₹ ${e.amount}",
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 16,

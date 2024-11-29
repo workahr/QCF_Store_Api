@@ -3,6 +3,9 @@ import 'package:namstore/widgets/heading_widget.dart';
 import 'package:namstore/widgets/sub_heading_widget.dart';
 
 import '../../../constants/app_colors.dart';
+import '../../../services/comFuncService.dart';
+import '../../../services/nam_food_api_service.dart';
+import '../models/report_model.dart';
 
 class ReportPage extends StatefulWidget {
   const ReportPage({super.key});
@@ -12,11 +15,51 @@ class ReportPage extends StatefulWidget {
 }
 
 class _ReportPageState extends State<ReportPage> {
-  final List<Map<String, String>> _reportData = [
-    {'sno': '01', 'storeName': 'Grill chickeni..', 'date': '01-11-2024'},
-    {'sno': '02', 'storeName': 'Grill chickeni..', 'date': '06-11-2024'},
-    {'sno': '03', 'storeName': 'Grill chickeni..', 'date': '08-11-2024'},
-  ];
+  final NamFoodApiService apiService = NamFoodApiService();
+
+  @override
+  void initState() {
+    super.initState();
+    getreportpage();
+  }
+
+  List<ReportList> reportlistpage = [];
+  List<ReportList> reportlistpageAll = [];
+  bool isLoading = false;
+
+  Future getreportpage() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      var result = await apiService.getreportpage();
+      var response = reportmodelFromJson(result);
+      if (response.status.toString() == 'SUCCESS') {
+        setState(() {
+          reportlistpage = response.list;
+          reportlistpageAll = reportlistpage;
+          isLoading = false;
+        });
+      } else {
+        setState(() {
+          reportlistpage = [];
+          reportlistpageAll = [];
+          isLoading = false;
+        });
+        showInSnackBar(context, response.message.toString());
+      }
+    } catch (e) {
+      setState(() {
+        reportlistpage = [];
+        reportlistpageAll = [];
+        isLoading = false;
+      });
+      showInSnackBar(context, 'Error occurred: $e');
+    }
+
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,50 +105,104 @@ class _ReportPageState extends State<ReportPage> {
               ],
             ),
             const SizedBox(height: 20),
-            SingleChildScrollView(
-              scrollDirection:
-                  Axis.vertical, // Allows horizontal scrolling if needed
+            Expanded(
               child: Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
-                    border: Border.all(color: AppColors.grey),
-                    borderRadius: BorderRadius.circular(16)),
+                  border: Border.all(color: AppColors.grey),
+                  borderRadius: BorderRadius.circular(16),
+                ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(16),
-                  child: DataTable(
-                    dividerThickness: 0.2,
-                    columnSpacing: 30,
-                    columns: const [
-                      DataColumn(
-                        label: Text(
-                          'S.no',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      DataColumn(
-                        label: Text(
-                          'Store Name',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      DataColumn(
-                        label: Text(
-                          'Date',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ],
-                    rows: _reportData.map((data) {
-                      return DataRow(cells: [
-                        DataCell(Text(data['sno']!)),
-                        DataCell(Text(data['storeName']!,
-                            style: TextStyle(
-                                color: AppColors.red,
-                                decoration: TextDecoration.underline,
-                                decorationColor: AppColors.red))),
-                        DataCell(Text(data['date']!)),
-                      ]);
-                    }).toList(),
+                  child: ListView.builder(
+                    itemCount:
+                        reportlistpage.length + 1, // +1 for the header row
+                    itemBuilder: (context, index) {
+                      if (index == 0) {
+                        // Header Row
+                        return Container(
+                          // color: AppColors.grey.withOpacity(0.2),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10, horizontal: 16),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  flex: 1,
+                                  child: Text(
+                                    'S.no',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 3,
+                                  child: Text(
+                                    'Store Name',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 2,
+                                  child: Text(
+                                    'Date',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      } else {
+                        // Data Rows
+                        final e = reportlistpage[index - 1]; // Offset by 1
+
+                        return Column(
+                          children: [
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Divider(
+                              color: AppColors.grey.withOpacity(0.5),
+                              thickness: 0.5,
+                              height: 1, // Adjust spacing around divider
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 8, horizontal: 16),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    flex: 1,
+                                    child: Text(e.snumber),
+                                  ),
+                                  Expanded(
+                                    flex: 3,
+                                    child: Text(
+                                      e.storename,
+                                      style: TextStyle(
+                                        color: AppColors.red,
+                                        decoration: TextDecoration.underline,
+                                        decorationColor: AppColors.red,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 2,
+                                    child: Text(e.date),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        );
+                      }
+                    },
                   ),
                 ),
               ),

@@ -153,4 +153,5 @@ class AppAssets {
   static const String delivery = 'assets/images/delivery.png';
   static const String shop = 'assets/images/Shop.png';
   static const String UserRounded = 'assets/images/UserRounded.png';
+  static const String report = 'images/report.png';
 }
