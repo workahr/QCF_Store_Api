@@ -6,7 +6,7 @@ import 'package:namstore/widgets/sub_heading_widget.dart';
 import '../../../constants/constants.dart';
 import '../../../services/comFuncService.dart';
 import '../../../services/nam_food_api_service.dart';
-import '../models/individual_order_details_model.dart';
+import '../api_model/indivualorderpage_model.dart';
 
 class Individualorderdetails extends StatefulWidget {
   const Individualorderdetails({super.key});
@@ -26,8 +26,8 @@ class _IndividualorderdetailsState extends State<Individualorderdetails> {
   }
 
   //Individualorderdetails
-  List<Indivualoders> indivualorderpage = [];
-  List<Indivualoders> indivualorderpageAll = [];
+  List<IndivualOrders> indivualorderpage = [];
+  List<IndivualOrders> indivualorderpageAll = [];
   bool isLoading1 = false;
 
   Future getdeliveryperson() async {
@@ -99,10 +99,10 @@ class _IndividualorderdetailsState extends State<Individualorderdetails> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     HeadingWidget(
-                      title: "Order ID #${e.orderid}",
+                      title: "Order ID #${e.invoiceNumber}",
                     ),
                     SubHeadingWidget(
-                      title: "${e.items} items | ${e.date}",
+                      title: "${e.items.length} items | ${e.createdDate}",
                     ),
                     SizedBox(
                       height: 16,
@@ -110,421 +110,408 @@ class _IndividualorderdetailsState extends State<Individualorderdetails> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        ...e.userdetails.map((user) {
-                          return Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Column(
-                                children: [
-                                  Container(
-                                    width: 30,
-                                    height: 30,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: AppColors.red,
-                                    ),
-                                    child: const Center(
-                                      child: Image(
-                                        image: AssetImage(
-                                          AppAssets.UserRounded,
-                                        ),
-                                        width: 18,
-                                        height: 18,
-                                        color: AppColors.white,
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Column(
+                              children: [
+                                Container(
+                                  width: 30,
+                                  height: 30,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: AppColors.red,
+                                  ),
+                                  child: const Center(
+                                    child: Image(
+                                      image: AssetImage(
+                                        AppAssets.UserRounded,
                                       ),
+                                      width: 18,
+                                      height: 18,
+                                      color: AppColors.white,
                                     ),
                                   ),
-                                  DottedLine(
-                                    direction: Axis.vertical,
-                                    dashColor: AppColors.red,
-                                    lineLength: responsiveLineLength,
-                                    dashLength: 2,
-                                    dashGapLength: 2,
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                // Ensures responsiveness
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'User details',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 20.0),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 10),
-                                      child: Container(
-                                        padding: const EdgeInsets.all(10),
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          border: Border.all(
-                                              color: AppColors.grey1),
-                                        ),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Container(
-                                                  height: 45,
-                                                  width: 45,
-                                                  decoration: BoxDecoration(
-                                                    shape: BoxShape.circle,
-                                                    border: Border.all(
-                                                        color: AppColors.grey1),
-                                                  ),
-                                                  child: Image.asset(
-                                                    AppAssets.UserRounded,
-                                                    width: 18,
-                                                    height: 18,
-                                                  ),
-                                                ),
-                                                Padding(
-                                                  padding: const EdgeInsets
-                                                      .symmetric(horizontal: 8),
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      HeadingWidget(
-                                                        title: user.username,
-                                                      ),
-                                                      SubHeadingWidget(
-                                                        title: user
-                                                            .usermobilenumber,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                Container(
-                                                  // height: 24,
-                                                  // width: 24,
-                                                  padding: EdgeInsets.all(6),
-                                                  decoration: BoxDecoration(
-                                                    color: AppColors.red,
-                                                    shape: BoxShape.circle,
-                                                  ),
-                                                  child: Image.asset(
-                                                    AppAssets.call_icon,
-                                                    width: 30,
-                                                    height: 30,
-                                                    color: AppColors.white,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            const SizedBox(
-                                                height:
-                                                    10), // Add spacing for better alignment
-                                            Wrap(
-                                              children: [
-                                                SubHeadingWidget(
-                                                  title: user.useraddress,
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
                                 ),
-                              ),
-                            ],
-                          );
-                        }).toList(),
-                        ...e.storedetails.map((store) {
-                          return Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Column(
+                                DottedLine(
+                                  direction: Axis.vertical,
+                                  dashColor: AppColors.red,
+                                  lineLength: responsiveLineLength,
+                                  dashLength: 2,
+                                  dashGapLength: 2,
+                                ),
+                              ],
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              // Ensures responsiveness
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Container(
-                                    width: 30,
-                                    height: 30,
-                                    decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: AppColors.red),
-                                    child: const Center(
-                                      child: Image(
-                                        image: AssetImage(
-                                          AppAssets.shop,
-                                        ),
-                                        width: 18,
-                                        height: 18,
+                                  Text(
+                                    'User details',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 20.0),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 10),
+                                    child: Container(
+                                      padding: const EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        border:
+                                            Border.all(color: AppColors.grey1),
                                       ),
-                                    ),
-                                  ),
-                                  DottedLine(
-                                    direction: Axis.vertical,
-                                    dashColor: AppColors.red,
-                                    lineLength: responsiveLineLength1,
-                                    dashLength: 2,
-                                    dashGapLength: 2,
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                // Ensures responsiveness
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Store details',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 20.0),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 10),
-                                      child: Container(
-                                        padding: const EdgeInsets.all(10),
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          border: Border.all(
-                                              color: AppColors.grey1),
-                                        ),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Wrap(
-                                              children: [
-                                                HeadingWidget(
-                                                  title: store.storename
-                                                      .toString(),
-                                                  fontSize: 18.0,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Container(
+                                                height: 45,
+                                                width: 45,
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  border: Border.all(
+                                                      color: AppColors.grey1),
                                                 ),
-                                                SizedBox(
+                                                child: Image.asset(
+                                                  AppAssets.UserRounded,
+                                                  width: 18,
+                                                  height: 18,
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 8),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    HeadingWidget(
+                                                      title: e.customerAddress
+                                                          .pincode,
+                                                    ),
+                                                    SubHeadingWidget(
+                                                      title: e.customerAddress
+                                                          .pincode,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              Container(
+                                                // height: 24,
+                                                // width: 24,
+                                                padding: EdgeInsets.all(6),
+                                                decoration: BoxDecoration(
+                                                  color: AppColors.red,
+                                                  shape: BoxShape.circle,
+                                                ),
+                                                child: Image.asset(
+                                                  AppAssets.call_icon,
+                                                  width: 30,
                                                   height: 30,
+                                                  color: AppColors.white,
                                                 ),
-                                                SubHeadingWidget(
-                                                  title: store.storeaddress
-                                                      .toString(),
-                                                ),
-                                              ],
-                                            ),
-                                            SizedBox(
-                                              height: 10,
-                                            ),
-                                            Divider(
-                                              height: 10,
-                                              color: AppColors.grey1,
-                                            ),
-                                            SizedBox(
-                                              height: 10,
-                                            ),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Container(
-                                                  height: 45,
-                                                  width: 45,
-                                                  decoration: BoxDecoration(
-                                                    shape: BoxShape.circle,
-                                                    border: Border.all(
-                                                        color: AppColors.grey1),
-                                                  ),
-                                                  child: Image.asset(
-                                                    AppAssets.UserRounded,
-                                                    width: 18,
-                                                    height: 18,
-                                                  ),
-                                                ),
-                                                Padding(
-                                                  padding: const EdgeInsets
-                                                      .symmetric(horizontal: 8),
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      HeadingWidget(
-                                                        title: store
-                                                            .storeownername
-                                                            .toString(),
-                                                      ),
-                                                      SubHeadingWidget(
-                                                        title: store
-                                                            .storemobilenumber,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                Container(
-                                                  // height: 24,
-                                                  // width: 24,
-                                                  padding: EdgeInsets.all(6),
-                                                  decoration: BoxDecoration(
-                                                    color: AppColors.red,
-                                                    shape: BoxShape.circle,
-                                                  ),
-                                                  child: Image.asset(
-                                                    AppAssets.call_icon,
-                                                    width: 30,
-                                                    height: 30,
-                                                    color: AppColors.white,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            // Add spacing for better alignment
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          );
-                        }).toList(),
-                        ...e.deliverydetails.map((delivery) {
-                          return Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Column(
-                                children: [
-                                  Container(
-                                    width: 30,
-                                    height: 30,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: AppColors.red,
-                                    ),
-                                    child: const Center(
-                                      child: Image(
-                                        image: AssetImage(
-                                          AppAssets.delivery,
-                                        ),
-                                        width: 18,
-                                        height: 18,
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(
+                                              height:
+                                                  10), // Add spacing for better alignment
+                                          Wrap(
+                                            children: [
+                                              SubHeadingWidget(
+                                                title: e.customerAddress.address
+                                                    .toString(),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ),
                                 ],
                               ),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                // Ensures responsiveness
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Delivery person details',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 20.0),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Column(
+                              children: [
+                                Container(
+                                  width: 30,
+                                  height: 30,
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: AppColors.red),
+                                  child: const Center(
+                                    child: Image(
+                                      image: AssetImage(
+                                        AppAssets.shop,
+                                      ),
+                                      width: 18,
+                                      height: 18,
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 10),
-                                      child: Container(
-                                        padding: const EdgeInsets.all(10),
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          border: Border.all(
-                                              color: AppColors.grey1),
-                                        ),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Container(
-                                                  height: 45,
-                                                  width: 45,
-                                                  decoration: BoxDecoration(
-                                                    shape: BoxShape.circle,
-                                                    border: Border.all(
-                                                        color: AppColors.grey1),
-                                                  ),
-                                                  child: Image.asset(
-                                                    AppAssets.UserRounded,
-                                                    width: 18,
-                                                    height: 18,
-                                                  ),
+                                  ),
+                                ),
+                                DottedLine(
+                                  direction: Axis.vertical,
+                                  dashColor: AppColors.red,
+                                  lineLength: responsiveLineLength1,
+                                  dashLength: 2,
+                                  dashGapLength: 2,
+                                ),
+                              ],
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              // Ensures responsiveness
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Store details',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 20.0),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 10),
+                                    child: Container(
+                                      padding: const EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        border:
+                                            Border.all(color: AppColors.grey1),
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Wrap(
+                                            children: [
+                                              HeadingWidget(
+                                                title: e.storeAddress.name
+                                                    .toString(),
+                                                fontSize: 18.0,
+                                              ),
+                                              SizedBox(
+                                                height: 30,
+                                              ),
+                                              SubHeadingWidget(
+                                                title: e.storeAddress.address
+                                                    .toString(),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Divider(
+                                            height: 10,
+                                            color: AppColors.grey1,
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Container(
+                                                height: 45,
+                                                width: 45,
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  border: Border.all(
+                                                      color: AppColors.grey1),
                                                 ),
-                                                Padding(
-                                                  padding: const EdgeInsets
-                                                      .symmetric(horizontal: 8),
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      HeadingWidget(
-                                                        title: delivery
-                                                            .deliverypersonname
-                                                            .toString(),
-                                                      ),
-                                                      SubHeadingWidget(
-                                                        title: delivery
-                                                            .deliverypersonmobilenumber
-                                                            .toString(),
-                                                      ),
-                                                    ],
-                                                  ),
+                                                child: Image.asset(
+                                                  AppAssets.UserRounded,
+                                                  width: 18,
+                                                  height: 18,
                                                 ),
-                                                Container(
-                                                  // height: 24,
-                                                  // width: 24,
-                                                  padding: EdgeInsets.all(6),
-                                                  decoration: BoxDecoration(
-                                                    color: AppColors.red,
-                                                    shape: BoxShape.circle,
-                                                  ),
-                                                  child: Image.asset(
-                                                    AppAssets.call_icon,
-                                                    width: 30,
-                                                    height: 30,
-                                                    color: AppColors.white,
-                                                  ),
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 8),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    HeadingWidget(
+                                                      title: e.storeAddress.name
+                                                          .toString(),
+                                                    ),
+                                                    SubHeadingWidget(
+                                                      title: e
+                                                          .storeAddress.mobile
+                                                          .toString(),
+                                                    ),
+                                                  ],
                                                 ),
-                                              ],
-                                            ),
-                                            const SizedBox(
-                                                height:
-                                                    10), // Add spacing for better alignment
-                                            Wrap(
-                                              children: [
-                                                SubHeadingWidget(
-                                                  title: delivery
-                                                      .deliveryaddress
-                                                      .toString(),
+                                              ),
+                                              Container(
+                                                // height: 24,
+                                                // width: 24,
+                                                padding: EdgeInsets.all(6),
+                                                decoration: BoxDecoration(
+                                                  color: AppColors.red,
+                                                  shape: BoxShape.circle,
                                                 ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
+                                                child: Image.asset(
+                                                  AppAssets.call_icon,
+                                                  width: 30,
+                                                  height: 30,
+                                                  color: AppColors.white,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          // Add spacing for better alignment
+                                        ],
                                       ),
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
-                            ],
-                          );
-                        }).toList(),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Column(
+                              children: [
+                                Container(
+                                  width: 30,
+                                  height: 30,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: AppColors.red,
+                                  ),
+                                  child: const Center(
+                                    child: Image(
+                                      image: AssetImage(
+                                        AppAssets.delivery,
+                                      ),
+                                      width: 18,
+                                      height: 18,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              // Ensures responsiveness
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Delivery person details',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 20.0),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 10),
+                                    child: Container(
+                                      padding: const EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        border:
+                                            Border.all(color: AppColors.grey1),
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Container(
+                                                height: 45,
+                                                width: 45,
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  border: Border.all(
+                                                      color: AppColors.grey1),
+                                                ),
+                                                child: Image.asset(
+                                                  AppAssets.UserRounded,
+                                                  width: 18,
+                                                  height: 18,
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 8),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    HeadingWidget(
+                                                      title: e.deliveryBoyName
+                                                          .toString(),
+                                                    ),
+                                                    SubHeadingWidget(
+                                                      title: e.deliveryBoyMobile
+                                                          .toString(),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              Container(
+                                                // height: 24,
+                                                // width: 24,
+                                                padding: EdgeInsets.all(6),
+                                                decoration: BoxDecoration(
+                                                  color: AppColors.red,
+                                                  shape: BoxShape.circle,
+                                                ),
+                                                child: Image.asset(
+                                                  AppAssets.call_icon,
+                                                  width: 30,
+                                                  height: 30,
+                                                  color: AppColors.white,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(
+                                              height:
+                                                  10), // Add spacing for better alignment
+                                          Wrap(
+                                            children: [
+                                              SubHeadingWidget(
+                                                title: e.deliveryBoyName
+                                                    .toString(),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                         SizedBox(
                           height: 16,
                         ),
@@ -545,7 +532,7 @@ class _IndividualorderdetailsState extends State<Individualorderdetails> {
                           ),
                           child: Column(
                             children: [
-                              ...e.orderdetails.map((order) {
+                              ...e.items.map((item) {
                                 return Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -555,12 +542,12 @@ class _IndividualorderdetailsState extends State<Individualorderdetails> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         HeadingWidget(
-                                          title: order.dishname,
+                                          title: item.productName,
                                           fontWeight: FontWeight.w500,
                                         ),
                                         HeadingWidget(
                                           title:
-                                              '${order.dishqty} X ${order.singleprice}',
+                                              '${item.quantity} X ${item.price}',
                                         ),
                                         SizedBox(
                                           height: 10,
@@ -568,7 +555,7 @@ class _IndividualorderdetailsState extends State<Individualorderdetails> {
                                       ],
                                     ),
                                     HeadingWidget(
-                                      title: "₹${order.singleprice}",
+                                      title: "₹${item.totalPrice}",
                                       fontWeight: FontWeight.w500,
                                     )
                                   ],
@@ -588,142 +575,140 @@ class _IndividualorderdetailsState extends State<Individualorderdetails> {
                         SizedBox(
                           height: 12,
                         ),
-                        ...e.paymentdetails.map((payment) {
-                          return Container(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 16, horizontal: 16),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(color: AppColors.grey1),
-                            ),
-                            child: Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    HeadingWidget(
-                                      title: 'Item total',
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                    HeadingWidget(
-                                      title: "₹${payment.itemtotal}",
-                                      fontWeight: FontWeight.w500,
-                                    )
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    HeadingWidget(
-                                      title: 'Delivery Chargers',
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                    HeadingWidget(
-                                      title: "₹${payment.deliverychargers}",
-                                      fontWeight: FontWeight.w500,
-                                    )
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Divider(
-                                  color: AppColors.grey1,
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    HeadingWidget(
-                                      title: 'Platform Fee',
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                    HeadingWidget(
-                                      title: "₹${payment.platformfee}",
-                                      fontWeight: FontWeight.w500,
-                                    )
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    HeadingWidget(
-                                      title: 'GST & Restaurant Charges',
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                    HeadingWidget(
-                                      title: "₹${payment.restaurantcharges}",
-                                      fontWeight: FontWeight.w500,
-                                    )
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                DottedLine(
-                                  direction: Axis.horizontal,
-                                  dashColor: AppColors.grey,
-                                  dashLength: 4,
-                                  dashGapLength: 4,
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    HeadingWidget(
-                                      title: 'Total Amount',
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                    HeadingWidget(
-                                      title: "₹${payment.totalamount}",
-                                      fontWeight: FontWeight.w500,
-                                    )
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                DottedLine(
-                                  direction: Axis.horizontal,
-                                  dashColor: AppColors.grey,
-                                  dashLength: 4,
-                                  dashGapLength: 4,
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    HeadingWidget(
-                                      title: 'Payment method:',
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                    HeadingWidget(
-                                      title: payment.paymentmethod,
-                                    )
-                                  ],
-                                ),
-                              ],
-                            ),
-                          );
-                        }).toList(),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                              vertical: 16, horizontal: 16),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(color: AppColors.grey1),
+                          ),
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  HeadingWidget(
+                                    title: 'Item total',
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  HeadingWidget(
+                                    title: "₹${e.totalPrice}",
+                                    fontWeight: FontWeight.w500,
+                                  )
+                                ],
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  HeadingWidget(
+                                    title: 'Delivery Chargers',
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  HeadingWidget(
+                                    title: "₹${e.totalPrice}",
+                                    fontWeight: FontWeight.w500,
+                                  )
+                                ],
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Divider(
+                                color: AppColors.grey1,
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  HeadingWidget(
+                                    title: 'Platform Fee',
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  HeadingWidget(
+                                    title: "₹${e.totalPrice}",
+                                    fontWeight: FontWeight.w500,
+                                  )
+                                ],
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  HeadingWidget(
+                                    title: 'GST & Restaurant Charges',
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  HeadingWidget(
+                                    title: "₹${e.totalPrice}",
+                                    fontWeight: FontWeight.w500,
+                                  )
+                                ],
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              DottedLine(
+                                direction: Axis.horizontal,
+                                dashColor: AppColors.grey,
+                                dashLength: 4,
+                                dashGapLength: 4,
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  HeadingWidget(
+                                    title: 'Total Amount',
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  HeadingWidget(
+                                    title: "₹${e.totalPrice}",
+                                    fontWeight: FontWeight.w500,
+                                  )
+                                ],
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              DottedLine(
+                                direction: Axis.horizontal,
+                                dashColor: AppColors.grey,
+                                dashLength: 4,
+                                dashGapLength: 4,
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  HeadingWidget(
+                                    title: 'Payment method:',
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  HeadingWidget(
+                                    title: e.paymentMethod,
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   ],
