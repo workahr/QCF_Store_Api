@@ -10,6 +10,7 @@ import '../../widgets/custom_text_field.dart';
 import '../../widgets/svgiconButtonWidget.dart';
 import '../models/dashboard_order_list_model.dart';
 import '../order/orderdetails.dart';
+import 'order_status_model.dart';
 import 'store_order_list_model.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -97,6 +98,28 @@ class _DashboardPageState extends State<DashboardPage> {
 
   List<StoreOrderListData> filterOrdersByStatus(String status) {
     return orderListAll.where((entry) => entry.orderStatus == status).toList();
+  }
+
+
+  Future orderStatusUpdate(int orderId, String status) async {
+    try {
+      Map<String, dynamic> postData = {
+        "order_id": orderId,
+        "order_status": status.toString()
+      };
+      var result = await apiService.orderStatusUpdate(postData);
+      OrderStatusModel response = orderStatusModelFromJson(result);
+
+      closeSnackBar(context: context);
+
+      if (response.status.toString() == 'SUCCESS') {
+        setState(() {});
+      } else {
+        showInSnackBar(context, response.message.toString());
+      }
+    } catch (error) {
+      showInSnackBar(context, error.toString());
+    }
   }
 
   @override
@@ -326,7 +349,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                         style: TextStyle(fontSize: 16),
                                       ),
                                       Text(
-                                        '₹ ${dish.price.toString()}',
+                                        '₹ ${dish.totalPrice.toString()}',
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold),
                                       ),
@@ -353,6 +376,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                     InkWell(
                                       onTap: () {
                                         // Handle order notification tap
+                                        makePhoneCall(item.customerMobile.toString());
                                       },
                                       child: Container(
                                         padding: EdgeInsets.all(12.0),
@@ -410,7 +434,12 @@ class _DashboardPageState extends State<DashboardPage> {
                                         width: 150.0,
                                         fontSize: 13.0,
                                         height: 50.0,
-                                        onTap: () {}),
+                                        onTap: () {
+
+                                          orderStatusUpdate(item.items[0].orderId, "Ready to Pickup");
+
+                                        }
+                                        ),
                                   ],
                                 ),
                               ],
@@ -530,7 +559,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                         style: TextStyle(fontSize: 16),
                                       ),
                                       Text(
-                                        '₹ ${dish.price.toString()}',
+                                        '₹ ${dish.totalPrice.toString()}',
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold),
                                       ),
@@ -635,6 +664,36 @@ class _DashboardPageState extends State<DashboardPage> {
                                     ),
                                   ],
                                 ),
+                               const SizedBox(height: 10.0),
+                                 const DottedLine(
+                                  direction: Axis.horizontal,
+                                  dashColor: AppColors.black,
+                                  lineLength: 320,
+                                  dashLength: 6,
+                                  dashGapLength: 4,
+                                ),
+                                const SizedBox(height: 10.0),
+
+                                 SvgIconButtonWidget(
+                                        title: ' Done ',
+                                        // color: AppColors.light,
+                                        color: Colors.red,
+                                        borderColor: Colors.red,
+                                        titleColor: AppColors.light,
+                                        // titleColor: AppColors.dark,
+                                        // borderColor: AppColors.dark,
+                                        leadingIcon:
+                                            Icon(Icons.check_circle_outline),
+                                        width: 150.0,
+                                        fontSize: 13.0,
+                                        height: 50.0,
+                                        onTap: () {
+
+                                          orderStatusUpdate(item.items[0].orderId, "Order Picked");
+
+                                        }
+                                        ),
+
                               ],
                             ),
                           ),
