@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:namstore/constants/app_assets.dart';
 import 'package:namstore/constants/app_colors.dart';
-import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
+
 import '../../constants/app_constants.dart';
 import '../../services/comFuncService.dart';
 import '../../services/nam_food_api_service.dart';
@@ -13,7 +13,7 @@ import '../../widgets/outline_btn_widget.dart';
 import 'add_category_model.dart';
 import 'add_menu_model.dart';
 import 'package:image_picker/image_picker.dart';
-
+import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'category_list_model.dart';
 import 'menu_details_screen.dart';
 import 'menu_edit_model.dart';
@@ -93,7 +93,7 @@ class _AddNewMenuState extends State<AddNewMenu> {
           "item_offer_price": strickoutpriceController.text,
           "item_category_id": selectedcategoryId,
           "tax_id": 0,
-          "item_stock": 0,
+          "item_stock": menuDetails!.itemStock,
           "item_tags": "",
           "store_price": offerpriceController.text,
           "item_price_type": 1,

@@ -13,6 +13,8 @@ import '../../widgets/heading_widget.dart';
 import '../models/menu_details_model.dart';
 import 'menu_edit_model.dart';
 import 'menu_list_model.dart';
+import 'mystoredetails_model.dart';
+import 'storestatusupdate_model.dart';
 
 class MenuDetailsScreen extends StatefulWidget {
   @override
@@ -22,7 +24,7 @@ class MenuDetailsScreen extends StatefulWidget {
 class _MenuDetailsScreenState extends State<MenuDetailsScreen> {
   final NamFoodApiService apiService = NamFoodApiService();
 
-  bool isOnDuty = true;
+  bool? isOnDuty;
   bool inStock1 = true;
   String toggleTitle = "On Duty";
   bool? inStock;
@@ -30,7 +32,7 @@ class _MenuDetailsScreenState extends State<MenuDetailsScreen> {
   void initState() {
     super.initState();
     getdashbordlist();
-
+    getMyStoreDetails();
     getmenuList();
   }
 
@@ -131,11 +133,47 @@ class _MenuDetailsScreenState extends State<MenuDetailsScreen> {
     }
   }
 
+// My Store List
+
+  StoreDetails? MyStoreDetails;
+
+  Future getMyStoreDetails() async {
+    await apiService.getBearerToken();
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      var result = await apiService.getMyStoreDetails();
+      var response = myStoreDetailsmodelFromJson(result);
+      if (response.status.toString() == 'SUCCESS') {
+        setState(() {
+          MyStoreDetails = response.list;
+          isLoading = false;
+        });
+      } else {
+        setState(() {
+          MyStoreDetails = null;
+          isLoading = false;
+        });
+        showInSnackBar(context, response.message.toString());
+      }
+    } catch (e) {
+      setState(() {
+        MyStoreDetails = null;
+        isLoading = false;
+      });
+      showInSnackBar(context, 'Error occurred: $e');
+    }
+
+    setState(() {});
+  }
+
   Future updatemenustock(id, value) async {
     await apiService.getBearerToken();
 
     Map<String, dynamic> postData = {
-      "item_id": id,
+      "id": id,
       "item_stock": value,
     };
     print("item_stock $postData");
@@ -145,7 +183,39 @@ class _MenuDetailsScreenState extends State<MenuDetailsScreen> {
 
     if (response.status.toString() == 'SUCCESS') {
       showInSnackBar(context, response.message.toString());
-      Navigator.pop(context, {'update': true});
+      // Navigator.pop(context);
+      setState(() {
+        getmenuList();
+      });
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) => Third_party_List(),
+      //   ),
+      // );
+    } else {
+      print(response.message.toString());
+      showInSnackBar(context, response.message.toString());
+    }
+  }
+
+// Store Status Update
+
+  Future updateStoreStatus(status) async {
+    await apiService.getBearerToken();
+
+    Map<String, dynamic> postData = {"store_status": status};
+    print("store_status $postData");
+    var result = await apiService.updateStoreStatus(postData);
+
+    StoreStatusUpdatemodel response = storeStatusUpdatemodelFromJson(result);
+
+    if (response.status.toString() == 'SUCCESS') {
+      showInSnackBar(context, response.message.toString());
+      //    Navigator.pop(context);
+      setState(() {
+        getMyStoreDetails(); // Update the state variable
+      });
       // Navigator.push(
       //   context,
       //   MaterialPageRoute(
@@ -187,15 +257,17 @@ class _MenuDetailsScreenState extends State<MenuDetailsScreen> {
                     child: Transform.scale(
                         scale: 0.9,
                         child: Switch(
-                          value: isOnDuty,
-                          onChanged: (value) {
+                          value: MyStoreDetails!.storeStatus == 1, // isOnDuty,
+                          onChanged: (value1) {
                             setState(() {
-                              isOnDuty = value;
-                              if (isOnDuty == true) {
-                                toggleTitle = "On Duty";
-                              } else {
+                              isOnDuty = value1;
+                              if (MyStoreDetails!.storeStatus == 1) {
                                 toggleTitle = "Off Duty";
+                              } else {
+                                toggleTitle = "On Duty";
                               }
+                              updateStoreStatus(value1 ? 1 : 0);
+                              print(value1 ? 1 : 0);
                             });
                           },
                           activeColor: Colors.white,
@@ -245,27 +317,45 @@ class _MenuDetailsScreenState extends State<MenuDetailsScreen> {
                     child: Row(
                       children: [
                         ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: Image.asset(
+                          borderRadius: BorderRadius.circular(8),
+                          child:
+                              //  Image.asset(
+                              //   AppAssets.restaurant_briyani,
+                              //   height: 100,
+                              //   width: 100,
+                              // )
+                              Image.network(
+                                  AppConstants.imgBaseUrl +
+                                      MyStoreDetails!.frontImg.toString(),
+                                  width: 90,
+                                  height: 90,
+                                  fit: BoxFit.fill, errorBuilder:
+                                      (BuildContext context, Object exception,
+                                          StackTrace? stackTrace) {
+                            return Image.asset(
                               AppAssets.restaurant_briyani,
-                              height: 100,
-                              width: 100,
-                            )),
+                              width: 90,
+                              height: 90,
+                              // fit: BoxFit.cover,
+                            );
+                          }),
+                        ),
                         SizedBox(width: 12),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Grill Chicken Arabian\nRestaurant',
+                            Text(MyStoreDetails!.name.toString(),
+                                //'Grill Chicken Arabian\nRestaurant',
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 20)),
-                            SizedBox(height: 4),
+                            SizedBox(height: 8),
                             Text('South Indian Foods',
                                 style: TextStyle(
                                     color: Colors.black, fontSize: 14)),
                             SizedBox(height: 4),
-                            Text('Open Time: 8.30am - 11.00pm',
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 14)),
+                            // Text('Open Time: 8.30am - 11.00pm',
+                            //     style: TextStyle(
+                            //         color: Colors.black, fontSize: 14)),
                           ],
                         ),
                       ],
@@ -442,9 +532,14 @@ class _MenuDetailsScreenState extends State<MenuDetailsScreen> {
                                                         inactiveTrackColor:
                                                             Colors.grey[300],
                                                       ))),
-                                              Text('In stock',
+                                              Text(
+                                                  e.itemStock == 1
+                                                      ? 'In Stock'
+                                                      : 'Out of Stock',
                                                   style: TextStyle(
-                                                      color: Colors.green,
+                                                      color: e.itemStock == 1
+                                                          ? Colors.green
+                                                          : AppColors.red,
                                                       fontSize: 18.0))
                                             ]),
                                         GestureDetector(

@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:namstore/constants/app_assets.dart';
 import 'package:namstore/constants/app_colors.dart';
 
+import '../../../constants/app_constants.dart';
 import '../../../services/comFuncService.dart';
 import '../../../services/nam_food_api_service.dart';
+import '../api_model/store_list_model.dart';
 import '../models/adminstore_model.dart';
 import 'add_store_page.dart';
 
@@ -17,25 +19,26 @@ class _StoreListState extends State<StoreList> {
   @override
   void initState() {
     super.initState();
-    getstoredetailslist();
+    getStoreList();
   }
 
   //Store Menu Details
 
-  List<AdminStoreList> storedetaillistpage = [];
-  List<AdminStoreList> storedetaillistpageAll = [];
+  List<StoreListData> storedetaillistpage = [];
+  List<StoreListData> storedetaillistpageAll = [];
   bool isLoading = false;
 
-  Future getstoredetailslist() async {
+  Future getStoreList() async {
     setState(() {
       isLoading = true;
     });
 
     try {
-      var result = await apiService.getstoredetailslist();
-      var response = adminstorelistmodelFromJson(result);
+      var result = await apiService.getStoreList();
+      var response = storeListmodelFromJson(result);
       if (response.status.toString() == 'SUCCESS') {
         setState(() {
+          print("hi");
           storedetaillistpage = response.list;
           storedetaillistpageAll = storedetaillistpage;
           isLoading = false;
@@ -58,38 +61,6 @@ class _StoreListState extends State<StoreList> {
     }
 
     setState(() {});
-  }
-
-  // Sample store data
-  List<Map<String, String>> storeData = [
-    {
-      "name": "Grill Chicken Arabian Restaurant",
-      "status": "Active",
-      "address":
-          "No 37 Paranjothi Nagar Thalakoidi, velour Nagar Trichy-620005",
-      "contactName": "Sulaiman",
-      "contactNumber": "+91-9787921226"
-    },
-    {
-      "name": "Pizza Palace",
-      "status": "Active",
-      "address": "No 10 Main Street, Chennai-600012",
-      "contactName": "Rahul",
-      "contactNumber": "+91-9876543210"
-    },
-  ];
-
-  void _deleteStore(int index) {
-    setState(() {
-      storeData.removeAt(index);
-    });
-  }
-
-  void _toggleStatus(int index) {
-    setState(() {
-      storeData[index]["status"] =
-          storeData[index]["status"] == "Active" ? "Inactive" : "Active";
-    });
   }
 
   @override
@@ -129,9 +100,19 @@ class _StoreListState extends State<StoreList> {
                 children: [
                   Stack(
                     children: [
-                      Image.asset(
-                        e.image.toString(),
-                      ),
+                      Image.network(
+                          AppConstants.imgBaseUrl + e.frontImg.toString(),
+                          width: 90,
+                          height: 90,
+                          fit: BoxFit.fill, errorBuilder: (BuildContext context,
+                              Object exception, StackTrace? stackTrace) {
+                        return Image.asset(
+                          AppAssets.admin_store_list_image,
+                          // width: 90,
+                          // height: 90,
+                          // fit: BoxFit.cover,
+                        );
+                      }),
 
                       // Image.asset(
                       //   AppAssets.admin_store_list_image,
@@ -140,18 +121,20 @@ class _StoreListState extends State<StoreList> {
                         top: 12.0,
                         left: 12.0,
                         child: GestureDetector(
-                          onTap: () => _toggleStatus(index),
+                          onTap: () {}, //_toggleStatus(index),
                           child: Container(
                             decoration: BoxDecoration(
-                              color: e.storestatus == "Active"
+                              color: e.storeStatus == "Active"
                                   ? Colors.green
-                                  : Colors.grey,
+                                  : AppColors.red,
                               borderRadius: BorderRadius.circular(6.0),
                             ),
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 8.0, vertical: 4.0),
                             child: Text(
-                              e.storestatus.toString(), // store["status"]!,
+                              e.storeStatus.toString() == 1
+                                  ? 'Active'
+                                  : "Not Active", // store["status"]!,
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 13.0,
@@ -169,7 +152,7 @@ class _StoreListState extends State<StoreList> {
                         children: [
                           Expanded(
                             child: Text(
-                              e.storename.toString(),
+                              e.name.toString(),
                               //store["name"]!,
                               style: const TextStyle(
                                 fontSize: 18,
@@ -213,7 +196,7 @@ class _StoreListState extends State<StoreList> {
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(
-                              e.storeAddress.toString(),
+                              e.address.toString(),
                               // store["address"]!,
                               style: const TextStyle(color: Colors.black),
                             ),
@@ -258,7 +241,7 @@ class _StoreListState extends State<StoreList> {
                                 .start, // Align text to the left
                             children: [
                               Text(
-                                e.storeOwnername.toString(),
+                                e.owner_name.toString(),
                                 // store["contactName"]!,
                                 style: const TextStyle(
                                   fontWeight: FontWeight.bold,
@@ -266,7 +249,7 @@ class _StoreListState extends State<StoreList> {
                                 ),
                               ),
                               Text(
-                                e.storeOwnernumber.toString(),
+                                e.mobile.toString(),
                                 // store["contactNumber"]!,
                                 style: const TextStyle(color: Colors.black),
                               ),

@@ -1719,10 +1719,28 @@ class NamFoodApiService {
 
   // Store Api
 
-  // Menu Lit
+  // Menu List
   Future getmenuList() async {
     try {
       final url = Uri.parse('${liveApiPath}v1/getallitem');
+      final response = await client.get(
+        url,
+        headers: headerData,
+      );
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        return response;
+      }
+    } catch (e) {
+      return e;
+    }
+  }
+
+  // MyStoreDetails
+  Future getMyStoreDetails() async {
+    try {
+      final url = Uri.parse('${liveApiPath}v1/mystoredetails');
       final response = await client.get(
         url,
         headers: headerData,
@@ -1798,7 +1816,7 @@ class NamFoodApiService {
   // update menu stock
   Future updatemenustock(postData) async {
     try {
-      final url = Uri.parse('${liveApiPath}v1/updateitem');
+      final url = Uri.parse('${liveApiPath}v1/itemstockupdate');
       final response = await client.post(url,
           headers: headerData, body: jsonEncode(postData));
 
@@ -1812,6 +1830,82 @@ class NamFoodApiService {
       }
     } catch (e) {
       print('catcherror ${e}');
+      return e;
+    }
+  }
+
+  // update Store Status
+
+  Future updateStoreStatus(postData) async {
+    try {
+      final url = Uri.parse('${liveApiPath}v1/storestatusupdate');
+      final response = await client.post(url,
+          headers: headerData, body: jsonEncode(postData));
+
+      if (response.statusCode == 200) {
+        final json = response.body;
+        return json;
+      } else {
+        print('error');
+        throw Exception(
+            'Failed. Status code: ${response.statusCode} ${response.toString()}');
+      }
+    } catch (e) {
+      print('catcherror ${e}');
+      return e;
+    }
+  }
+
+  // Admin
+
+  // Store List
+  Future getStoreList() async {
+    try {
+      final url = Uri.parse('${liveApiPath}v1/getallstorebyadmin');
+      final response = await client.get(
+        url,
+        headers: headerData,
+      );
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        return response;
+      }
+    } catch (e) {
+      return e;
+    }
+  }
+
+  //Add Store
+
+  Future addstore(
+      String apiCtrl, Map<String, dynamic> postData, imageFile) async {
+    try {
+      final url = Uri.parse(liveApiPath + apiCtrl);
+
+      var headers = headerData;
+      var request = http.MultipartRequest(
+        'POST',
+        url,
+      );
+      request.headers.addAll(headerData);
+
+      for (var entry in postData.entries) {
+        request.fields[entry.key] = entry.value.toString();
+      }
+      if (imageFile != null) {
+        var image = await http.MultipartFile.fromPath('media', imageFile!.path);
+        request.files.add(image);
+      }
+      request.headers.addAll(headers);
+      var response = await request.send();
+      if (response.statusCode == 200) {
+        final json = await response.stream.bytesToString();
+        return json;
+      } else {
+        return [];
+      }
+    } catch (e) {
       return e;
     }
   }

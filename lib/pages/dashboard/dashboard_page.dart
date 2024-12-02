@@ -10,6 +10,8 @@ import '../../widgets/custom_text_field.dart';
 import '../../widgets/svgiconButtonWidget.dart';
 import '../models/dashboard_order_list_model.dart';
 import '../order/orderdetails.dart';
+import '../store_menu/mystoredetails_model.dart';
+import '../store_menu/storestatusupdate_model.dart';
 import 'order_status_model.dart';
 import 'store_order_list_model.dart';
 
@@ -31,14 +33,11 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   void initState() {
     super.initState();
-
+    getMyStoreDetails();
     getAllStoreOrders();
   }
 
- 
   bool isLoading = false;
-
-
 
   List<StoreOrderListData> orderList = [];
   List<StoreOrderListData> orderListAll = [];
@@ -95,11 +94,9 @@ class _DashboardPageState extends State<DashboardPage> {
     setState(() {});
   }
 
-
   List<StoreOrderListData> filterOrdersByStatus(String status) {
     return orderListAll.where((entry) => entry.orderStatus == status).toList();
   }
-
 
   Future orderStatusUpdate(int orderId, String status) async {
     try {
@@ -119,6 +116,71 @@ class _DashboardPageState extends State<DashboardPage> {
       }
     } catch (error) {
       showInSnackBar(context, error.toString());
+    }
+  }
+
+// My Store List
+
+  StoreDetails? MyStoreDetails;
+
+  Future getMyStoreDetails() async {
+    await apiService.getBearerToken();
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      var result = await apiService.getMyStoreDetails();
+      var response = myStoreDetailsmodelFromJson(result);
+      if (response.status.toString() == 'SUCCESS') {
+        setState(() {
+          MyStoreDetails = response.list;
+          isLoading = false;
+        });
+      } else {
+        setState(() {
+          MyStoreDetails = null;
+          isLoading = false;
+        });
+        showInSnackBar(context, response.message.toString());
+      }
+    } catch (e) {
+      setState(() {
+        MyStoreDetails = null;
+        isLoading = false;
+      });
+      showInSnackBar(context, 'Error occurred: $e');
+    }
+
+    setState(() {});
+  }
+
+  // Store Status Update
+
+  Future updateStoreStatus(status) async {
+    await apiService.getBearerToken();
+
+    Map<String, dynamic> postData = {"store_status": status};
+    print("store_status $postData");
+    var result = await apiService.updateStoreStatus(postData);
+
+    StoreStatusUpdatemodel response = storeStatusUpdatemodelFromJson(result);
+
+    if (response.status.toString() == 'SUCCESS') {
+      showInSnackBar(context, response.message.toString());
+      //    Navigator.pop(context);
+      setState(() {
+        getMyStoreDetails(); // Update the state variable
+      });
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) => Third_party_List(),
+      //   ),
+      // );
+    } else {
+      print(response.message.toString());
+      showInSnackBar(context, response.message.toString());
     }
   }
 
@@ -146,28 +208,31 @@ class _DashboardPageState extends State<DashboardPage> {
                   SizedBox(
                     width: 8.0,
                   ),
-                    Padding(
-                padding: const EdgeInsets.symmetric(vertical: 0.0),
-                child: Transform.scale(
-                    scale: 0.9,
-                    child:
-                  Switch(
-                    value: isOnDuty,
-                    onChanged: (value) {
-                      setState(() {
-                        isOnDuty = value;
-                        if (isOnDuty == true) {
-                          toggleTitle = "On Duty";
-                        } else {
-                          toggleTitle = "Off Duty";
-                        }
-                      });
-                    },
-                    activeColor: Colors.white,
-                    activeTrackColor: Colors.green,
-                    inactiveThumbColor: Colors.grey,
-                    inactiveTrackColor: Colors.grey.shade300,
-                  ))),
+                  Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 0.0),
+                      child: Transform.scale(
+                          scale: 0.9,
+                          child: Switch(
+                            value:
+                                MyStoreDetails!.storeStatus == 1, // isOnDuty,
+                            onChanged: (value1) {
+                              setState(() {
+                                isOnDuty = value1;
+                                print(MyStoreDetails!.storeStatus);
+                                if (MyStoreDetails!.storeStatus == 1) {
+                                  toggleTitle = "Off Duty";
+                                } else {
+                                  toggleTitle = "On Duty";
+                                }
+                                updateStoreStatus(value1 ? 1 : 0);
+                                print(value1 ? 1 : 0);
+                              });
+                            },
+                            activeColor: Colors.white,
+                            activeTrackColor: Colors.green,
+                            inactiveThumbColor: Colors.grey,
+                            inactiveTrackColor: Colors.grey.shade300,
+                          ))),
                 ],
               ),
             )
@@ -195,9 +260,12 @@ class _DashboardPageState extends State<DashboardPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    _buildStatusTab('Pending (${pendingList.length.toString()})', 0),
-                    _buildStatusTab('Preparing (${preparingList.length.toString()})', 1),
-                    _buildStatusTab('Ready (${readyList.length.toString()})', 2),
+                    _buildStatusTab(
+                        'Pending (${pendingList.length.toString()})', 0),
+                    _buildStatusTab(
+                        'Preparing (${preparingList.length.toString()})', 1),
+                    _buildStatusTab(
+                        'Ready (${readyList.length.toString()})', 2),
                   ],
                 ),
               ),
@@ -220,18 +288,18 @@ class _DashboardPageState extends State<DashboardPage> {
                         child: InkWell(
                           onTap: () {
                             // Handle order notification tap
-                             Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => OrderDetails(
-                              orderId: item.invoiceNumber.toString(),
-                              time: item.prepareMin.toString(),
-                              totalPrice: item.totalPrice.toString(),
-                              orderitems: item.items,
-                              paymentMethod: item.paymentMethod.toString(),
-                            ),
-                          ),
-                        );
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => OrderDetails(
+                                  orderId: item.invoiceNumber.toString(),
+                                  time: item.prepareMin.toString(),
+                                  totalPrice: item.totalPrice.toString(),
+                                  orderitems: item.items,
+                                  paymentMethod: item.paymentMethod.toString(),
+                                ),
+                              ),
+                            );
                           },
                           child: Padding(
                             padding: const EdgeInsets.all(16.0),
@@ -376,7 +444,8 @@ class _DashboardPageState extends State<DashboardPage> {
                                     InkWell(
                                       onTap: () {
                                         // Handle order notification tap
-                                        makePhoneCall(item.customerMobile.toString());
+                                        makePhoneCall(
+                                            item.customerMobile.toString());
                                       },
                                       child: Container(
                                         padding: EdgeInsets.all(12.0),
@@ -435,11 +504,10 @@ class _DashboardPageState extends State<DashboardPage> {
                                         fontSize: 13.0,
                                         height: 50.0,
                                         onTap: () {
-
-                                          orderStatusUpdate(item.items[0].orderId, "Ready to Pickup");
-
-                                        }
-                                        ),
+                                          orderStatusUpdate(
+                                              item.items[0].orderId,
+                                              "Ready to Pickup");
+                                        }),
                                   ],
                                 ),
                               ],
@@ -664,8 +732,8 @@ class _DashboardPageState extends State<DashboardPage> {
                                     ),
                                   ],
                                 ),
-                               const SizedBox(height: 10.0),
-                                 const DottedLine(
+                                const SizedBox(height: 10.0),
+                                const DottedLine(
                                   direction: Axis.horizontal,
                                   dashColor: AppColors.black,
                                   lineLength: 320,
@@ -674,26 +742,23 @@ class _DashboardPageState extends State<DashboardPage> {
                                 ),
                                 const SizedBox(height: 10.0),
 
-                                 SvgIconButtonWidget(
-                                        title: ' Done ',
-                                        // color: AppColors.light,
-                                        color: Colors.red,
-                                        borderColor: Colors.red,
-                                        titleColor: AppColors.light,
-                                        // titleColor: AppColors.dark,
-                                        // borderColor: AppColors.dark,
-                                        leadingIcon:
-                                            Icon(Icons.check_circle_outline),
-                                        width: 150.0,
-                                        fontSize: 13.0,
-                                        height: 50.0,
-                                        onTap: () {
-
-                                          orderStatusUpdate(item.items[0].orderId, "Order Picked");
-
-                                        }
-                                        ),
-
+                                SvgIconButtonWidget(
+                                    title: ' Done ',
+                                    // color: AppColors.light,
+                                    color: Colors.red,
+                                    borderColor: Colors.red,
+                                    titleColor: AppColors.light,
+                                    // titleColor: AppColors.dark,
+                                    // borderColor: AppColors.dark,
+                                    leadingIcon:
+                                        Icon(Icons.check_circle_outline),
+                                    width: 150.0,
+                                    fontSize: 13.0,
+                                    height: 50.0,
+                                    onTap: () {
+                                      orderStatusUpdate(item.items[0].orderId,
+                                          "Order Picked");
+                                    }),
                               ],
                             ),
                           ),
