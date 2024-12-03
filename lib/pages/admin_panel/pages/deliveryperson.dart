@@ -6,13 +6,17 @@ import 'package:namstore/widgets/outline_btn_widget.dart';
 import 'package:namstore/widgets/sub_heading_widget.dart';
 
 import '../../../constants/app_colors.dart';
+import '../../../constants/app_constants.dart';
 import '../../../services/comFuncService.dart';
 import '../../../services/nam_food_api_service.dart';
 import '../../../widgets/button1_widget.dart';
+import '../api_model/assign_deliveryboy_model.dart';
+import '../api_model/deliveryperson_list_model.dart';
 import '../models/delivery_person_model.dart';
 
 class Deliveryperson extends StatefulWidget {
-  const Deliveryperson({super.key});
+  int? orderId;
+  Deliveryperson({super.key, this.orderId});
 
   @override
   State<Deliveryperson> createState() => _DeliverypersonState();
@@ -24,47 +28,69 @@ class _DeliverypersonState extends State<Deliveryperson> {
   @override
   void initState() {
     super.initState();
-
-    getdeliveryperson();
+    print(widget.orderId);
+    getalldeliverypersonlist();
   }
 
   //deliveryperson
-  List<deliverypersons> deliverypersonpage = [];
-  List<deliverypersons> deliverypersonpageAll = [];
-  bool isLoading1 = false;
+  List<ListDeliveryPerson> deliverypersonlistpage = [];
+  List<ListDeliveryPerson> deliverypersonlistpageAll = [];
+  bool isLoading = false;
 
-  Future getdeliveryperson() async {
+  Future getalldeliverypersonlist() async {
     setState(() {
-      isLoading1 = true;
+      isLoading = true;
     });
 
     try {
-      var result = await apiService.getdeliveryperson();
-      var response = deliverypersonmodelFromJson(result);
+      var result = await apiService.getalldeliverypersonlist();
+      var response = getallDeliveryPersonmodelFromJson(result);
       if (response.status.toString() == 'SUCCESS') {
         setState(() {
-          deliverypersonpage = response.list;
-          deliverypersonpageAll = deliverypersonpage;
-          isLoading1 = false;
+          deliverypersonlistpage = response.list;
+          deliverypersonlistpageAll = deliverypersonlistpage;
+          isLoading = false;
         });
       } else {
         setState(() {
-          deliverypersonpage = [];
-          deliverypersonpageAll = [];
-          isLoading1 = false;
+          deliverypersonlistpage = [];
+          deliverypersonlistpageAll = [];
+          isLoading = false;
         });
         showInSnackBar(context, response.message.toString());
       }
     } catch (e) {
       setState(() {
-        deliverypersonpage = [];
-        deliverypersonpageAll = [];
-        isLoading1 = false;
+        deliverypersonlistpage = [];
+        deliverypersonlistpageAll = [];
+        isLoading = false;
       });
       showInSnackBar(context, 'Error occurred: $e');
     }
 
     setState(() {});
+  }
+
+  Future<void> assignDeliveryboy(String deliveryboy_id) async {
+    Map<String, dynamic> postData = {
+      "order_id": widget.orderId,
+      "delivery_partner_id": deliveryboy_id
+    };
+
+    try {
+      var result = await apiService.assignDeliveryboy(postData);
+      AssignDeliveryBoymodel response = assignDeliveryBoymodelFromJson(result);
+
+      if (response.status == 'SUCCESS') {
+        setState(() {});
+        showInSnackBar(context, response.message);
+      } else {
+        showInSnackBar(context, response.message);
+      }
+    } catch (error) {
+      print('Error adding quantity: $error');
+      showInSnackBar(context, 'Failed to add quantity. Please try again.');
+    }
   }
 
   @override
@@ -87,9 +113,9 @@ class _DeliverypersonState extends State<Deliveryperson> {
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
         child: ListView.builder(
-          itemCount: deliverypersonpage.length,
+          itemCount: deliverypersonlistpage.length,
           itemBuilder: (context, index) {
-            final e = deliverypersonpage[index];
+            final e = deliverypersonlistpage[index];
             return ListTile(
                 leading: Container(
                   height: 45,
@@ -97,21 +123,40 @@ class _DeliverypersonState extends State<Deliveryperson> {
                   decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border: Border.all(color: AppColors.grey1)),
-                  child: Image.asset(
-                    // AppAssets.UserRounded,
-                    e.image.toString(),
-                    width: 18,
-                    height: 18,
-                  ),
+                  child: e.imageUrl == null
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Image.asset(
+                            AppAssets.UserRounded,
+                            width: 18,
+                            height: 18,
+                          ),
+                        )
+                      : ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Image.network(
+                            AppConstants.imgBaseUrl + e.imageUrl.toString(),
+                            width: 18,
+                            height: 18,
+                          ),
+                        ),
+                  //  Image.asset(
+                  //   // AppAssets.UserRounded,
+                  //   e.image.toString(),
+                  //   width: 18,
+                  //   height: 18,
+                  // ),
                 ),
                 title: SubHeadingWidget(
                   title: 'Name',
                 ),
                 subtitle: HeadingWidget(
-                  title: e.title.toString(),
+                  title: e.fullname.toString(),
                 ),
                 trailing: GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    assignDeliveryboy(e.id.toString());
+                  },
                   child: Container(
                     padding: EdgeInsets.all(8.0),
                     decoration: BoxDecoration(

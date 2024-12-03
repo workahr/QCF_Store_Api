@@ -151,6 +151,22 @@ class _ReportPageState extends State<ReportPage> {
                                         TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                 ),
+                                Expanded(
+                                  flex: 2,
+                                  child: Text(
+                                    'Method',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 2,
+                                  child: Text(
+                                    'Amount',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                )
                               ],
                             ),
                           ),
@@ -191,6 +207,14 @@ class _ReportPageState extends State<ReportPage> {
                                         decorationColor: AppColors.red,
                                       ),
                                     ),
+                                  ),
+                                  Expanded(
+                                    flex: 2,
+                                    child: Text(e.date),
+                                  ),
+                                  Expanded(
+                                    flex: 2,
+                                    child: Text(e.date),
                                   ),
                                   Expanded(
                                     flex: 2,

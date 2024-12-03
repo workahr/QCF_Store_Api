@@ -31,16 +31,15 @@ class _LoginPageState extends State<LoginPage> {
 
   var obscureText = true;
 
-
   Future login() async {
     try {
-       showInSnackBar(context, 'Processing...');
+      showInSnackBar(context, 'Processing...');
 
       if (usernameCtrl.text != "" && passwordCtrl.text != "") {
         Map<String, dynamic> postData = {
-         "username":usernameCtrl.text,
-         "password":passwordCtrl.text,
-         "mobile_push_id":""
+          "username": usernameCtrl.text,
+          "password": passwordCtrl.text,
+          "mobile_push_id": ""
         };
         var result = await apiService.storeLogin(postData);
         LoginModel response = loginModelFromJson(result);
@@ -48,23 +47,21 @@ class _LoginPageState extends State<LoginPage> {
         closeSnackBar(context: context);
 
         if (response.status.toString() == 'SUCCESS') {
-       
           final prefs = await SharedPreferences.getInstance();
 
           //prefs.setString('fullname', response.fullname ?? '');
 
-            if(response.authToken != null){
-              Navigator.pushNamed(context, '/');
-              prefs.setString('auth_token', response.authToken ?? '');
-              prefs.setBool('isLoggedin', true);
-              prefs.setInt('role', response.role);
+          if (response.authToken != null) {
+            Navigator.pushNamed(context, '/');
+            prefs.setString('auth_token', response.authToken ?? '');
+            prefs.setBool('isLoggedin', true);
+            prefs.setInt('role', response.role);
 
+            Navigator.pushNamedAndRemoveUntil(
+                context, '/home', ModalRoute.withName('/home'));
+          }
 
-                Navigator.pushNamedAndRemoveUntil(
-          context, '/home', ModalRoute.withName('/home'));
-            }
-
-         setState(() { });
+          setState(() {});
         } else {
           showInSnackBar(context, response.message.toString());
         }
@@ -75,6 +72,7 @@ class _LoginPageState extends State<LoginPage> {
       showInSnackBar(context, error.toString());
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -118,7 +116,7 @@ class _LoginPageState extends State<LoginPage> {
                     validator:
                         authValidation.errValidateMobileNo(usernameCtrl.text),
                     width: MediaQuery.of(context).size.width / 1.1,
-                    type: const TextInputType.numberWithOptions(),
+                    // type: const TextInputType.numberWithOptions(),
                     prefixIcon: Image.asset(AppAssets.UserRounded),
                   ),
 

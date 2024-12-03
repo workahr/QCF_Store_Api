@@ -5,6 +5,7 @@ import 'package:namstore/constants/app_colors.dart';
 import '../../../constants/app_constants.dart';
 import '../../../services/comFuncService.dart';
 import '../../../services/nam_food_api_service.dart';
+import '../api_model/delete_store_model.dart';
 import '../api_model/store_list_model.dart';
 import '../models/adminstore_model.dart';
 import 'add_store_page.dart';
@@ -63,6 +64,26 @@ class _StoreListState extends State<StoreList> {
     setState(() {});
   }
 
+  Future deleteStoreById(String storeid, String userid) async {
+    await apiService.getBearerToken();
+
+    Map<String, dynamic> postData = {"user_id": userid, "store_id": storeid};
+    print("delete $postData");
+
+    var result = await apiService.deleteStoreById(postData);
+    DeleteStoremodel response = deleteStoremodelFromJson(result);
+
+    if (response.status.toString() == 'SUCCESS') {
+      showInSnackBar(context, response.message.toString());
+      setState(() {
+        getStoreList();
+      });
+    } else {
+      print(response.message.toString());
+      showInSnackBar(context, response.message.toString());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -102,7 +123,7 @@ class _StoreListState extends State<StoreList> {
                     children: [
                       Image.network(
                           AppConstants.imgBaseUrl + e.frontImg.toString(),
-                          width: 90,
+                          width: double.infinity,
                           height: 90,
                           fit: BoxFit.fill, errorBuilder: (BuildContext context,
                               Object exception, StackTrace? stackTrace) {
@@ -124,7 +145,7 @@ class _StoreListState extends State<StoreList> {
                           onTap: () {}, //_toggleStatus(index),
                           child: Container(
                             decoration: BoxDecoration(
-                              color: e.storeStatus == "Active"
+                              color: e.storeStatus == 1
                                   ? Colors.green
                                   : AppColors.red,
                               borderRadius: BorderRadius.circular(6.0),
@@ -132,7 +153,7 @@ class _StoreListState extends State<StoreList> {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 8.0, vertical: 4.0),
                             child: Text(
-                              e.storeStatus.toString() == 1
+                              e.storeStatus == 1
                                   ? 'Active'
                                   : "Not Active", // store["status"]!,
                               style: const TextStyle(
@@ -163,7 +184,10 @@ class _StoreListState extends State<StoreList> {
                           Row(
                             children: [
                               GestureDetector(
-                                onTap: () {},
+                                onTap: () {
+                                  deleteStoreById(e.storeId.toString(),
+                                      e.userId.toString());
+                                },
                                 child: Image.asset(
                                   AppAssets.delete_round_icon,
                                   height: 40,
@@ -172,7 +196,16 @@ class _StoreListState extends State<StoreList> {
                               ),
                               SizedBox(width: 10),
                               GestureDetector(
-                                onTap: () {},
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => AddStorePage(
+                                        storeId: e.storeId,
+                                      ),
+                                    ),
+                                  );
+                                },
                                 child: Image.asset(
                                   AppAssets.edit_rounded_icon,
                                   height: 40,
