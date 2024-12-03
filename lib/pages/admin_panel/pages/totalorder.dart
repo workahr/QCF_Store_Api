@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:namstore/pages/admin_panel/pages/Individual%20order%20details.dart';
 import 'package:namstore/widgets/button_widget.dart';
 import 'package:namstore/widgets/custom_text_field.dart';
 
 import '../../../constants/app_colors.dart';
+import '../../../services/comFuncService.dart';
+import '../../../services/nam_food_api_service.dart';
 import '../../../widgets/heading_widget.dart';
 import '../../../widgets/sub_heading_widget.dart';
+import '../api_model/indivualorderpage_model.dart';
 
 class Totalorder extends StatefulWidget {
   const Totalorder({super.key});
@@ -20,6 +24,106 @@ class _TotalorderState extends State<Totalorder> {
 
   TextEditingController pickupDateCtrl = TextEditingController();
   TextEditingController pickupDateCtrl1 = TextEditingController();
+
+  final NamFoodApiService apiService = NamFoodApiService();
+
+  @override
+  void initState() {
+    super.initState();
+
+    getallOrderdetailslist();
+  }
+
+  //totalorder
+  List<IndivualOrders> indivualorderpage = [];
+  List<IndivualOrders> indivualorderpageAll = [];
+  bool isLoading1 = false;
+
+  // Future getallOrderdetailslist() async {
+  //   setState(() {
+  //     isLoading1 = true;
+  //   });
+
+  //   try {
+  //     var result = await apiService.getallOrderdetailslist();
+  //     var response = individualOrderDetailsModelFromJson(result);
+  //     if (response.status.toString() == 'SUCCESS') {
+  //       print("test");
+  //       setState(() {
+  //         indivualorderpage = response.list;
+  //         indivualorderpageAll = indivualorderpage;
+  //         isLoading1 = false;
+  //       });
+  //     } else {
+  //       setState(() {
+  //         indivualorderpage = [];
+  //         indivualorderpageAll = [];
+  //         isLoading1 = false;
+  //       });
+  //       showInSnackBar(context, response.message.toString());
+  //     }
+  //   } catch (e) {
+  //     setState(() {
+  //       indivualorderpage = [];
+  //       indivualorderpageAll = [];
+  //       isLoading1 = false;
+  //     });
+  //     showInSnackBar(context, 'Error occurred: $e');
+  //     print(e);
+  //   }
+
+  //   setState(() {});
+  // }
+
+  Future<void> getallOrderdetailslist() async {
+    setState(() {
+      isLoading1 = true;
+    });
+
+    try {
+      final result = await apiService.getallOrderdetailslist();
+      print("API result: $result"); // Check if this prints
+
+      // Log type of result and ensure it matches expected type
+      print("Result Type: ${result.runtimeType}");
+
+      // If the result is not a string, ensure it's properly converted.
+      if (result == null || result.isEmpty) {
+        throw 'No data received or empty response.';
+      }
+
+      final response = individualorderdetailsmodelFromJson(result);
+      print("Parsed Response: $response"); // Log parsed response
+
+      print(
+          "Response Status: ${response.status}"); // Ensure status is being printed
+
+      if (response.status == 'SUCCESS') {
+        print("test"); // Ensure this prints when status is 'SUCCESS'
+        setState(() {
+          indivualorderpage = response.list ?? [];
+          indivualorderpageAll = response.list ?? [];
+          isLoading1 = false;
+        });
+      } else {
+        print("Response Status is not SUCCESS: ${response.status}");
+        setState(() {
+          indivualorderpage = [];
+          indivualorderpageAll = [];
+          isLoading1 = false;
+        });
+        showInSnackBar(context, response.message ?? 'Unknown error occurred');
+      }
+    } catch (e, stackTrace) {
+      print("Error: $e\nStack Trace: $stackTrace");
+      setState(() {
+        indivualorderpage = [];
+        indivualorderpageAll = [];
+        isLoading1 = false;
+      });
+      showInSnackBar(context, 'Error: $e');
+    }
+  }
 
   errValidatepickfrom(String? value) {
     return (value) {
@@ -430,22 +534,31 @@ class _TotalorderState extends State<Totalorder> {
             ),
             Expanded(
               child: ListView.builder(
-                itemCount: 10,
+                itemCount: indivualorderpage.length,
                 itemBuilder: (context, index) {
+                  final e = indivualorderpage[index];
                   return Column(
                     children: [
                       ListTile(
                         title: HeadingWidget(
                           fontSize: 20.0,
-                          title: 'Order ID #2333563356',
+                          title: e.invoiceNumber.toString(),
                         ),
                         subtitle: SubHeadingWidget(
-                          title: '3 items | 29-Oct-2024',
+                          title:
+                              '${e.totalProduct.toString()}items | ${e.createdDate.toString()}',
                         ),
                         trailing: const Icon(
                           Icons.arrow_forward_ios,
                           size: 20,
                         ),
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(
+                            builder: (context) {
+                              return Individualorderdetails();
+                            },
+                          ));
+                        },
                       ),
                       Divider(
                         color: AppColors.grey1,

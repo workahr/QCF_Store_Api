@@ -11,6 +11,7 @@ import '../../services/comFuncService.dart';
 import '../../services/nam_food_api_service.dart';
 import '../../widgets/heading_widget.dart';
 import '../models/menu_details_model.dart';
+import 'menu_categorie.dart';
 import 'menu_edit_model.dart';
 import 'menu_list_model.dart';
 import 'mystoredetails_model.dart';
@@ -574,11 +575,45 @@ class _MenuDetailsScreenState extends State<MenuDetailsScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AddNewMenu(),
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+              ),
             ),
+            builder: (BuildContext context) {
+              return Container(
+                height: 200,
+                child: Padding(
+                  padding: EdgeInsets.all(20),
+                  child: Column(
+                    children: [
+                      ListTile(
+                        title: HeadingWidget(title: "Add New Menu"),
+                        trailing: Icon(Icons.arrow_forward_ios),
+                        onTap: () {},
+                      ),
+                      Divider(color: AppColors.grey),
+                      ListTile(
+                        title: HeadingWidget(title: "Menu Categories"),
+                        trailing: Icon(Icons.arrow_forward_ios),
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(
+                            builder: (context) {
+                              return MenuCategorie();
+                            },
+                          ));
+                        },
+                      ),
+                      Divider(color: AppColors.grey),
+                    ],
+                  ),
+                ),
+              );
+            },
           );
         },
         shape: CircleBorder(),

@@ -8,7 +8,7 @@ import '../../../services/nam_food_api_service.dart';
 import '../../../widgets/button_widget.dart';
 import '../../../widgets/custom_text_field.dart';
 import '../../../widgets/heading_widget.dart';
-import '../models/payments_page_model.dart';
+import '../api_model/payment_page_api_model.dart';
 
 class PaymentsPage extends StatefulWidget {
   const PaymentsPage({super.key});
@@ -62,7 +62,7 @@ class _PaymentsPageState extends State<PaymentsPage> {
 
     try {
       var result = await apiService.getpaymentspage();
-      var response = paymentspagemodelFromJson(result);
+      var response = paymentsPageModelFromJson(result);
       if (response.status.toString() == 'SUCCESS') {
         setState(() {
           paymentspage = response.list;
@@ -497,7 +497,7 @@ class _PaymentsPageState extends State<PaymentsPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         HeadingWidget(
-                          title: e.storename.toString(),
+                          title: e.name.toString(),
                           fontSize: 18.0,
                         ),
                         SubHeadingWidget(
@@ -523,7 +523,7 @@ class _PaymentsPageState extends State<PaymentsPage> {
                               fontWeight: FontWeight.w500,
                             ),
                             HeadingWidget(
-                              title: e.totalorder.toString(),
+                              title: e.totalOrderCount.toString(),
                               fontWeight: FontWeight.w500,
                             )
                           ],
@@ -539,7 +539,7 @@ class _PaymentsPageState extends State<PaymentsPage> {
                               fontWeight: FontWeight.w500,
                             ),
                             HeadingWidget(
-                              title: "₹${e.totalorderamount}",
+                              title: "₹${e.totalOrderAmount.toString()}",
                               fontWeight: FontWeight.w500,
                             )
                           ],
@@ -555,7 +555,7 @@ class _PaymentsPageState extends State<PaymentsPage> {
                               fontWeight: FontWeight.w500,
                             ),
                             HeadingWidget(
-                              title: "₹${e.tostore}",
+                              title: "₹${e.totalStoreAmount.toString()}",
                               fontWeight: FontWeight.w500,
                             )
                           ],
@@ -571,7 +571,7 @@ class _PaymentsPageState extends State<PaymentsPage> {
                               fontWeight: FontWeight.w500,
                             ),
                             HeadingWidget(
-                              title: "₹${e.aggregator}",
+                              title: "₹${e.totalAggregator.toString()}",
                               fontWeight: FontWeight.w500,
                             )
                           ],
@@ -587,7 +587,7 @@ class _PaymentsPageState extends State<PaymentsPage> {
                               fontWeight: FontWeight.w500,
                             ),
                             HeadingWidget(
-                              title: "₹${e.giventostore}",
+                              title: "₹${e.givenToStore.toString()}",
                               fontWeight: FontWeight.w500,
                             )
                           ],
@@ -612,7 +612,7 @@ class _PaymentsPageState extends State<PaymentsPage> {
                               fontWeight: FontWeight.bold,
                             ),
                             HeadingWidget(
-                              title: "₹${e.pendingtostore}",
+                              title: "₹${e.pendingAmount.toString()}",
                               fontWeight: FontWeight.bold,
                             )
                           ],

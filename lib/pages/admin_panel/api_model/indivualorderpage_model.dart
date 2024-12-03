@@ -41,19 +41,19 @@ class Individualorderdetailsmodel {
 }
 
 class IndivualOrders {
-  String invoiceNumber;
-  int code;
-  int totalProduct;
-  String totalPrice;
-  String deliveryCharges;
-  String orderStatus;
-  String paymentMethod;
-  int prepareMin;
+  String? invoiceNumber;
+  int? code;
+  int? totalProduct;
+  String? totalPrice;
+  String? deliveryCharges;
+  String? orderStatus;
+  String? paymentMethod;
+  int? prepareMin;
   DateTime createdDate;
-  int userId;
-  String deliveryPartnerId;
-  String customerName;
-  String customerMobile;
+  int? userId;
+  String? deliveryPartnerId;
+  String? customerName;
+  String? customerMobile;
   String? deliveryBoyName;
   String? deliveryBoyMobile;
   List<Item> items;
@@ -61,21 +61,21 @@ class IndivualOrders {
   StoreAddress storeAddress;
 
   IndivualOrders({
-    required this.invoiceNumber,
-    required this.code,
-    required this.totalProduct,
-    required this.totalPrice,
-    required this.deliveryCharges,
-    required this.orderStatus,
-    required this.paymentMethod,
-    required this.prepareMin,
+    this.invoiceNumber,
+    this.code,
+    this.totalProduct,
+    this.totalPrice,
+    this.deliveryCharges,
+    this.orderStatus,
+    this.paymentMethod,
+    this.prepareMin,
     required this.createdDate,
-    required this.userId,
-    required this.deliveryPartnerId,
-    required this.customerName,
-    required this.customerMobile,
-    required this.deliveryBoyName,
-    required this.deliveryBoyMobile,
+    this.userId,
+    this.deliveryPartnerId,
+    this.customerName,
+    this.customerMobile,
+    this.deliveryBoyName,
+    this.deliveryBoyMobile,
     required this.items,
     required this.customerAddress,
     required this.storeAddress,
@@ -125,29 +125,29 @@ class IndivualOrders {
 }
 
 class CustomerAddress {
-  int id;
-  int orderId;
-  String address;
-  String landmark;
-  String city;
-  String state;
-  String country;
-  String pincode;
-  String addressLine2;
-  int status;
+  int? id;
+  int? orderId;
+  String? address;
+  String? landmark;
+  String? city;
+  String? state;
+  String? country;
+  String? pincode;
+  String? addressLine2;
+  int? status;
   DateTime createdDate;
 
   CustomerAddress({
-    required this.id,
-    required this.orderId,
-    required this.address,
-    required this.landmark,
-    required this.city,
-    required this.state,
-    required this.country,
-    required this.pincode,
-    required this.addressLine2,
-    required this.status,
+    this.id,
+    this.orderId,
+    this.address,
+    this.landmark,
+    this.city,
+    this.state,
+    this.country,
+    this.pincode,
+    this.addressLine2,
+    this.status,
     required this.createdDate,
   });
 
@@ -182,41 +182,41 @@ class CustomerAddress {
 }
 
 class Item {
-  int orderItemId;
-  int storeId;
-  int orderId;
-  int productId;
-  String productName;
-  int userId;
-  String price;
-  int quantity;
-  String totalPrice;
-  String storePrice;
-  String storeTotalPrice;
-  dynamic imageUrl;
-  int status;
-  int createdBy;
+  int? orderItemId;
+  int? storeId;
+  int? orderId;
+  int? productId;
+  String? productName;
+  int? userId;
+  String? price;
+  int? quantity;
+  String? totalPrice;
+  String? storePrice;
+  String? storeTotalPrice;
+  String? imageUrl;
+  int? status;
+  int? createdBy;
   DateTime createdDate;
-  dynamic updatedBy;
-  dynamic updatedDate;
+  int? updatedBy;
+  DateTime updatedDate;
 
   Item({
     required this.orderItemId,
-    required this.storeId,
-    required this.orderId,
-    required this.productId,
-    required this.productName,
-    required this.userId,
-    required this.price,
-    required this.quantity,
-    required this.totalPrice,
-    required this.storePrice,
-    required this.storeTotalPrice,
-    required this.imageUrl,
-    required this.status,
-    required this.createdBy,
+    this.storeId,
+    this.orderId,
+    this.productId,
+    this.productName,
+    this.userId,
+    this.price,
+    this.quantity,
+    this.totalPrice,
+    this.storePrice,
+    this.storeTotalPrice,
+    this.imageUrl,
+    this.status,
+    this.createdBy,
     required this.createdDate,
-    required this.updatedBy,
+    this.updatedBy,
     required this.updatedDate,
   });
 
@@ -237,7 +237,7 @@ class Item {
         createdBy: json["created_by"],
         createdDate: DateTime.parse(json["created_date"]),
         updatedBy: json["updated_by"],
-        updatedDate: json["updated_date"],
+        updatedDate: DateTime.parse(json["updated_date"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -257,61 +257,61 @@ class Item {
         "created_by": createdBy,
         "created_date": createdDate.toIso8601String(),
         "updated_by": updatedBy,
-        "updated_date": updatedDate,
+        "updated_date": updatedDate.toIso8601String(),
       };
 }
 
 class StoreAddress {
-  int storeId;
-  int userId;
-  String name;
-  String mobile;
-  String email;
-  String address;
-  String city;
-  String state;
-  dynamic country;
-  dynamic logo;
-  dynamic gstNo;
-  dynamic panNo;
-  dynamic terms;
-  String zipcode;
+  int? storeId;
+  int? userId;
+  String? name;
+  String? mobile;
+  String? email;
+  String? address;
+  String? city;
+  String? state;
+  String? country;
+  String? logo;
+  int? gstNo;
+  int? panNo;
+  String? terms;
+  String? zipcode;
   dynamic frontImg;
-  String onlineVisibility;
-  dynamic tags;
-  int status;
-  dynamic createdBy;
-  dynamic createdDate;
-  dynamic updatedBy;
-  dynamic updatedDate;
-  dynamic slug;
-  int storeStatus;
+  String? onlineVisibility;
+  String? tags;
+  String? status;
+  int? createdBy;
+  DateTime createdDate;
+  int? updatedBy;
+  DateTime updatedDate;
+  String? slug;
+  int? storeStatus;
 
   StoreAddress({
-    required this.storeId,
-    required this.userId,
-    required this.name,
-    required this.mobile,
-    required this.email,
-    required this.address,
-    required this.city,
-    required this.state,
-    required this.country,
-    required this.logo,
-    required this.gstNo,
-    required this.panNo,
-    required this.terms,
-    required this.zipcode,
-    required this.frontImg,
-    required this.onlineVisibility,
-    required this.tags,
-    required this.status,
-    required this.createdBy,
+    this.storeId,
+    this.userId,
+    this.name,
+    this.mobile,
+    this.email,
+    this.address,
+    this.city,
+    this.state,
+    this.country,
+    this.logo,
+    this.gstNo,
+    this.panNo,
+    this.terms,
+    this.zipcode,
+    this.frontImg,
+    this.onlineVisibility,
+    this.tags,
+    this.status,
+    this.createdBy,
     required this.createdDate,
-    required this.updatedBy,
+    this.updatedBy,
     required this.updatedDate,
-    required this.slug,
-    required this.storeStatus,
+    this.slug,
+    this.storeStatus,
   });
 
   factory StoreAddress.fromJson(Map<String, dynamic> json) => StoreAddress(
@@ -334,9 +334,9 @@ class StoreAddress {
         tags: json["tags"],
         status: json["status"],
         createdBy: json["created_by"],
-        createdDate: json["created_date"],
+        createdDate: DateTime.parse(json["created_date"]),
         updatedBy: json["updated_by"],
-        updatedDate: json["updated_date"],
+        updatedDate: DateTime.parse(json["updated_date"]),
         slug: json["slug"],
         storeStatus: json["store_status"],
       );
@@ -361,9 +361,9 @@ class StoreAddress {
         "tags": tags,
         "status": status,
         "created_by": createdBy,
-        "created_date": createdDate,
+        "created_date": createdDate.toIso8601String(),
         "updated_by": updatedBy,
-        "updated_date": updatedDate,
+        "updated_date": updatedDate.toIso8601String(),
         "slug": slug,
         "store_status": storeStatus,
       };

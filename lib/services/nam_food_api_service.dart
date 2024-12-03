@@ -1909,4 +1909,80 @@ class NamFoodApiService {
       return e;
     }
   }
+
+// //getallorders
+//   Future getallOrderdetailslist() async {
+//     try {
+//       final url = Uri.parse('${liveApiPath}v1/getallorderbyadmin');
+//       final response = await client.get(
+//         url,
+//         headers: headerData,
+//       );
+//       if (response.statusCode == 200) {
+//         return response.body;
+//       } else {
+//         return response;
+//       }
+//     } catch (e) {
+//       return e;
+//     }
+//   }
+
+  Future<String> getallOrderdetailslist() async {
+    try {
+      final url = Uri.parse('${liveApiPath}v1/getallorderbyadmin');
+      // final response = await client.get(
+      //   url,
+      //   headers: headerData,
+      // );
+      final response = await client.get(
+        url,
+        headers: headerData,
+      );
+      return response.body ?? '';
+
+      // Debug log for response
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        return response.body; // Return the response body as String
+      } else {
+        // Handle non-200 status codes
+        print('Error: Received status code ${response.statusCode}');
+        return json.encode({
+          'status': 'ERROR',
+          'message':
+              'Failed to fetch data. Status code: ${response.statusCode}',
+          'data': null,
+        });
+      }
+    } catch (e) {
+      // Catch and log exceptions
+      print('Exception occurred: $e');
+      return json.encode({
+        'status': 'ERROR',
+        'message': 'An error occurred while making the API call',
+        'error': e.toString(),
+      });
+    }
+  }
+
+// paymentpage
+  Future getPaymentpage() async {
+    try {
+      final url = Uri.parse('${liveApiPath}v1/getallstorepayment');
+      final response = await client.get(
+        url,
+        headers: headerData,
+      );
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        return response;
+      }
+    } catch (e) {
+      return e;
+    }
+  }
 }
