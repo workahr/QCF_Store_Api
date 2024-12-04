@@ -8,6 +8,7 @@ import '../api_model/dashboard_orderlist_model.dart';
 import '../models/admindashboard_model.dart';
 import 'delivery_person_list.dart';
 import 'deliveryperson.dart';
+import 'totalorder.dart';
 
 class AdminDashboardPage extends StatefulWidget {
   @override
@@ -90,7 +91,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
   }
 
   int? totalTodayOrdersCount;
-  late double totalTodayOrderPrice;
+  double? totalTodayOrderPrice;
   void calculateTodayOrders() {
     DateTime now = DateTime.now();
     DateTime startOfToday = DateTime(now.year, now.month, now.day);
@@ -104,7 +105,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
     int totalTodayProducts =
         todayOrders.fold(0, (sum, order) => sum + (order.totalProduct ?? 0));
     totalTodayOrderPrice = todayOrders.fold(0.0, (sum, order) {
-      return sum + double.tryParse(order.totalPrice ?? '0')!;
+      return sum! + double.tryParse(order.totalPrice ?? '0')!;
     });
 
     print("Today's Orders Count: $totalTodayOrdersCount");
@@ -217,48 +218,58 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                       ),
                     ),
                   ),
-                  IntrinsicHeight(
-                      child: SizedBox(
-                    height: 120,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Colors.grey.shade300),
-                        color: Color(0xFFFBFBFB),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Total Orders",
-                              style:
-                                  TextStyle(fontSize: 16, color: Colors.black),
-                            ),
-                            SizedBox(height: 25),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Totalorder(),
+                          ),
+                        );
+                      },
+                      child: IntrinsicHeight(
+                          child: SizedBox(
+                        height: 120,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(color: Colors.grey.shade300),
+                            color: Color(0xFFFBFBFB),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Image.asset(
-                                  AppAssets.textedit_icon,
-                                  height: 25,
-                                  width: 25,
-                                ),
                                 Text(
-                                  "$totalOrdersCount",
+                                  "Total Orders",
                                   style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
+                                      fontSize: 16, color: Colors.black),
+                                ),
+                                SizedBox(height: 25),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Image.asset(
+                                      AppAssets.textedit_icon,
+                                      height: 25,
+                                      width: 25,
+                                    ),
+                                    Text(
+                                      "$totalOrdersCount",
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
-                          ],
+                          ),
                         ),
-                      ),
-                    ),
-                  )),
+                      ))),
                   IntrinsicHeight(
                       child: SizedBox(
                     height: 120,
@@ -289,7 +300,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                                   width: 25,
                                 ),
                                 Text(
-                                  " $totalTodayOrderPrice",
+                                  "₹$totalTodayOrderPrice",
                                   style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold),
@@ -391,9 +402,10 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                               Container(
                                 decoration: BoxDecoration(
                                   color: e.orderStatus == "Order Confirmed" ||
-                                          e.orderStatus == "On Delivery"
+                                          e.orderStatus == "On Delivery" ||
+                                          e.orderStatus == "Order Placed"
                                       ? Colors.green
-                                      : Color(0xFFF9B361),
+                                      : AppColors.red,
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 padding: const EdgeInsets.all(5.0),
@@ -462,69 +474,74 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                             ],
                           ),
                           Divider(height: 20, color: Color(0xFFE8E8E8)),
-                          e.orderStatus == "Order Confirmed"
-                              ? GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => Deliveryperson(
-                                          orderId:
-                                              currentCustomerAddress.orderId,
+                          if (e.orderStatus != "Cancelled")
+                            e.deliveryPartnerId == '0'
+                                ? GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => Deliveryperson(
+                                            orderId:
+                                                currentCustomerAddress.orderId,
+                                          ),
                                         ),
-                                      ),
-                                    );
-                                  },
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        "Click to Assign Delivery Person",
-                                        style: TextStyle(
-                                            fontSize: 16, color: AppColors.red),
-                                      ),
-                                      Image.asset(AppAssets.forward_icon,
-                                          height: 25, width: 25),
-                                    ],
-                                  ),
-                                )
-                              : Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text("Delivery Person Details:",
-                                        style: TextStyle(fontSize: 14)),
-                                    SizedBox(height: 10),
-                                    Row(
+                                      );
+                                    },
+                                    child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Row(
-                                          children: [
-                                            CircleAvatar(
-                                              radius: 15,
-                                              backgroundColor: Colors.grey[300],
-                                              child: Image.asset(
-                                                  AppAssets.UserRounded,
-                                                  height: 20),
-                                            ),
-                                            SizedBox(width: 10),
-                                            Text(e.deliveryBoyName ?? '',
-                                                style: TextStyle(fontSize: 16)),
-                                          ],
+                                        Text(
+                                          "Click to Assign Delivery Person",
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: AppColors.red),
                                         ),
-                                        CircleAvatar(
-                                          radius: 15,
-                                          backgroundColor: AppColors.red,
-                                          child: Image.asset(
-                                              AppAssets.call_icon,
-                                              height: 25,
-                                              color: Colors.white),
-                                        ),
+                                        Image.asset(AppAssets.forward_icon,
+                                            height: 25, width: 25),
                                       ],
                                     ),
-                                  ],
-                                ),
+                                  )
+                                : Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text("Delivery Person Details:",
+                                          style: TextStyle(fontSize: 14)),
+                                      SizedBox(height: 10),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              CircleAvatar(
+                                                radius: 15,
+                                                backgroundColor:
+                                                    Colors.grey[300],
+                                                child: Image.asset(
+                                                    AppAssets.UserRounded,
+                                                    height: 20),
+                                              ),
+                                              SizedBox(width: 10),
+                                              Text(e.deliveryBoyName ?? '',
+                                                  style:
+                                                      TextStyle(fontSize: 16)),
+                                            ],
+                                          ),
+                                          CircleAvatar(
+                                            radius: 15,
+                                            backgroundColor: AppColors.red,
+                                            child: Image.asset(
+                                                AppAssets.call_icon,
+                                                height: 25,
+                                                color: Colors.white),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                         ],
                       ),
                     ),

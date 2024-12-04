@@ -11,7 +11,7 @@ Future getscreenshotpageJsonData() async {
         "mobilenumber": "+91-9787921226",
         "date": "29-Oct-2024",
         "amount": "30,000.00",
-        "image": "images/payment.png",
+        "image": "assets/images/payment.png",
         "imageno": "20241103_16.jpg",
         "status": 1,
         "active": 1,

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:namstore/widgets/heading_widget.dart';
 import 'package:namstore/widgets/sub_heading_widget.dart';
 
 import '../../../constants/app_colors.dart';
 import '../../../services/comFuncService.dart';
 import '../../../services/nam_food_api_service.dart';
+import '../api_model/paymentreport_model.dart';
 import '../models/report_model.dart';
 
 class ReportPage extends StatefulWidget {
@@ -20,21 +22,21 @@ class _ReportPageState extends State<ReportPage> {
   @override
   void initState() {
     super.initState();
-    getreportpage();
+    getallstorepaymentlist();
   }
 
-  List<ReportList> reportlistpage = [];
-  List<ReportList> reportlistpageAll = [];
+  List<PaymentList> reportlistpage = [];
+  List<PaymentList> reportlistpageAll = [];
   bool isLoading = false;
 
-  Future getreportpage() async {
+  Future getallstorepaymentlist() async {
     setState(() {
       isLoading = true;
     });
 
     try {
-      var result = await apiService.getreportpage();
-      var response = reportmodelFromJson(result);
+      var result = await apiService.getallstorepaymentlist();
+      var response = paymentReportmodelFromJson(result);
       if (response.status.toString() == 'SUCCESS') {
         setState(() {
           reportlistpage = response.list;
@@ -174,7 +176,8 @@ class _ReportPageState extends State<ReportPage> {
                       } else {
                         // Data Rows
                         final e = reportlistpage[index - 1]; // Offset by 1
-
+                        String formattedDate =
+                            DateFormat('dd-MM-yyyy').format(e.date);
                         return Column(
                           children: [
                             SizedBox(
@@ -195,12 +198,12 @@ class _ReportPageState extends State<ReportPage> {
                                 children: [
                                   Expanded(
                                     flex: 1,
-                                    child: Text(e.snumber),
+                                    child: Text(e.id.toString()),
                                   ),
                                   Expanded(
                                     flex: 3,
                                     child: Text(
-                                      e.storename,
+                                      e.storeName.toString(),
                                       style: TextStyle(
                                         color: AppColors.red,
                                         decoration: TextDecoration.underline,
@@ -209,16 +212,16 @@ class _ReportPageState extends State<ReportPage> {
                                     ),
                                   ),
                                   Expanded(
-                                    flex: 2,
-                                    child: Text(e.date),
+                                    flex: 3,
+                                    child: Text(formattedDate),
                                   ),
                                   Expanded(
                                     flex: 2,
-                                    child: Text(e.date),
+                                    child: Text(e.paymentMethod.toString()),
                                   ),
                                   Expanded(
                                     flex: 2,
-                                    child: Text(e.date),
+                                    child: Text(e.amount.toString()),
                                   ),
                                 ],
                               ),

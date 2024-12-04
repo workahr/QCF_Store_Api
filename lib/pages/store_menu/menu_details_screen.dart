@@ -594,7 +594,13 @@ class _MenuDetailsScreenState extends State<MenuDetailsScreen> {
                       ListTile(
                         title: HeadingWidget(title: "Add New Menu"),
                         trailing: Icon(Icons.arrow_forward_ios),
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(
+                            builder: (context) {
+                              return AddNewMenu();
+                            },
+                          ));
+                        },
                       ),
                       Divider(color: AppColors.grey),
                       ListTile(

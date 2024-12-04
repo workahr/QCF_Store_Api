@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:namstore/pages/admin_panel/pages/Individual%20order%20details.dart';
+import 'package:namstore/pages/admin_panel/pages/Individual_order_details.dart';
 import 'package:namstore/widgets/button_widget.dart';
 import 'package:namstore/widgets/custom_text_field.dart';
 
@@ -9,6 +9,7 @@ import '../../../services/comFuncService.dart';
 import '../../../services/nam_food_api_service.dart';
 import '../../../widgets/heading_widget.dart';
 import '../../../widgets/sub_heading_widget.dart';
+import '../api_model/dashboard_orderlist_model.dart';
 import '../api_model/indivualorderpage_model.dart';
 
 class Totalorder extends StatefulWidget {
@@ -35,45 +36,9 @@ class _TotalorderState extends State<Totalorder> {
   }
 
   //totalorder
-  List<IndivualOrders> indivualorderpage = [];
-  List<IndivualOrders> indivualorderpageAll = [];
+  List<OrderList> indivualorderpage = [];
+  List<OrderList> indivualorderpageAll = [];
   bool isLoading1 = false;
-
-  // Future getallOrderdetailslist() async {
-  //   setState(() {
-  //     isLoading1 = true;
-  //   });
-
-  //   try {
-  //     var result = await apiService.getallOrderdetailslist();
-  //     var response = individualOrderDetailsModelFromJson(result);
-  //     if (response.status.toString() == 'SUCCESS') {
-  //       print("test");
-  //       setState(() {
-  //         indivualorderpage = response.list;
-  //         indivualorderpageAll = indivualorderpage;
-  //         isLoading1 = false;
-  //       });
-  //     } else {
-  //       setState(() {
-  //         indivualorderpage = [];
-  //         indivualorderpageAll = [];
-  //         isLoading1 = false;
-  //       });
-  //       showInSnackBar(context, response.message.toString());
-  //     }
-  //   } catch (e) {
-  //     setState(() {
-  //       indivualorderpage = [];
-  //       indivualorderpageAll = [];
-  //       isLoading1 = false;
-  //     });
-  //     showInSnackBar(context, 'Error occurred: $e');
-  //     print(e);
-  //   }
-
-  //   setState(() {});
-  // }
 
   Future<void> getallOrderdetailslist() async {
     setState(() {
@@ -82,31 +47,19 @@ class _TotalorderState extends State<Totalorder> {
 
     try {
       final result = await apiService.getallOrderdetailslist();
-      print("API result: $result"); // Check if this prints
 
-      // Log type of result and ensure it matches expected type
       print("Result Type: ${result.runtimeType}");
+      final response = orderListmodelFromJson(result);
 
-      // If the result is not a string, ensure it's properly converted.
-      if (result == null || result.isEmpty) {
-        throw 'No data received or empty response.';
-      }
-
-      final response = individualorderdetailsmodelFromJson(result);
-      print("Parsed Response: $response"); // Log parsed response
-
-      print(
-          "Response Status: ${response.status}"); // Ensure status is being printed
+      print("Response Status: ${response.status}");
 
       if (response.status == 'SUCCESS') {
-        print("test"); // Ensure this prints when status is 'SUCCESS'
         setState(() {
           indivualorderpage = response.list ?? [];
           indivualorderpageAll = response.list ?? [];
           isLoading1 = false;
         });
       } else {
-        print("Response Status is not SUCCESS: ${response.status}");
         setState(() {
           indivualorderpage = [];
           indivualorderpageAll = [];

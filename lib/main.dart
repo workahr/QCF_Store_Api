@@ -8,10 +8,11 @@ import 'controllers/base_controller.dart';
 import 'package:flutter/material.dart';
 import 'constants/constants.dart';
 import 'package:upgrader/upgrader.dart';
-import 'pages/admin_panel/pages/Individual order details.dart';
+import 'pages/admin_panel/pages/Individual_order_details.dart';
 import 'pages/admin_panel/pages/totalorder.dart';
 import 'pages/auth/login_page.dart';
 import 'pages/landing_page.dart';
+import 'pages/loginmanagement.dart';
 import 'pages/maincontainer.dart';
 
 // import 'package:flutter/services.dart';
@@ -123,7 +124,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
                   showLater: false,
                   durationUntilAlertAgain: const Duration(seconds: 1),
                 ),
-                child: AdminMainContainer(),
+                child: LoginManagement(),
               ),
         },
         // home: const OrdersPayment(),

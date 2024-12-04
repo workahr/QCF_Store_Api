@@ -9,6 +9,8 @@ import '../../../widgets/button_widget.dart';
 import '../../../widgets/custom_text_field.dart';
 import '../../../widgets/heading_widget.dart';
 import '../api_model/payment_page_api_model.dart';
+import 'orders_payment.dart';
+import 'screenshot_page.dart';
 
 class PaymentsPage extends StatefulWidget {
   const PaymentsPage({super.key});
@@ -632,17 +634,34 @@ class _PaymentsPageState extends State<PaymentsPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            HeadingWidget(
-                              title: 'Orders Payment',
-                              color: AppColors.red,
-                              fontWeight: FontWeight.w500,
-                            ),
+                            GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => OrdersPayment(),
+                                    ),
+                                  );
+                                },
+                                child: HeadingWidget(
+                                  title: 'Orders Payment',
+                                  color: AppColors.red,
+                                  fontWeight: FontWeight.w500,
+                                )),
                             Text('|'),
-                            HeadingWidget(
-                              title: "View details",
-                              color: AppColors.red,
-                              fontWeight: FontWeight.w500,
-                            )
+                            GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => ScreenshotPage()),
+                                  );
+                                },
+                                child: HeadingWidget(
+                                  title: "View details",
+                                  color: AppColors.red,
+                                  fontWeight: FontWeight.w500,
+                                ))
                           ],
                         ),
                       ],

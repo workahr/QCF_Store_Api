@@ -149,9 +149,8 @@ class AppAssets {
   static const String map_location_icon = 'assets/images/map_location.png';
   static const String admin_store_list_image =
       'assets/images/admin_store_list_image.png';
-
   static const String delivery = 'assets/images/delivery.png';
   static const String shop = 'assets/images/Shop.png';
   static const String UserRounded = 'assets/images/UserRounded.png';
-  static const String report = 'images/report.png';
+  static const String report = 'assets/images/report.png';
 }

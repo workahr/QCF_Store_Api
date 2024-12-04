@@ -6,6 +6,7 @@ import 'package:namstore/widgets/sub_heading_widget.dart';
 import '../../../constants/constants.dart';
 import '../../../services/comFuncService.dart';
 import '../../../services/nam_food_api_service.dart';
+import '../api_model/dashboard_orderlist_model.dart';
 import '../api_model/indivualorderpage_model.dart';
 
 class Individualorderdetails extends StatefulWidget {
@@ -22,22 +23,22 @@ class _IndividualorderdetailsState extends State<Individualorderdetails> {
   void initState() {
     super.initState();
 
-    getdeliveryperson();
+    getindividualorderdetails();
   }
 
   //Individualorderdetails
-  List<IndivualOrders> indivualorderpage = [];
-  List<IndivualOrders> indivualorderpageAll = [];
+  List<OrderList> indivualorderpage = [];
+  List<OrderList> indivualorderpageAll = [];
   bool isLoading1 = false;
 
-  Future getdeliveryperson() async {
+  Future getindividualorderdetails() async {
     setState(() {
       isLoading1 = true;
     });
 
     try {
-      var result = await apiService.getindividualorderdetails();
-      var response = individualorderdetailsmodelFromJson(result);
+      var result = await apiService.getallOrderdetailslist();
+      final response = orderListmodelFromJson(result);
       if (response.status.toString() == 'SUCCESS') {
         setState(() {
           indivualorderpage = response.list;

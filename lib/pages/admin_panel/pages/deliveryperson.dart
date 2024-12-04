@@ -82,6 +82,8 @@ class _DeliverypersonState extends State<Deliveryperson> {
       AssignDeliveryBoymodel response = assignDeliveryBoymodelFromJson(result);
 
       if (response.status == 'SUCCESS') {
+        Navigator.pushNamedAndRemoveUntil(
+            context, '/home', ModalRoute.withName('/home'));
         setState(() {});
         showInSnackBar(context, response.message);
       } else {
@@ -89,7 +91,7 @@ class _DeliverypersonState extends State<Deliveryperson> {
       }
     } catch (error) {
       print('Error adding quantity: $error');
-      showInSnackBar(context, 'Failed to add quantity. Please try again.');
+      showInSnackBar(context, 'Failed . Please try again.');
     }
   }
 

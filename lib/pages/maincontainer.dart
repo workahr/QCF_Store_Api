@@ -3,6 +3,10 @@ import 'package:namstore/pages/admin_panel/pages/add_store_page.dart';
 import 'package:namstore/pages/admin_panel/pages/admindashboardpage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../constants/app_assets.dart';
+import 'admin_panel/pages/manage_page.dart';
+import 'admin_panel/pages/payments_page.dart';
+import 'admin_panel/pages/report_page.dart';
+import 'admin_panel/pages/screenshot_page.dart';
 import 'admin_panel/pages/store_list.dart';
 import 'dashboard/dashboard_page.dart';
 import 'order-list/orderlist_page.dart';
@@ -159,8 +163,8 @@ class _AdminMainContainerState extends State<AdminMainContainer>
   final List pageId = [1, 5, 8, 12, 15];
   static List<Widget> pageOptions = <Widget>[
     AdminDashboardPage(),
-    StoreList(),
-    OrderlistPage()
+    PaymentsPage(),
+    ManagePage()
   ];
 
   void _onItemTapped(int index) async {
@@ -248,7 +252,7 @@ class _AdminMainContainerState extends State<AdminMainContainer>
                 height: 25,
                 width: 25,
               ),
-              label: 'Store',
+              label: 'Payment',
             ),
             BottomNavigationBarItem(
               icon: Image.asset(
@@ -258,7 +262,7 @@ class _AdminMainContainerState extends State<AdminMainContainer>
                 height: 25,
                 width: 25,
               ),
-              label: 'Orders',
+              label: 'Manage',
             ),
           ],
           currentIndex: _selectedIndex,

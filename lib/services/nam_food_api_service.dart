@@ -1878,7 +1878,230 @@ class NamFoodApiService {
 
   //Add Store
 
-  Future addstore(
+  Future addstore(String apiCtrl, Map<String, dynamic> postData, imageFile,
+      imageFile1) async {
+    try {
+      final url = Uri.parse(liveApiPath + apiCtrl);
+
+      var headers = headerData;
+      var request = http.MultipartRequest(
+        'POST',
+        url,
+      );
+      request.headers.addAll(headerData);
+
+      for (var entry in postData.entries) {
+        request.fields[entry.key] = entry.value.toString();
+      }
+      if (imageFile != null) {
+        var image = await http.MultipartFile.fromPath('media', imageFile!.path);
+        request.files.add(image);
+      }
+      if (imageFile1 != null) {
+        var image =
+            await http.MultipartFile.fromPath('store_media', imageFile1!.path);
+        request.files.add(image);
+      }
+      request.headers.addAll(headers);
+      var response = await request.send();
+      if (response.statusCode == 200) {
+        final json = await response.stream.bytesToString();
+        return json;
+      } else {
+        return [];
+      }
+    } catch (e) {
+      return e;
+    }
+  }
+
+  //get StoreById
+  Future getStoreById(id) async {
+    try {
+      final url = Uri.parse('${liveApiPath}v1/getstorebyid?id=$id');
+      final response = await client.get(
+        url,
+        headers: headerData,
+      );
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        return response;
+      }
+    } catch (e) {
+      return e;
+    }
+  }
+
+  // Delivery Person List List
+  Future getalldeliverypersonlist() async {
+    try {
+      final url = Uri.parse('${liveApiPath}v1/getalldeliveryperson');
+      final response = await client.get(
+        url,
+        headers: headerData,
+      );
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        return response;
+      }
+    } catch (e) {
+      return e;
+    }
+  }
+
+  //Add Delivery Person
+
+  Future adddeliveryperson(String apiCtrl, Map<String, dynamic> postData,
+      imageFile, imageFile1, imageFileRc, imageFilePerson) async {
+    try {
+      final url = Uri.parse(liveApiPath + apiCtrl);
+
+      var headers = headerData;
+      var request = http.MultipartRequest(
+        'POST',
+        url,
+      );
+      request.headers.addAll(headerData);
+
+      for (var entry in postData.entries) {
+        request.fields[entry.key] = entry.value.toString();
+      }
+      if (imageFile != null) {
+        var image = await http.MultipartFile.fromPath(
+            'license_front_img', imageFile!.path);
+        request.files.add(image);
+      }
+      if (imageFile1 != null) {
+        var image = await http.MultipartFile.fromPath(
+            'license_back_img', imageFile1!.path);
+        request.files.add(image);
+      }
+      if (imageFileRc != null) {
+        var image =
+            await http.MultipartFile.fromPath('vehicle_img', imageFileRc!.path);
+        request.files.add(image);
+      }
+      if (imageFilePerson != null) {
+        var image =
+            await http.MultipartFile.fromPath('media', imageFilePerson!.path);
+        request.files.add(image);
+      }
+      request.headers.addAll(headers);
+      var response = await request.send();
+      if (response.statusCode == 200) {
+        final json = await response.stream.bytesToString();
+        return json;
+      } else {
+        return [];
+      }
+    } catch (e) {
+      return e;
+    }
+  }
+
+  //get delivery person ById
+  Future getDeliverypersonById(id) async {
+    try {
+      final url = Uri.parse('${liveApiPath}v1/getdeliverypersonbyid?id=$id');
+      final response = await client.get(
+        url,
+        headers: headerData,
+      );
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        return response;
+      }
+    } catch (e) {
+      return e;
+    }
+  }
+
+  // delete Store Id
+  Future deleteStoreById(postData) async {
+    print('store delete test $postData');
+    try {
+      final url = Uri.parse('${liveApiPath}v1/deletestore');
+      final response = await client.post(
+        url,
+        headers: headerData,
+        body: jsonEncode(postData),
+      );
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        return [];
+      }
+    } catch (e) {
+      return e;
+    }
+  }
+
+  // delete Delivery Person Id
+  Future deleteDeleverypersonById(postData) async {
+    print('Delivery person delete test $postData');
+    try {
+      final url = Uri.parse('${liveApiPath}v1/deletedeliveryperson');
+      final response = await client.post(
+        url,
+        headers: headerData,
+        body: jsonEncode(postData),
+      );
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        return [];
+      }
+    } catch (e) {
+      return e;
+    }
+  }
+
+// assign Delivery Boy
+  Future assignDeliveryboy(postData) async {
+    try {
+      final url = Uri.parse('${liveApiPath}v1/assigndeliveryorder');
+      print("test1 ");
+      final response = await client.post(
+        url,
+        headers: headerData,
+        body: jsonEncode(postData),
+      );
+      print("test2 ");
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        return response;
+      }
+    } catch (e) {
+      return e;
+    }
+  }
+
+  //  get All Order Detail List for Admin Dashboard
+
+  Future getallDashboardOrderdetailslist() async {
+    try {
+      final url = Uri.parse('${liveApiPath}v1/getallorderbyadmin');
+      final response = await client.get(
+        url,
+        headers: headerData,
+      );
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        return response;
+      }
+    } catch (e) {
+      return e;
+    }
+  }
+
+  // add Payment
+
+  Future addpayment(
       String apiCtrl, Map<String, dynamic> postData, imageFile) async {
     try {
       final url = Uri.parse(liveApiPath + apiCtrl);
@@ -1897,6 +2120,7 @@ class NamFoodApiService {
         var image = await http.MultipartFile.fromPath('media', imageFile!.path);
         request.files.add(image);
       }
+
       request.headers.addAll(headers);
       var response = await request.send();
       if (response.statusCode == 200) {
@@ -1910,23 +2134,23 @@ class NamFoodApiService {
     }
   }
 
-// //getallorders
-//   Future getallOrderdetailslist() async {
-//     try {
-//       final url = Uri.parse('${liveApiPath}v1/getallorderbyadmin');
-//       final response = await client.get(
-//         url,
-//         headers: headerData,
-//       );
-//       if (response.statusCode == 200) {
-//         return response.body;
-//       } else {
-//         return response;
-//       }
-//     } catch (e) {
-//       return e;
-//     }
-//   }
+  // Delivery Person List List
+  Future getallstorepaymentlist() async {
+    try {
+      final url = Uri.parse('${liveApiPath}v1/getallpayment');
+      final response = await client.get(
+        url,
+        headers: headerData,
+      );
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        return response;
+      }
+    } catch (e) {
+      return e;
+    }
+  }
 
   Future<String> getallOrderdetailslist() async {
     try {

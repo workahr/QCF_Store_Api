@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:namstore/constants/constants.dart';
 
+import 'package:namstore/pages/admin_panel/pages/store_list.dart';
+
+import 'delivery_person_list.dart';
+import 'report_page.dart';
+
 class ManagePage extends StatefulWidget {
   const ManagePage({super.key});
 
@@ -43,7 +48,10 @@ class _ManagePageState extends State<ManagePage> {
               title: const Text('Store list'),
               trailing: const Icon(Icons.arrow_forward_ios, size: 16),
               onTap: () {
-                // Add navigation or functionality here
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => StoreList()),
+                );
               },
             ),
             ListTile(
@@ -56,7 +64,10 @@ class _ManagePageState extends State<ManagePage> {
               title: const Text('Delivery person list'),
               trailing: const Icon(Icons.arrow_forward_ios, size: 16),
               onTap: () {
-                // Add navigation or functionality here
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => DeliveryPersonList()),
+                );
               },
             ),
             ListTile(
@@ -80,7 +91,10 @@ class _ManagePageState extends State<ManagePage> {
               title: const Text('Report'),
               trailing: const Icon(Icons.arrow_forward_ios, size: 16),
               onTap: () {
-                // Add navigation or functionality here
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ReportPage()),
+                );
               },
             ),
           ],

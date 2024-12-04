@@ -6,13 +6,18 @@ import 'package:namstore/widgets/button_widget.dart';
 
 import '../../../constants/app_assets.dart';
 import '../../../constants/app_colors.dart';
+import '../../../constants/app_constants.dart';
 import '../../../services/comFuncService.dart';
 import '../../../services/nam_food_api_service.dart';
 import '../../../widgets/custom_text_field.dart';
 import '../../../widgets/heading_widget.dart';
 import '../../../widgets/outline_btn_widget.dart';
 import '../../../widgets/sub_heading_widget.dart';
+import '../api_model/add_payment_model.dart';
 import '../models/screenshotpage_model.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
+import 'dart:io';
 
 class ScreenshotPage extends StatefulWidget {
   const ScreenshotPage({super.key});
@@ -92,6 +97,127 @@ class _ScreenshotPageState extends State<ScreenshotPage> {
     };
   }
 
+  Future addpayment() async {
+    await apiService.getBearerToken();
+    if (imageFile == null) {
+      showInSnackBar(context, 'Payment image is required');
+      return;
+    }
+
+    Map<String, dynamic> postData = {
+      "store_id": 5,
+      "date": DateTime.now(),
+      "amount": enteramount.text,
+      "payment_method": selectedValue,
+    };
+    print(postData);
+
+    showSnackBar(context: context);
+    // update-Car_management
+    String url = 'v1/addpayment';
+
+    var result = await apiService.addpayment(url, postData, imageFile);
+    closeSnackBar(context: context);
+    setState(() {
+      // isLoading = false;
+    });
+    Addpaymentmodel response = addpaymentmodelFromJson(result);
+
+    if (response.status.toString() == 'SUCCESS') {
+      //  showInSnackBar(context, response.message.toString());
+      // Navigator.pushNamedAndRemoveUntil(
+      //     context, '/home', ModalRoute.withName('/home'));
+
+      setState(() {});
+    } else {
+      print(response.message.toString());
+      showInSnackBar(context, response.message.toString());
+    }
+  }
+
+  XFile? imageFile;
+  File? imageSrc;
+  String? liveimgSrc;
+
+  getImage(ImageSource source) async {
+    try {
+      Navigator.pop(context);
+      final pickedImage = await ImagePicker().pickImage(source: source);
+      if (pickedImage != null) {
+        imageFile = pickedImage;
+        imageSrc = File(pickedImage.path);
+        getRecognizedText(pickedImage);
+        setState(() {});
+      }
+    } catch (e) {
+      setState(() {});
+    }
+  }
+
+  void getRecognizedText(image) async {
+    try {
+      final inputImage = InputImage.fromFilePath(image.path);
+
+      final textDetector = TextRecognizer();
+      RecognizedText recognisedText =
+          await textDetector.processImage(inputImage);
+      final resVal = recognisedText.blocks.toList();
+      List allDates = [];
+      for (TextBlock block in resVal) {
+        for (TextLine line in block.lines) {
+          String recognizedLine = line.text;
+          RegExp dateRegex = RegExp(r"\b\d{1,2}/\d{1,2}/\d{2,4}\b");
+          Iterable<Match> matches = dateRegex.allMatches(recognizedLine);
+
+          for (Match match in matches) {
+            allDates.add(match.group(0));
+          }
+        }
+      }
+
+      await textDetector.close();
+
+      print(allDates); // For example, print the dates
+    } catch (e) {
+      showInSnackBar(context, e.toString());
+    }
+  }
+
+  int type = 0;
+
+  showActionSheet(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              ListTile(
+                leading: const Icon(Icons.photo_library),
+                title: const Text('Gallery'),
+                onTap: () async {
+                  await getImage(ImageSource.gallery);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.camera_alt),
+                title: const Text('Camera'),
+                onTap: () async {
+                  await getImage(ImageSource.camera);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.close_rounded),
+                title: const Text('Close'),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          );
+        });
+  }
+
   void showpayment() {
     showDialog(
       context: context,
@@ -158,12 +284,13 @@ class _ScreenshotPageState extends State<ScreenshotPage> {
                                   ],
                                 ),
                                 Radio(
-                                  value: 'cash_on_delivery',
+                                  value: 'Cash',
                                   groupValue: selectedValue,
                                   activeColor: AppColors.red,
                                   onChanged: (value) {
                                     setState(() {
                                       selectedValue = value;
+                                      print(selectedValue);
                                     });
                                   },
                                 ),
@@ -195,12 +322,13 @@ class _ScreenshotPageState extends State<ScreenshotPage> {
                                   ],
                                 ),
                                 Radio(
-                                  value: 'Online Payment',
+                                  value: 'Online',
                                   groupValue: selectedValue,
                                   activeColor: AppColors.red,
                                   onChanged: (value) {
                                     setState(() {
                                       selectedValue = value;
+                                      print(selectedValue);
                                     });
                                   },
                                 ),
@@ -228,6 +356,58 @@ class _ScreenshotPageState extends State<ScreenshotPage> {
                         titleColor: AppColors.n_blue,
                         icon: Icons.add_a_photo_rounded,
                         iconColor: AppColors.n_blue,
+                        onTap: () {
+                          type = 0;
+                          showActionSheet(context);
+                        },
+                      ),
+                      SizedBox(height: 10),
+                      Center(
+                        child: Stack(
+                          children: [
+                            liveimgSrc != "" &&
+                                    liveimgSrc != null &&
+                                    imageSrc == null
+                                ? ClipRRect(
+                                    borderRadius: BorderRadius.circular(16),
+                                    child: Container(
+                                      width: 100,
+                                      height: 100,
+                                      decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                          image: NetworkImage(
+                                            AppConstants.imgBaseUrl +
+                                                (liveimgSrc ?? ''),
+                                          ),
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                      child: liveimgSrc == null
+                                          ? Image.asset(
+                                              AppAssets.user,
+                                              fit: BoxFit.fill,
+                                            )
+                                          : null,
+                                    ),
+                                  )
+                                : imageSrc != null
+                                    ? ClipRRect(
+                                        borderRadius: BorderRadius.circular(
+                                            16), // Adjust the radius as needed
+                                        child: Container(
+                                          width: 100,
+                                          height: 100,
+                                          decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                              image: FileImage(imageSrc!),
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    : SizedBox(),
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -239,7 +419,7 @@ class _ScreenshotPageState extends State<ScreenshotPage> {
             Center(
                 child: ElevatedButton.icon(
               onPressed: () {
-                Navigator.pop(context);
+                addpayment();
               },
               label: Text('Submit'),
               style: ElevatedButton.styleFrom(
@@ -621,8 +801,8 @@ class _ScreenshotPageState extends State<ScreenshotPage> {
         padding: const EdgeInsets.all(16),
         child: ButtonWidget(
           title: 'Add Amount',
-          width: 250,
-          height: 45,
+          width: double.infinity,
+          // height: 45.0,
           color: AppColors.red,
           borderRadius: 10,
           onTap: showpayment,
