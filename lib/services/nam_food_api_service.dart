@@ -2209,4 +2209,21 @@ class NamFoodApiService {
       return e;
     }
   }
+
+  Future getDynamicAPI(String api) async {
+    try {
+      final url = Uri.parse('$liveApiPath$api');
+      final response = await client.get(
+        url,
+        headers: headerData,
+      );
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        return response;
+      }
+    } catch (e) {
+      return e;
+    }
+  }
 }
