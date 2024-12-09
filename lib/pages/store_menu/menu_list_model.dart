@@ -41,19 +41,19 @@ class MenuListmodel {
 class MenuList {
   int itemId;
   int storeId;
-  String itemName;
-  int itemType;
+  String? itemName;
+  int? itemType;
   String? itemDesc;
-  String itemPrice;
-  String storePrice;
-  String itemOfferPrice;
-  int itemPriceType;
-  int itemCategoryId;
-  int taxId;
+  String? itemPrice;
+  String? storePrice;
+  String? itemOfferPrice;
+  int? itemPriceType;
+  int? itemCategoryId;
+  int? taxId;
   String? itemImageUrl;
-  int itemStock;
+  int? itemStock;
   String? itemTags;
-  int status;
+  int? status;
   int? createdBy;
   DateTime? createdDate;
   int? updatedBy;
@@ -62,19 +62,19 @@ class MenuList {
   MenuList({
     required this.itemId,
     required this.storeId,
-    required this.itemName,
-    required this.itemType,
+    this.itemName,
+    this.itemType,
     this.itemDesc,
-    required this.itemPrice,
-    required this.storePrice,
-    required this.itemOfferPrice,
-    required this.itemPriceType,
-    required this.itemCategoryId,
-    required this.taxId,
+    this.itemPrice,
+    this.storePrice,
+    this.itemOfferPrice,
+    this.itemPriceType,
+    this.itemCategoryId,
+    this.taxId,
     this.itemImageUrl,
-    required this.itemStock,
+    this.itemStock,
     this.itemTags,
-    required this.status,
+    this.status,
     this.createdBy,
     this.createdDate,
     this.updatedBy,

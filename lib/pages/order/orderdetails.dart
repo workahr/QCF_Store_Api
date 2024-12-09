@@ -1,5 +1,6 @@
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:namstore/widgets/heading_widget.dart';
 import 'package:namstore/widgets/sub_heading_widget.dart';
 
@@ -9,6 +10,7 @@ import '../../services/comFuncService.dart';
 import '../../services/nam_food_api_service.dart';
 import '../dashboard/order_status_model.dart';
 import '../dashboard/store_order_list_model.dart';
+import '../maincontainer.dart';
 import '../models/orderdetails_model.dart';
 import '../order_confirm_page.dart';
 
@@ -17,6 +19,7 @@ class OrderDetails extends StatefulWidget {
   final String time;
   final String totalPrice;
   final String paymentMethod;
+  final String mobilenumber;
   List<OrderItems> orderitems;
   OrderDetails(
       {super.key,
@@ -24,6 +27,7 @@ class OrderDetails extends StatefulWidget {
       required this.paymentMethod,
       required this.orderId,
       required this.time,
+      required this.mobilenumber,
       required this.totalPrice});
 
   @override
@@ -50,6 +54,18 @@ class _OrderDetailsState extends State<OrderDetails> {
   //timer
   double _minutes = 0.0;
 
+  String dateFormat(dynamic date) {
+    try {
+      DateTime dateTime = date is DateTime ? date : DateTime.parse(date);
+      String formattedTime =
+          DateFormat('h:mm a').format(dateTime).toLowerCase();
+      String formattedDate = DateFormat('dd-MMM-yyyy').format(dateTime);
+      return "$formattedTime | $formattedDate";
+    } catch (e) {
+      return "Invalid date"; // Fallback for invalid date format
+    }
+  }
+
   Future orderStatusUpdate() async {
     try {
       Map<String, dynamic> postData = {
@@ -62,6 +78,12 @@ class _OrderDetailsState extends State<OrderDetails> {
       closeSnackBar(context: context);
 
       if (response.status.toString() == 'SUCCESS') {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MainContainer(),
+          ),
+        );
         setState(() {});
       } else {
         showInSnackBar(context, response.message.toString());
@@ -75,7 +97,7 @@ class _OrderDetailsState extends State<OrderDetails> {
     try {
       Map<String, dynamic> postData = {
         "order_id": widget.orderitems[0].orderId,
-         "prepare_min": _minutes.toString()
+        "prepare_min": _minutes.toString()
       };
       var result = await apiService.orderConfirm(postData);
       OrderStatusModel response = orderStatusModelFromJson(result);
@@ -85,13 +107,11 @@ class _OrderDetailsState extends State<OrderDetails> {
       if (response.status.toString() == 'SUCCESS') {
         setState(() {
           Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => OrderConfirmPage(
-                              
-                            ),
-                          ),
-                        );
+            context,
+            MaterialPageRoute(
+              builder: (context) => OrderConfirmPage(),
+            ),
+          );
         });
       } else {
         showInSnackBar(context, response.message.toString());
@@ -131,39 +151,82 @@ class _OrderDetailsState extends State<OrderDetails> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
-                        children: [
-                          HeadingWidget(
-                            title: 'Order ID',
-                            fontWeight: FontWeight.w400,
-                          ),
-                          const SizedBox(width: 5),
-                          Container(
-                            decoration: BoxDecoration(
-                                color: AppColors.green,
-                                borderRadius: BorderRadius.circular(6)),
-                            padding: const EdgeInsets.all(4),
-                            child: Text(
-                              "New",
-                              style: TextStyle(
-                                color: AppColors.white,
-                                fontSize: 8,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                HeadingWidget(
+                                  title: 'Order ID',
+                                  fontWeight: FontWeight.w400,
+                                ),
+                                const SizedBox(width: 5),
+                                Container(
+                                  decoration: BoxDecoration(
+                                      color: AppColors.green,
+                                      borderRadius: BorderRadius.circular(6)),
+                                  padding: const EdgeInsets.all(4),
+                                  child: Text(
+                                    "New",
+                                    style: TextStyle(
+                                      color: AppColors.white,
+                                      fontSize: 8,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            InkWell(
+                              onTap: () {
+                                // Handle order notification tap
+                                makePhoneCall(widget.mobilenumber.toString());
+                              },
+                              child: Container(
+                                height: 30,
+                                width: 120,
+                                padding: EdgeInsets.all(3.0),
+                                decoration: BoxDecoration(
+                                    //color: AppColors.light,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(8.0)),
+                                    border: Border.all(color: AppColors.red)),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Image.asset(
+                                      AppAssets.call_icon,
+                                      width: 23.0,
+                                      height: 23.0,
+                                    ),
+                                    SizedBox(
+                                      width: 5.0,
+                                    ),
+                                    Text(
+                                      'Call Customer',
+                                      style: TextStyle(
+                                          color: AppColors.red, fontSize: 13),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
+                          ]),
                       const SizedBox(height: 5),
                       HeadingWidget(title: widget.orderId.toString()),
                       const SizedBox(height: 5),
                       Row(
                         children: [
-                          SubHeadingWidget(title: widget.time.toString()),
+                          SubHeadingWidget(
+                            title: dateFormat(widget.time.toString()),
+                            color: const Color.fromARGB(255, 60, 60, 60),
+                          ),
                           const SizedBox(width: 8),
                           const Text('|'),
                           const SizedBox(width: 8),
                           SubHeadingWidget(
-                              title:
-                                  '${widget.orderitems.length.toString()} items'),
+                            title:
+                                '${widget.orderitems.length.toString()} items',
+                            color: const Color.fromARGB(255, 60, 60, 60),
+                          ),
                         ],
                       ),
                     ],
@@ -175,8 +238,14 @@ class _OrderDetailsState extends State<OrderDetails> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          SubHeadingWidget(title: 'Items'),
-                          SubHeadingWidget(title: 'Qty X Price'),
+                          SubHeadingWidget(
+                            title: 'Items',
+                            color: const Color.fromARGB(255, 60, 60, 60),
+                          ),
+                          SubHeadingWidget(
+                            title: 'Qty X Price',
+                            color: const Color.fromARGB(255, 60, 60, 60),
+                          ),
                         ],
                       ),
                       const SizedBox(height: 8),

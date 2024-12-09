@@ -102,237 +102,250 @@ class _StoreListState extends State<StoreList> {
         ),
         centerTitle: true,
       ),
-      body: ListView.builder(
-        itemCount: storedetaillistpage.length,
-        shrinkWrap: true, // Let the list take only as much space as needed
-        physics: ScrollPhysics(), // Disable scrolling for ListView
-        itemBuilder: (context, index) {
-          final e = storedetaillistpage[index];
-          return Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
-                border: Border.all(color: Colors.grey.shade300),
-                color: Color(0xFFFFFFFF),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Stack(
-                    children: [
-                      Image.network(
-                          AppConstants.imgBaseUrl + e.frontImg.toString(),
-                          width: double.infinity,
-                          height: 90,
-                          fit: BoxFit.fill, errorBuilder: (BuildContext context,
-                              Object exception, StackTrace? stackTrace) {
-                        return Image.asset(
-                          AppAssets.admin_store_list_image,
-                          // width: 90,
-                          // height: 90,
-                          // fit: BoxFit.cover,
-                        );
-                      }),
+      body: isLoading
+          ? Center(child: CircularProgressIndicator())
+          : ListView.builder(
+              itemCount: storedetaillistpage.length,
+              shrinkWrap:
+                  true, // Let the list take only as much space as needed
+              physics: ScrollPhysics(), // Disable scrolling for ListView
+              itemBuilder: (context, index) {
+                final e = storedetaillistpage[index];
+                return Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      border: Border.all(color: Colors.grey.shade300),
+                      color: Color(0xFFFFFFFF),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Stack(
+                          children: [
+                            Image.network(
+                                AppConstants.imgBaseUrl + e.frontImg.toString(),
+                                width: double.infinity,
+                                height: 90,
+                                fit: BoxFit.fill, errorBuilder:
+                                    (BuildContext context, Object exception,
+                                        StackTrace? stackTrace) {
+                              return Image.asset(
+                                AppAssets.admin_store_list_image,
+                                // width: 90,
+                                // height: 90,
+                                // fit: BoxFit.cover,
+                              );
+                            }),
 
-                      // Image.asset(
-                      //   AppAssets.admin_store_list_image,
-                      // ),
-                      Positioned(
-                        top: 12.0,
-                        left: 12.0,
-                        child: GestureDetector(
-                          onTap: () {}, //_toggleStatus(index),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: e.storeStatus == 1
-                                  ? Colors.green
-                                  : AppColors.red,
-                              borderRadius: BorderRadius.circular(6.0),
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 8.0, vertical: 4.0),
-                            child: Text(
-                              e.storeStatus == 1
-                                  ? 'Active'
-                                  : "Not Active", // store["status"]!,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 13.0,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Padding(
-                      padding: const EdgeInsets.fromLTRB(16.0, 10.0, 16.0, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Text(
-                              e.name.toString(),
-                              //store["name"]!,
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          Row(
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  deleteStoreById(e.storeId.toString(),
-                                      e.userId.toString());
-                                },
-                                child: Image.asset(
-                                  AppAssets.delete_round_icon,
-                                  height: 40,
-                                  width: 40,
+                            // Image.asset(
+                            //   AppAssets.admin_store_list_image,
+                            // ),
+                            Positioned(
+                              top: 12.0,
+                              left: 12.0,
+                              child: GestureDetector(
+                                onTap: () {}, //_toggleStatus(index),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: e.storeStatus == 1
+                                        ? Colors.green
+                                        : AppColors.red,
+                                    borderRadius: BorderRadius.circular(6.0),
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0, vertical: 4.0),
+                                  child: Text(
+                                    e.storeStatus == 1
+                                        ? 'Active'
+                                        : "Not Active", // store["status"]!,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 13.0,
+                                    ),
+                                  ),
                                 ),
                               ),
-                              SizedBox(width: 10),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => AddStorePage(
-                                        storeId: e.storeId,
+                            ),
+                          ],
+                        ),
+                        Padding(
+                            padding:
+                                const EdgeInsets.fromLTRB(16.0, 10.0, 16.0, 0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    e.name.toString(),
+                                    //store["name"]!,
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                Row(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        deleteStoreById(e.storeId.toString(),
+                                            e.userId.toString());
+                                      },
+                                      child: Image.asset(
+                                        AppAssets.delete_round_icon,
+                                        height: 40,
+                                        width: 40,
                                       ),
                                     ),
-                                  );
-                                },
-                                child: Image.asset(
-                                  AppAssets.edit_rounded_icon,
-                                  height: 40,
-                                  width: 40,
+                                    SizedBox(width: 10),
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => AddStorePage(
+                                              storeId: e.storeId,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      child: Image.asset(
+                                        AppAssets.edit_rounded_icon,
+                                        height: 40,
+                                        width: 40,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      )),
-                  const SizedBox(height: 8),
-                  Padding(
-                      padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0),
-                      child: Row(
-                        children: [
-                          Image.asset(
-                            AppAssets.map_location_icon,
-                            height: 30,
-                            width: 30,
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: Text(
-                              e.address.toString(),
-                              // store["address"]!,
-                              style: const TextStyle(color: Colors.black),
-                            ),
-                          ),
-                        ],
-                      )),
-                  const SizedBox(height: 8),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0),
-                    child: Divider(color: Colors.grey[300]),
-                  ),
-                  const SizedBox(height: 8),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: 35.0,
-                          height: 35.0,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: const Color.fromARGB(255, 221, 220, 220),
-                            ),
-                          ),
-                          child: Center(
-                            child: Image.asset(
-                              AppAssets.UserRounded,
-                              height: 20,
-                              width: 20,
-                            ),
-                          ),
+                              ],
+                            )),
+                        const SizedBox(height: 8),
+                        Padding(
+                            padding:
+                                const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0),
+                            child: Row(
+                              children: [
+                                Image.asset(
+                                  AppAssets.map_location_icon,
+                                  height: 30,
+                                  width: 30,
+                                ),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    e.address.toString(),
+                                    // store["address"]!,
+                                    style: const TextStyle(color: Colors.black),
+                                  ),
+                                ),
+                              ],
+                            )),
+                        const SizedBox(height: 8),
+                        Padding(
+                          padding:
+                              const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0),
+                          child: Divider(color: Colors.grey[300]),
                         ),
-                        const SizedBox(
-                            width:
-                                8.0), // Add space between the avatar and text
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment
-                                .start, // Align text to the left
+                        const SizedBox(height: 8),
+                        Padding(
+                          padding:
+                              const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text(
-                                e.owner_name.toString(),
-                                // store["contactName"]!,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.black,
+                              Container(
+                                width: 35.0,
+                                height: 35.0,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: const Color.fromARGB(
+                                        255, 221, 220, 220),
+                                  ),
+                                ),
+                                child: Center(
+                                  child: Image.asset(
+                                    AppAssets.UserRounded,
+                                    height: 20,
+                                    width: 20,
+                                  ),
                                 ),
                               ),
-                              Text(
-                                e.mobile.toString(),
-                                // store["contactNumber"]!,
-                                style: const TextStyle(color: Colors.black),
+                              const SizedBox(
+                                  width:
+                                      8.0), // Add space between the avatar and text
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment
+                                      .start, // Align text to the left
+                                  children: [
+                                    Text(
+                                      e.owner_name.toString(),
+                                      // store["contactName"]!,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: AppColors.black,
+                                      ),
+                                    ),
+                                    Text(
+                                      e.mobile.toString(),
+                                      // store["contactNumber"]!,
+                                      style:
+                                          const TextStyle(color: Colors.black),
+                                    ),
+                                  ],
+                                ),
                               ),
+                              Container(
+                                  width: 35.0,
+                                  height: 35.0,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.red,
+                                    shape: BoxShape.circle,
+                                    // border: Border.all(
+                                    //   color: const Color.fromARGB(255, 221, 220, 220),
+                                    // ),
+                                  ),
+                                  child: Center(
+                                    child: Image.asset(
+                                      AppAssets.call_icon,
+                                      height: 25,
+                                      width: 25,
+                                      color: Colors.white,
+                                    ),
+                                  )),
                             ],
                           ),
                         ),
-                        Container(
-                            width: 35.0,
-                            height: 35.0,
-                            decoration: BoxDecoration(
-                              color: AppColors.red,
-                              shape: BoxShape.circle,
-                              // border: Border.all(
-                              //   color: const Color.fromARGB(255, 221, 220, 220),
-                              // ),
-                            ),
+                        Padding(
+                            padding:
+                                const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0),
+                            child: Divider(color: Colors.grey[300])),
+                        const SizedBox(height: 8),
+                        Padding(
+                            padding: const EdgeInsets.fromLTRB(
+                                16.0, 0.0, 16.0, 16.0),
                             child: Center(
-                              child: Image.asset(
-                                AppAssets.call_icon,
-                                height: 25,
-                                width: 25,
-                                color: Colors.white,
+                              child: GestureDetector(
+                                onTap: () {
+                                  // Add "View details" functionality here
+                                },
+                                child: const Text(
+                                  "View details",
+                                  style: TextStyle(
+                                      color: Colors.red, fontSize: 14),
+                                ),
                               ),
                             )),
                       ],
                     ),
                   ),
-                  Padding(
-                      padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0),
-                      child: Divider(color: Colors.grey[300])),
-                  const SizedBox(height: 8),
-                  Padding(
-                      padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
-                      child: Center(
-                        child: GestureDetector(
-                          onTap: () {
-                            // Add "View details" functionality here
-                          },
-                          child: const Text(
-                            "View details",
-                            style: TextStyle(color: Colors.red, fontSize: 14),
-                          ),
-                        ),
-                      )),
-                ],
-              ),
+                );
+              },
             ),
-          );
-        },
-      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(

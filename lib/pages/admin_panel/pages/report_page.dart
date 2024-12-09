@@ -81,162 +81,167 @@ class _ReportPageState extends State<ReportPage> {
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                HeadingWidget(
-                  title: 'Report',
-                ),
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: AppColors.red,
+      body: isLoading
+          ? Center(child: CircularProgressIndicator())
+          : Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      HeadingWidget(
+                        title: 'Report',
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 6),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: AppColors.red,
+                        ),
+                        child: SubHeadingWidget(
+                          title: 'Print',
+                          color: AppColors.white,
+                        ),
+                      ),
+                    ],
                   ),
-                  child: SubHeadingWidget(
-                    title: 'Print',
-                    color: AppColors.white,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            Expanded(
-              child: Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  border: Border.all(color: AppColors.grey),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(16),
-                  child: ListView.builder(
-                    itemCount:
-                        reportlistpage.length + 1, // +1 for the header row
-                    itemBuilder: (context, index) {
-                      if (index == 0) {
-                        // Header Row
-                        return Container(
-                          // color: AppColors.grey.withOpacity(0.2),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 10, horizontal: 16),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  flex: 1,
-                                  child: Text(
-                                    'S.no',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 3,
-                                  child: Text(
-                                    'Store Name',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 2,
-                                  child: Text(
-                                    'Date',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 2,
-                                  child: Text(
-                                    'Method',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 2,
-                                  child: Text(
-                                    'Amount',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        );
-                      } else {
-                        // Data Rows
-                        final e = reportlistpage[index - 1]; // Offset by 1
-                        String formattedDate =
-                            DateFormat('dd-MM-yyyy').format(e.date);
-                        return Column(
-                          children: [
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Divider(
-                              color: AppColors.grey.withOpacity(0.5),
-                              thickness: 0.5,
-                              height: 1, // Adjust spacing around divider
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 8, horizontal: 16),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    flex: 1,
-                                    child: Text(e.id.toString()),
-                                  ),
-                                  Expanded(
-                                    flex: 3,
-                                    child: Text(
-                                      e.storeName.toString(),
-                                      style: TextStyle(
-                                        color: AppColors.red,
-                                        decoration: TextDecoration.underline,
-                                        decorationColor: AppColors.red,
+                  const SizedBox(height: 20),
+                  Expanded(
+                    child: Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: AppColors.grey),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(16),
+                        child: ListView.builder(
+                          itemCount: reportlistpage.length +
+                              1, // +1 for the header row
+                          itemBuilder: (context, index) {
+                            if (index == 0) {
+                              // Header Row
+                              return Container(
+                                // color: AppColors.grey.withOpacity(0.2),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 10, horizontal: 16),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        flex: 1,
+                                        child: Text(
+                                          'S.no',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
                                       ),
+                                      Expanded(
+                                        flex: 3,
+                                        child: Text(
+                                          'Store Name',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 2,
+                                        child: Text(
+                                          'Date',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 2,
+                                        child: Text(
+                                          'Method',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 2,
+                                        child: Text(
+                                          'Amount',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              );
+                            } else {
+                              // Data Rows
+                              final e =
+                                  reportlistpage[index - 1]; // Offset by 1
+                              String formattedDate =
+                                  DateFormat('dd-MM-yyyy').format(e.date);
+                              return Column(
+                                children: [
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  Divider(
+                                    color: AppColors.grey.withOpacity(0.5),
+                                    thickness: 0.5,
+                                    height: 1, // Adjust spacing around divider
+                                  ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 8, horizontal: 16),
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          flex: 1,
+                                          child: Text(e.id.toString()),
+                                        ),
+                                        Expanded(
+                                          flex: 3,
+                                          child: Text(
+                                            e.storeName.toString(),
+                                            style: TextStyle(
+                                              color: AppColors.red,
+                                              decoration:
+                                                  TextDecoration.underline,
+                                              decorationColor: AppColors.red,
+                                            ),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          flex: 3,
+                                          child: Text(formattedDate),
+                                        ),
+                                        Expanded(
+                                          flex: 2,
+                                          child:
+                                              Text(e.paymentMethod.toString()),
+                                        ),
+                                        Expanded(
+                                          flex: 2,
+                                          child: Text(e.amount.toString()),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  Expanded(
-                                    flex: 3,
-                                    child: Text(formattedDate),
-                                  ),
-                                  Expanded(
-                                    flex: 2,
-                                    child: Text(e.paymentMethod.toString()),
-                                  ),
-                                  Expanded(
-                                    flex: 2,
-                                    child: Text(e.amount.toString()),
-                                  ),
                                 ],
-                              ),
-                            ),
-                          ],
-                        );
-                      }
-                    },
+                              );
+                            }
+                          },
+                        ),
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
             ),
-          ],
-        ),
-      ),
     );
   }
 }
