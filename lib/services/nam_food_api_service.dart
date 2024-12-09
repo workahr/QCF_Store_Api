@@ -2226,4 +2226,41 @@ class NamFoodApiService {
       return e;
     }
   }
+
+// un Assigned Delivery Boy
+  Future getunasssigneddeliveryboyDashboardOrderlist() async {
+    try {
+      final url =
+          Uri.parse('${liveApiPath}v1/getallorderbyadmin-unassigndelivery');
+      final response = await client.get(
+        url,
+        headers: headerData,
+      );
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        return response;
+      }
+    } catch (e) {
+      return e;
+    }
+  }
+
+  //  un Assigned Delivery Boy
+  Future getallpaymentlist() async {
+    try {
+      final url = Uri.parse('${liveApiPath}v1/getallpayment');
+      final response = await client.get(
+        url,
+        headers: headerData,
+      );
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        return response;
+      }
+    } catch (e) {
+      return e;
+    }
+  }
 }

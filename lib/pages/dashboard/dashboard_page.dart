@@ -1,5 +1,6 @@
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:namstore/constants/app_colors.dart';
 import 'package:namstore/widgets/heading_widget.dart';
 
@@ -69,9 +70,9 @@ class _DashboardPageState extends State<DashboardPage> {
           pendingList = filterOrdersByStatus("Order Placed");
           print(
               "Filtered Orders by 'Pending': ${filterOrdersByStatus("Order Placed")}");
-          preparingList = filterOrdersByStatus("Order Processed");
+          preparingList = filterOrdersByStatus("Order Confirmed");
           print(preparingList);
-          readyList = filterOrdersByStatus("Order Picked");
+          readyList = filterOrdersByStatus("Ready to Pickup");
           print(readyList);
         });
       } else {
@@ -110,7 +111,10 @@ class _DashboardPageState extends State<DashboardPage> {
       closeSnackBar(context: context);
 
       if (response.status.toString() == 'SUCCESS') {
-        setState(() {});
+        setState(() {
+          getMyStoreDetails();
+          getAllStoreOrders();
+        });
       } else {
         showInSnackBar(context, response.message.toString());
       }
@@ -184,6 +188,18 @@ class _DashboardPageState extends State<DashboardPage> {
     }
   }
 
+  String dateFormat(dynamic date) {
+    try {
+      DateTime dateTime = date is DateTime ? date : DateTime.parse(date);
+      String formattedTime =
+          DateFormat('h:mm a').format(dateTime).toLowerCase();
+      String formattedDate = DateFormat('dd-MMM-yyyy').format(dateTime);
+      return "$formattedTime | $formattedDate";
+    } catch (e) {
+      return "Invalid date"; // Fallback for invalid date format
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -245,551 +261,625 @@ class _DashboardPageState extends State<DashboardPage> {
           backgroundColor: Color(0xFFE23744),
           automaticallyImplyLeading: false,
         ),
-        body: SingleChildScrollView(
-            child: Padding(
-          padding: EdgeInsets.all(12.0),
-          child: Column(
-            children: [
-              // Order Status Tabs
-              // SizedBox(
-              //   height: 10.0,
-              // ),
-              Container(
-                color: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        body: isLoading
+            ? Center(child: CircularProgressIndicator())
+            : SingleChildScrollView(
+                child: Padding(
+                padding: EdgeInsets.all(12.0),
+                child: Column(
                   children: [
-                    _buildStatusTab(
-                        'Pending (${pendingList.length.toString()})', 0),
-                    _buildStatusTab(
-                        'Preparing (${preparingList.length.toString()})', 1),
-                    _buildStatusTab(
-                        'Ready (${readyList.length.toString()})', 2),
-                  ],
-                ),
-              ),
+                    // Order Status Tabs
+                    // SizedBox(
+                    //   height: 10.0,
+                    // ),
+                    Container(
+                      color: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          _buildStatusTab(
+                              'Pending (${pendingList.length.toString()})', 0),
+                          _buildStatusTab(
+                              'Preparing (${preparingList.length.toString()})',
+                              1),
+                          _buildStatusTab(
+                              'Ready (${readyList.length.toString()})', 2),
+                        ],
+                      ),
+                    ),
 
-              const SizedBox(height: 8.0),
+                    const SizedBox(height: 8.0),
 
-              // Order Notification Card
-              if (selectedIndex == 0 && pendingList.isNotEmpty)
-                ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: pendingList.length,
-                    itemBuilder: (context, index) {
-                      final item = pendingList[index];
-                      return Card(
-                        color: Colors.green,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: InkWell(
-                          onTap: () {
-                            // Handle order notification tap
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => OrderDetails(
-                                  orderId: item.invoiceNumber.toString(),
-                                  time: item.prepareMin.toString(),
-                                  totalPrice: item.totalPrice.toString(),
-                                  orderitems: item.items,
-                                  paymentMethod: item.paymentMethod.toString(),
+                    // Order Notification Card
+                    if (selectedIndex == 0 && pendingList.isNotEmpty)
+                      ListView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: pendingList.length,
+                          itemBuilder: (context, index) {
+                            final item = pendingList[index];
+                            return Card(
+                              color: Colors.green,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: InkWell(
+                                onTap: () {
+                                  // Handle order notification tap
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => OrderDetails(
+                                        orderId: item.invoiceNumber.toString(),
+                                        time: item.createdDate.toString(),
+                                        totalPrice: item.totalPrice.toString(),
+                                        orderitems: item.items,
+                                        paymentMethod:
+                                            item.paymentMethod.toString(),
+                                        mobilenumber:
+                                            item.customerMobile.toString(),
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Icon(Icons.celebration,
+                                              color: Colors.white),
+                                          SizedBox(width: 8),
+                                          Text(
+                                            'You have a order!',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Icon(Icons.arrow_forward_ios,
+                                          color: Colors.white),
+                                    ],
+                                  ),
                                 ),
                               ),
                             );
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    Icon(Icons.celebration,
-                                        color: Colors.white),
-                                    SizedBox(width: 8),
-                                    Text(
-                                      'You have a order!',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Icon(Icons.arrow_forward_ios,
-                                    color: Colors.white),
-                              ],
-                            ),
-                          ),
+                          }),
+
+                    if (selectedIndex == 1)
+                      CustomeTextField(
+                        width: MediaQuery.of(context).size.width - 10.0,
+                        hint: 'Order ID',
+                        prefixIcon: Icon(
+                          Icons.search,
+                          color: AppColors.red,
                         ),
-                      );
-                    }),
+                        labelColor: Colors.grey[900],
+                        focusBorderColor: AppColors.primary,
+                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                        borderColor: AppColors.lightGrey3,
+                      ),
+                    if (selectedIndex == 1)
+                      SizedBox(
+                        height: 12.0,
+                      ),
 
-              if (selectedIndex == 1)
-                CustomeTextField(
-                  width: MediaQuery.of(context).size.width - 10.0,
-                  hint: 'Order ID',
-                  prefixIcon: Icon(
-                    Icons.search,
-                    color: AppColors.red,
-                  ),
-                  labelColor: Colors.grey[900],
-                  focusBorderColor: AppColors.primary,
-                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                  borderColor: AppColors.lightGrey3,
-                ),
-              if (selectedIndex == 1)
-                SizedBox(
-                  height: 12.0,
-                ),
-
-              // Order Card
-              if (selectedIndex == 1 && preparingList.isNotEmpty)
-                Stack(children: [
-                  ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: preparingList.length,
-                      itemBuilder: (context, index) {
-                        final item = preparingList[index];
-                        return Container(
-                          margin: EdgeInsets.only(bottom: 15.0),
-                          padding: EdgeInsets.all(4.0),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: AppColors.lightGrey3)),
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                // Order ID and Status
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        const Text(
-                                          'Order ID',
-                                          style: TextStyle(
-                                            //fontWeight: FontWeight.bold,
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                        Text(
-                                          item.invoiceNumber.toString(),
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 18,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 8),
-                                // Order Time and Items Count
-                                Text(
-                                  '${item.prepareMin.toString()} pm | ${item.items.length.toString()} items',
-                                  // '12.30 pm | 4 items',
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                                const SizedBox(height: 16),
-                                // Food Item Details
-                                ...item.items.map((dish) {
-                                  return Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                    // Order Card
+                    if (selectedIndex == 1 && preparingList.isNotEmpty)
+                      Stack(children: [
+                        ListView.builder(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: preparingList.length,
+                            itemBuilder: (context, index) {
+                              final item = preparingList[index];
+                              return Container(
+                                margin: EdgeInsets.only(bottom: 15.0),
+                                padding: EdgeInsets.all(4.0),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(
+                                        color: AppColors.lightGrey3)),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Text(
-                                        '${dish.quantity.toString()} * ${dish.productName.toString()}',
-                                        // '2 X Chicken Biryani',
-                                        style: TextStyle(fontSize: 16),
+                                      // Order ID and Status
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              const Text(
+                                                'Order ID',
+                                                style: TextStyle(
+                                                  //fontWeight: FontWeight.bold,
+                                                  fontSize: 16,
+                                                ),
+                                              ),
+                                              Text(
+                                                item.invoiceNumber.toString(),
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 18,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
                                       ),
+                                      const SizedBox(height: 8),
+                                      // Order Time and Items Count
                                       Text(
-                                        '₹ ${dish.totalPrice.toString()}',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
+                                        '${dateFormat(item.createdDate.toString())}  | ${item.items.length.toString()} items',
+                                        // '12.30 pm | 4 items',
+                                        style: TextStyle(color: Colors.black),
                                       ),
-                                    ],
-                                  );
-                                }),
-                                const SizedBox(height: 8),
-
-                                const SizedBox(height: 16),
-                                // Divider Line
-                                const DottedLine(
-                                  direction: Axis.horizontal,
-                                  dashColor: AppColors.black,
-                                  lineLength: 320,
-                                  dashLength: 6,
-                                  dashGapLength: 4,
-                                ),
-                                const SizedBox(height: 8),
-                                // Action Buttons
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    InkWell(
-                                      onTap: () {
-                                        // Handle order notification tap
-                                        makePhoneCall(
-                                            item.customerMobile.toString());
-                                      },
-                                      child: Container(
-                                        padding: EdgeInsets.all(12.0),
-                                        decoration: BoxDecoration(
-                                            //color: AppColors.light,
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(8.0)),
-                                            border: Border.all(
-                                                color: AppColors.red)),
-                                        child: Row(
+                                      const SizedBox(height: 16),
+                                      // Food Item Details
+                                      ...item.items.map((dish) {
+                                        return Row(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.center,
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Image.asset(
-                                              AppAssets.call_icon,
-                                              width: 23.0,
-                                              height: 23.0,
-                                            ),
-                                            SizedBox(
-                                              width: 5.0,
+                                            Text(
+                                              '${dish.quantity.toString()} * ${dish.productName.toString()}',
+                                              // '2 X Chicken Biryani',
+                                              style: TextStyle(fontSize: 16),
                                             ),
                                             Text(
-                                              'Call Customer',
+                                              '₹ ${dish.totalPrice.toString()}',
                                               style: TextStyle(
-                                                  color: AppColors.red),
+                                                  fontWeight: FontWeight.bold),
                                             ),
                                           ],
-                                        ),
+                                        );
+                                      }),
+                                      const SizedBox(height: 8),
+
+                                      const SizedBox(height: 16),
+                                      // Divider Line
+                                      const DottedLine(
+                                        direction: Axis.horizontal,
+                                        dashColor: AppColors.black,
+                                        lineLength: 320,
+                                        dashLength: 6,
+                                        dashGapLength: 4,
                                       ),
-                                    ),
-                                    // ElevatedButton.icon(
-                                    //   onPressed: () {},
-                                    //   style: ElevatedButton.styleFrom(
-                                    //     backgroundColor: Colors.red,
-                                    //     foregroundColor: Colors.red,
-                                    //     shape: RoundedRectangleBorder(
-                                    //       borderRadius: BorderRadius.circular(8),
-                                    //     ),
-                                    //   ),
-                                    //   icon: const Icon(Icons.check_circle_outline,
-                                    //       color: Colors.white),
-                                    //   label: const Text('Food Ready',style: TextStyle(color: AppColors.light),),
-                                    // ),
-
-                                    SvgIconButtonWidget(
-                                        title: ' Food Ready ',
-                                        // color: AppColors.light,
-                                        color: Colors.red,
-                                        borderColor: Colors.red,
-                                        titleColor: AppColors.light,
-                                        // titleColor: AppColors.dark,
-                                        // borderColor: AppColors.dark,
-                                        leadingIcon:
-                                            Icon(Icons.check_circle_outline),
-                                        width: 150.0,
-                                        fontSize: 13.0,
-                                        height: 50.0,
-                                        onTap: () {
-                                          orderStatusUpdate(
-                                              item.items[0].orderId,
-                                              "Ready to Pickup");
-                                        }),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      }),
-                  Positioned(
-                    top: 18,
-                    right: 0,
-                    child: Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 30, vertical: 8),
-                      decoration: BoxDecoration(
-                        color: Color(0xFFF3B43F),
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(20),
-                          bottomLeft: Radius.circular(20),
-                        ), // Ro
-                      ),
-                      child: const Text(
-                        'Preparing',
-                        style: TextStyle(
-                          color: AppColors.light,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  )
-                ]),
-
-              if (selectedIndex == 2)
-                CustomeTextField(
-                  width: MediaQuery.of(context).size.width - 10.0,
-                  hint: 'Order ID',
-                  prefixIcon: Icon(
-                    Icons.search,
-                    color: AppColors.red,
-                  ),
-                  labelColor: Colors.grey[900],
-                  focusBorderColor: AppColors.primary,
-                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                  borderColor: AppColors.lightGrey3,
-                ),
-
-              if (selectedIndex == 2)
-                SizedBox(
-                  height: 12.0,
-                ),
-
-              // Order Card
-              if (selectedIndex == 2 && readyList.isNotEmpty)
-                Stack(children: [
-                  ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: readyList.length,
-                      itemBuilder: (context, index) {
-                        final item = readyList[index];
-                        return Container(
-                          margin: EdgeInsets.only(bottom: 15.0),
-                          padding: EdgeInsets.all(10.0),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: AppColors.lightGrey3)),
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                // Order ID and Status
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        const Text(
-                                          'Order ID',
-                                          style: TextStyle(
-                                            //fontWeight: FontWeight.bold,
-                                            fontSize: 16,
+                                      const SizedBox(height: 8),
+                                      // Action Buttons
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          InkWell(
+                                            onTap: () {
+                                              // Handle order notification tap
+                                              makePhoneCall(item.customerMobile
+                                                  .toString());
+                                            },
+                                            child: Container(
+                                              padding: EdgeInsets.all(8.0),
+                                              decoration: BoxDecoration(
+                                                  //color: AppColors.light,
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(8.0)),
+                                                  border: Border.all(
+                                                      color: AppColors.red)),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Image.asset(
+                                                    AppAssets.call_icon,
+                                                    width: 23.0,
+                                                    height: 23.0,
+                                                  ),
+                                                  SizedBox(
+                                                    width: 5.0,
+                                                  ),
+                                                  Text(
+                                                    'Call Customer',
+                                                    style: TextStyle(
+                                                        color: AppColors.red),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
                                           ),
-                                        ),
-                                        Text(
-                                          item.invoiceNumber.toString(),
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 18,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 8),
-                                // Order Time and Items Count
-                                Text(
-                                  '${item.prepareMin.toString()} pm | ${item.items.length.toString()} items',
-                                  // '12.30 pm | 4 items',
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                                const SizedBox(height: 16),
-                                // Food Item Details
-                                ...item.items.map((dish) {
-                                  return Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        '${dish.quantity.toString()} * ${dish.productName.toString()}',
-                                        // '2 X Chicken Biryani',
-                                        style: TextStyle(fontSize: 16),
-                                      ),
-                                      Text(
-                                        '₹ ${dish.totalPrice.toString()}',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
+                                          // ElevatedButton.icon(
+                                          //   onPressed: () {},
+                                          //   style: ElevatedButton.styleFrom(
+                                          //     backgroundColor: Colors.red,
+                                          //     foregroundColor: Colors.red,
+                                          //     shape: RoundedRectangleBorder(
+                                          //       borderRadius: BorderRadius.circular(8),
+                                          //     ),
+                                          //   ),
+                                          //   icon: const Icon(Icons.check_circle_outline,
+                                          //       color: Colors.white),
+                                          //   label: const Text('Food Ready',style: TextStyle(color: AppColors.light),),
+                                          // ),
+
+                                          SvgIconButtonWidget(
+                                              title: ' Food Ready ',
+                                              // color: AppColors.light,
+                                              color: Colors.red,
+                                              borderColor: Colors.red,
+                                              titleColor: AppColors.light,
+                                              // titleColor: AppColors.dark,
+                                              // borderColor: AppColors.dark,
+                                              leadingIcon: Icon(
+                                                  Icons.check_circle_outline),
+                                              width: 150.0,
+                                              fontSize: 13.0,
+                                              height: 50.0,
+                                              onTap: () {
+                                                orderStatusUpdate(
+                                                    item.items[0].orderId,
+                                                    "Ready to Pickup");
+                                              }),
+                                        ],
                                       ),
                                     ],
-                                  );
-                                }),
-                                // const SizedBox(height: 8),
-                                // const Row(
-                                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                //   children: [
-                                //     Text(
-                                //       '3 X Chicken Biryani',
-                                //       style: TextStyle(fontSize: 16),
-                                //     ),
-                                //     Text(
-                                //       '₹500.00',
-                                //       style: TextStyle(fontWeight: FontWeight.bold),
-                                //     ),
-                                //   ],
-                                // ),
-
-                                const SizedBox(height: 16.0),
-                                // Divider Line
-                                const DottedLine(
-                                  direction: Axis.horizontal,
-                                  dashColor: AppColors.black,
-                                  lineLength: 320,
-                                  dashLength: 6,
-                                  dashGapLength: 4,
+                                  ),
                                 ),
-                                const SizedBox(height: 10.0),
+                              );
+                            }),
+                        Positioned(
+                          top: 18,
+                          right: 0,
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 30, vertical: 8),
+                            decoration: BoxDecoration(
+                              color: Color(0xFFF3B43F),
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(20),
+                                bottomLeft: Radius.circular(20),
+                              ), // Ro
+                            ),
+                            child: const Text(
+                              'Preparing',
+                              style: TextStyle(
+                                color: AppColors.light,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        )
+                      ]),
 
-                                HeadingWidget(
-                                  title: 'Delivery Person Details',
-                                  fontSize: 16.0,
-                                  color: AppColors.black,
-                                ),
-                                SizedBox(
-                                  height: 10.0,
-                                ),
+                    if (selectedIndex == 2)
+                      CustomeTextField(
+                        width: MediaQuery.of(context).size.width - 10.0,
+                        hint: 'Order ID',
+                        prefixIcon: Icon(
+                          Icons.search,
+                          color: AppColors.red,
+                        ),
+                        labelColor: Colors.grey[900],
+                        focusBorderColor: AppColors.primary,
+                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                        borderColor: AppColors.lightGrey3,
+                      ),
 
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        // Profile Icon in a round container
-                                        Container(
-                                          padding: const EdgeInsets.all(10),
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            border: Border.all(
-                                                color: Colors.grey.shade300,
-                                                width: 2),
+                    if (selectedIndex == 2)
+                      SizedBox(
+                        height: 12.0,
+                      ),
+
+                    // Order Card
+                    if (selectedIndex == 2 && readyList.isNotEmpty)
+                      Stack(children: [
+                        ListView.builder(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: readyList.length,
+                            itemBuilder: (context, index) {
+                              final item = readyList[index];
+                              return Container(
+                                margin: EdgeInsets.only(bottom: 15.0),
+                                padding: EdgeInsets.all(10.0),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(
+                                        color: AppColors.lightGrey3)),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      // Order ID and Status
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              const Text(
+                                                'Order ID',
+                                                style: TextStyle(
+                                                  //fontWeight: FontWeight.bold,
+                                                  fontSize: 16,
+                                                ),
+                                              ),
+                                              Text(
+                                                item.invoiceNumber.toString(),
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 18,
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                          child: Image.asset(
-                                            AppAssets.UserRounded,
-                                            width: 23.0,
-                                            height: 23.0,
-                                          ),
-                                        ),
-                                        const SizedBox(width: 10),
-                                        // Name Text
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                        ],
+                                      ),
+                                      const SizedBox(height: 8),
+                                      // Order Time and Items Count
+                                      Text(
+                                        '${dateFormat(item.createdDate.toString())}  | ${item.items.length.toString()} items',
+                                        // '12.30 pm | 4 items',
+                                        style: TextStyle(color: Colors.black),
+                                      ),
+                                      const SizedBox(height: 16),
+                                      // Food Item Details
+                                      ...item.items.map((dish) {
+                                        return Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(
-                                              'Name',
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                color: AppColors.black,
-                                              ),
+                                              '${dish.quantity.toString()} * ${dish.productName.toString()}',
+                                              // '2 X Chicken Biryani',
+                                              style: TextStyle(fontSize: 16),
                                             ),
-                                            SizedBox(height: 4),
                                             Text(
-                                              item.deliveryBoyName.toString(),
+                                              '₹ ${dish.totalPrice.toString()}',
                                               style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold,
-                                                decorationColor: Colors.blue,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ],
+                                        );
+                                      }),
+                                      // const SizedBox(height: 8),
+                                      // const Row(
+                                      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      //   children: [
+                                      //     Text(
+                                      //       '3 X Chicken Biryani',
+                                      //       style: TextStyle(fontSize: 16),
+                                      //     ),
+                                      //     Text(
+                                      //       '₹500.00',
+                                      //       style: TextStyle(fontWeight: FontWeight.bold),
+                                      //     ),
+                                      //   ],
+                                      // ),
+
+                                      const SizedBox(height: 16.0),
+                                      // Divider Line
+                                      const DottedLine(
+                                        direction: Axis.horizontal,
+                                        dashColor: AppColors.black,
+                                        lineLength: 320,
+                                        dashLength: 6,
+                                        dashGapLength: 4,
+                                      ),
+                                      const SizedBox(height: 10.0),
+
+                                      if (item.deliveryBoyName.toString() !=
+                                          "null")
+                                        HeadingWidget(
+                                          title: 'Delivery Person Details',
+                                          fontSize: 16.0,
+                                          color: AppColors.black,
+                                        ),
+                                      SizedBox(
+                                        height: 10.0,
+                                      ),
+
+                                      if (item.deliveryBoyName.toString() !=
+                                          "null")
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                // Profile Icon in a round container
+                                                Container(
+                                                  padding:
+                                                      const EdgeInsets.all(10),
+                                                  decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    border: Border.all(
+                                                        color: Colors
+                                                            .grey.shade300,
+                                                        width: 2),
+                                                  ),
+                                                  child: Image.asset(
+                                                    AppAssets.UserRounded,
+                                                    width: 23.0,
+                                                    height: 23.0,
+                                                  ),
+                                                ),
+                                                const SizedBox(width: 10),
+                                                // Name Text
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      'Name',
+                                                      style: TextStyle(
+                                                        fontSize: 14,
+                                                        color: AppColors.black,
+                                                      ),
+                                                    ),
+                                                    SizedBox(height: 4),
+                                                    if (item.deliveryBoyName
+                                                            .toString() !=
+                                                        "null")
+                                                      Text(
+                                                        item.deliveryBoyName
+                                                            .toString(),
+                                                        style: TextStyle(
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          decorationColor:
+                                                              Colors.blue,
+                                                        ),
+                                                      ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                            // Call Icon in a round container
+                                            Container(
+                                              padding: const EdgeInsets.all(10),
+                                              decoration: const BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: Colors.red,
+                                              ),
+                                              child: Image.asset(
+                                                AppAssets.call_icon,
+                                                width: 23.0,
+                                                height: 23.0,
+                                                color: AppColors.light,
                                               ),
                                             ),
                                           ],
                                         ),
-                                      ],
-                                    ),
-                                    // Call Icon in a round container
-                                    Container(
-                                      padding: const EdgeInsets.all(10),
-                                      decoration: const BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: Colors.red,
-                                      ),
-                                      child: Image.asset(
-                                        AppAssets.call_icon,
-                                        width: 23.0,
-                                        height: 23.0,
-                                        color: AppColors.light,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 10.0),
-                                const DottedLine(
-                                  direction: Axis.horizontal,
-                                  dashColor: AppColors.black,
-                                  lineLength: 320,
-                                  dashLength: 6,
-                                  dashGapLength: 4,
-                                ),
-                                const SizedBox(height: 10.0),
+                                      const SizedBox(height: 10.0),
+                                      if (item.deliveryBoyName.toString() !=
+                                          "null")
+                                        const DottedLine(
+                                          direction: Axis.horizontal,
+                                          dashColor: AppColors.black,
+                                          lineLength: 320,
+                                          dashLength: 6,
+                                          dashGapLength: 4,
+                                        ),
+                                      const SizedBox(height: 10.0),
 
-                                SvgIconButtonWidget(
-                                    title: ' Done ',
-                                    // color: AppColors.light,
-                                    color: Colors.red,
-                                    borderColor: Colors.red,
-                                    titleColor: AppColors.light,
-                                    // titleColor: AppColors.dark,
-                                    // borderColor: AppColors.dark,
-                                    leadingIcon:
-                                        Icon(Icons.check_circle_outline),
-                                    width: 150.0,
-                                    fontSize: 13.0,
-                                    height: 50.0,
-                                    onTap: () {
-                                      orderStatusUpdate(item.items[0].orderId,
-                                          "Order Picked");
-                                    }),
-                              ],
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          if (item.deliveryBoyMobile != null)
+                                            InkWell(
+                                              onTap: () {
+                                                // Handle order notification tap
+                                                makePhoneCall(item
+                                                    .deliveryBoyMobile
+                                                    .toString());
+                                              },
+                                              child: Container(
+                                                // height: 40,
+                                                // width: 120,
+                                                padding: EdgeInsets.all(7.0),
+                                                decoration: BoxDecoration(
+                                                    //color: AppColors.light,
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                8.0)),
+                                                    border: Border.all(
+                                                        color: AppColors.red)),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Image.asset(
+                                                      AppAssets.call_icon,
+                                                      width: 23.0,
+                                                      height: 23.0,
+                                                    ),
+                                                    SizedBox(
+                                                      width: 5.0,
+                                                    ),
+                                                    Text(
+                                                      'Call DeliveryBoy',
+                                                      style: TextStyle(
+                                                          color: AppColors.red),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          SvgIconButtonWidget(
+                                              title: ' Done ',
+                                              // color: AppColors.light,
+                                              color: Colors.red,
+                                              borderColor: Colors.red,
+                                              titleColor: AppColors.light,
+                                              // titleColor: AppColors.dark,
+                                              // borderColor: AppColors.dark,
+                                              leadingIcon: Icon(
+                                                  Icons.check_circle_outline),
+                                              width: 150.0,
+                                              fontSize: 13.0,
+                                              height: 50.0,
+                                              onTap: () {
+                                                orderStatusUpdate(
+                                                    item.items[0].orderId,
+                                                    "Order Picked");
+                                              }),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }),
+                        Positioned(
+                          top: 18,
+                          right: 0,
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 30, vertical: 8),
+                            decoration: BoxDecoration(
+                              color: AppColors.green,
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(20),
+                                bottomLeft: Radius.circular(20),
+                              ), // Ro
+                            ),
+                            child: const Text(
+                              'Food Ready',
+                              style: TextStyle(
+                                color: AppColors.light,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
-                        );
-                      }),
-                  Positioned(
-                    top: 18,
-                    right: 0,
-                    child: Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 30, vertical: 8),
-                      decoration: BoxDecoration(
-                        color: AppColors.green,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(20),
-                          bottomLeft: Radius.circular(20),
-                        ), // Ro
-                      ),
-                      child: const Text(
-                        'Food Ready',
-                        style: TextStyle(
-                          color: AppColors.light,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  )
-                ]),
-            ],
-          ),
-        )));
+                        )
+                      ]),
+                  ],
+                ),
+              )));
   }
 
   // Method to build the status tabs

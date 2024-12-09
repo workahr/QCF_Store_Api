@@ -41,59 +41,59 @@ class EditDeliveryPersonmodel {
 
 class DeliveryPersonList {
   int id;
-  String username;
-  String password;
-  String fullname;
-  String email;
-  String mobile;
-  int role;
-  dynamic regOtp;
-  int status;
-  int active;
-  int createdBy;
-  DateTime createdDate;
-  dynamic updatedBy;
-  dynamic updatedDate;
-  dynamic mobilePushId;
-  String imageUrl;
-  String licenseNo;
-  String vehicleNo;
-  String vehicleName;
-  dynamic licenseFrontImg;
-  dynamic licenseBackImg;
-  dynamic vehicleImg;
-  String address;
-  String area;
-  String city;
-  String pincode;
+  String? username;
+  String? password;
+  String? fullname;
+  String? email;
+  String? mobile;
+  int? role;
+  String? regOtp;
+  int? status;
+  int? active;
+  int? createdBy;
+  String? createdDate;
+  int? updatedBy;
+  String? updatedDate;
+  String? mobilePushId;
+  String? imageUrl;
+  String? licenseNo;
+  String? vehicleNo;
+  String? vehicleName;
+  String? licenseFrontImg;
+  String? licenseBackImg;
+  String? vehicleImg;
+  String? address;
+  String? area;
+  String? city;
+  String? pincode;
 
   DeliveryPersonList({
     required this.id,
-    required this.username,
-    required this.password,
-    required this.fullname,
-    required this.email,
-    required this.mobile,
-    required this.role,
-    required this.regOtp,
-    required this.status,
-    required this.active,
-    required this.createdBy,
-    required this.createdDate,
-    required this.updatedBy,
-    required this.updatedDate,
-    required this.mobilePushId,
-    required this.imageUrl,
-    required this.licenseNo,
-    required this.vehicleNo,
-    required this.vehicleName,
-    required this.licenseFrontImg,
-    required this.licenseBackImg,
-    required this.vehicleImg,
-    required this.address,
-    required this.area,
-    required this.city,
-    required this.pincode,
+    this.username,
+    this.password,
+    this.fullname,
+    this.email,
+    this.mobile,
+    this.role,
+    this.regOtp,
+    this.status,
+    this.active,
+    this.createdBy,
+    this.createdDate,
+    this.updatedBy,
+    this.updatedDate,
+    this.mobilePushId,
+    this.imageUrl,
+    this.licenseNo,
+    this.vehicleNo,
+    this.vehicleName,
+    this.licenseFrontImg,
+    this.licenseBackImg,
+    this.vehicleImg,
+    this.address,
+    this.area,
+    this.city,
+    this.pincode,
   });
 
   factory DeliveryPersonList.fromJson(Map<String, dynamic> json) =>
@@ -109,7 +109,7 @@ class DeliveryPersonList {
         status: json["status"],
         active: json["active"],
         createdBy: json["created_by"],
-        createdDate: DateTime.parse(json["created_date"]),
+        createdDate: json["created_date"],
         updatedBy: json["updated_by"],
         updatedDate: json["updated_date"],
         mobilePushId: json["mobile_push_id"],
@@ -138,7 +138,7 @@ class DeliveryPersonList {
         "status": status,
         "active": active,
         "created_by": createdBy,
-        "created_date": createdDate.toIso8601String(),
+        "created_date": createdDate,
         "updated_by": updatedBy,
         "updated_date": updatedDate,
         "mobile_push_id": mobilePushId,

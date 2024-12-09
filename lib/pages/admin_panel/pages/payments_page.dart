@@ -48,7 +48,7 @@ class _PaymentsPageState extends State<PaymentsPage> {
   @override
   void initState() {
     super.initState();
-    getpaymentspage();
+    getallpaymentlist();
   }
 
   //Payments
@@ -57,13 +57,13 @@ class _PaymentsPageState extends State<PaymentsPage> {
   List<Payments> paymentspageAll = [];
   bool isLoading = false;
 
-  Future getpaymentspage() async {
+  Future getallpaymentlist() async {
     setState(() {
       isLoading = true;
     });
 
     try {
-      var result = await apiService.getpaymentspage();
+      var result = await apiService.getallpaymentlist();
       var response = paymentsPageModelFromJson(result);
       if (response.status.toString() == 'SUCCESS') {
         setState(() {
@@ -448,231 +448,243 @@ class _PaymentsPageState extends State<PaymentsPage> {
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  flex: 3,
-                  child: CustomeTextField(
-                    prefixIcon: Icon(
-                      Icons.search,
-                      color: AppColors.red,
-                    ),
-                    hint: 'Search',
-                    hintColor: AppColors.grey,
-                    borderColor: AppColors.grey1,
+      body: isLoading
+          ? Center(child: CircularProgressIndicator())
+          : Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 3,
+                        child: CustomeTextField(
+                          prefixIcon: Icon(
+                            Icons.search,
+                            color: AppColors.red,
+                          ),
+                          hint: 'Search',
+                          hintColor: AppColors.grey,
+                          borderColor: AppColors.grey1,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Flexible(
+                        flex: 1,
+                        child: ButtonWidget(
+                          borderRadius: 10,
+                          title: 'Filter',
+                          width: double.infinity,
+                          color: AppColors.red,
+                          onTap: _showFilterSheet,
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-                const SizedBox(width: 10),
-                Flexible(
-                  flex: 1,
-                  child: ButtonWidget(
-                    borderRadius: 10,
-                    title: 'Filter',
-                    width: double.infinity,
-                    color: AppColors.red,
-                    onTap: _showFilterSheet,
+                  SizedBox(
+                    height: 5,
                   ),
-                ),
-              ],
+                  Expanded(
+                      child: ListView.builder(
+                    itemCount: paymentspage.length,
+                    itemBuilder: (context, index) {
+                      final e = paymentspage[index];
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 16),
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                              vertical: 16, horizontal: 16),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(color: AppColors.grey1),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              HeadingWidget(
+                                title: e.name.toString(),
+                                fontSize: 18.0,
+                              ),
+                              SubHeadingWidget(
+                                title: e.date.toString(),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              DottedLine(
+                                direction: Axis.horizontal,
+                                dashColor: AppColors.grey,
+                                dashLength: 4,
+                                dashGapLength: 4,
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  HeadingWidget(
+                                    title: 'Total Order',
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  HeadingWidget(
+                                    title: e.totalOrderCount.toString(),
+                                    fontWeight: FontWeight.w500,
+                                  )
+                                ],
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  HeadingWidget(
+                                    title: 'Total Order Amount',
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  HeadingWidget(
+                                    title: "₹${e.totalOrderAmount.toString()}",
+                                    fontWeight: FontWeight.w500,
+                                  )
+                                ],
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  HeadingWidget(
+                                    title: 'To Store',
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  HeadingWidget(
+                                    title: "₹${e.totalStoreAmount.toString()}",
+                                    fontWeight: FontWeight.w500,
+                                  )
+                                ],
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  HeadingWidget(
+                                    title: 'To Aggregator',
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  HeadingWidget(
+                                    title: "₹${e.totalAggregator.toString()}",
+                                    fontWeight: FontWeight.w500,
+                                  )
+                                ],
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  HeadingWidget(
+                                    title: 'Given to Store',
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  HeadingWidget(
+                                    title: "₹${e.givenToStore.toString()}",
+                                    fontWeight: FontWeight.w500,
+                                  )
+                                ],
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              DottedLine(
+                                direction: Axis.horizontal,
+                                dashColor: AppColors.grey,
+                                dashLength: 4,
+                                dashGapLength: 4,
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  HeadingWidget(
+                                    title: 'Pending to Store',
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  HeadingWidget(
+                                    title: "₹${e.pendingAmount.toString()}",
+                                    fontWeight: FontWeight.bold,
+                                  )
+                                ],
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              DottedLine(
+                                direction: Axis.horizontal,
+                                dashColor: AppColors.grey,
+                                dashLength: 4,
+                                dashGapLength: 4,
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                OrdersPayment(),
+                                          ),
+                                        );
+                                      },
+                                      child: HeadingWidget(
+                                        title: 'Orders Payment',
+                                        color: AppColors.red,
+                                        fontWeight: FontWeight.w500,
+                                      )),
+                                  Text('|'),
+                                  GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ScreenshotPage()),
+                                        );
+                                      },
+                                      child: HeadingWidget(
+                                        title: "View details",
+                                        color: AppColors.red,
+                                        fontWeight: FontWeight.w500,
+                                      ))
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ))
+                ],
+              ),
             ),
-            SizedBox(
-              height: 5,
-            ),
-            Expanded(
-                child: ListView.builder(
-              itemCount: paymentspage.length,
-              itemBuilder: (context, index) {
-                final e = paymentspage[index];
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: AppColors.grey1),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        HeadingWidget(
-                          title: e.name.toString(),
-                          fontSize: 18.0,
-                        ),
-                        SubHeadingWidget(
-                          title: e.date.toString(),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        DottedLine(
-                          direction: Axis.horizontal,
-                          dashColor: AppColors.grey,
-                          dashLength: 4,
-                          dashGapLength: 4,
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            HeadingWidget(
-                              title: 'Total Order',
-                              fontWeight: FontWeight.w500,
-                            ),
-                            HeadingWidget(
-                              title: e.totalOrderCount.toString(),
-                              fontWeight: FontWeight.w500,
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            HeadingWidget(
-                              title: 'Total Order Amount',
-                              fontWeight: FontWeight.w500,
-                            ),
-                            HeadingWidget(
-                              title: "₹${e.totalOrderAmount.toString()}",
-                              fontWeight: FontWeight.w500,
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            HeadingWidget(
-                              title: 'To Store',
-                              fontWeight: FontWeight.w500,
-                            ),
-                            HeadingWidget(
-                              title: "₹${e.totalStoreAmount.toString()}",
-                              fontWeight: FontWeight.w500,
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            HeadingWidget(
-                              title: 'To Aggregator',
-                              fontWeight: FontWeight.w500,
-                            ),
-                            HeadingWidget(
-                              title: "₹${e.totalAggregator.toString()}",
-                              fontWeight: FontWeight.w500,
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            HeadingWidget(
-                              title: 'Given to Store',
-                              fontWeight: FontWeight.w500,
-                            ),
-                            HeadingWidget(
-                              title: "₹${e.givenToStore.toString()}",
-                              fontWeight: FontWeight.w500,
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        DottedLine(
-                          direction: Axis.horizontal,
-                          dashColor: AppColors.grey,
-                          dashLength: 4,
-                          dashGapLength: 4,
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            HeadingWidget(
-                              title: 'Pending to Store',
-                              fontWeight: FontWeight.bold,
-                            ),
-                            HeadingWidget(
-                              title: "₹${e.pendingAmount.toString()}",
-                              fontWeight: FontWeight.bold,
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        DottedLine(
-                          direction: Axis.horizontal,
-                          dashColor: AppColors.grey,
-                          dashLength: 4,
-                          dashGapLength: 4,
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => OrdersPayment(),
-                                    ),
-                                  );
-                                },
-                                child: HeadingWidget(
-                                  title: 'Orders Payment',
-                                  color: AppColors.red,
-                                  fontWeight: FontWeight.w500,
-                                )),
-                            Text('|'),
-                            GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => ScreenshotPage()),
-                                  );
-                                },
-                                child: HeadingWidget(
-                                  title: "View details",
-                                  color: AppColors.red,
-                                  fontWeight: FontWeight.w500,
-                                ))
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ))
-          ],
-        ),
-      ),
     );
   }
 

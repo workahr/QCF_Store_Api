@@ -111,109 +111,112 @@ class _DeliverypersonState extends State<DeliveryPersonList> {
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 0),
-        child: ListView.builder(
-          itemCount: deliverypersonlistpage.length,
-          itemBuilder: (context, index) {
-            final e = deliverypersonlistpage[index];
-            return Column(
-              children: [
-                ListTile(
-                  leading: Container(
-                    height: 45,
-                    width: 45,
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(color: AppColors.grey1)),
-                    child: e.imageUrl == null
-                        ? ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            child: Image.asset(
-                              AppAssets.UserRounded,
-                              width: 18,
-                              height: 18,
-                              //  fit: BoxFit.cover,
-                            ),
-                          )
-                        : ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            child: Image.network(
-                              AppConstants.imgBaseUrl + e.imageUrl.toString(),
-                              width: 18,
-                              height: 18,
-                            ),
-                          ),
-                    //                            Image.asset(
-                    //   e.imageUrl.toString(),
-                    //   width: 18,
-                    //   height: 18,
-                    // ),
-                  ),
-                  title: HeadingWidget(
-                    title: e.fullname.toString(),
-                  ),
-                  subtitle: SubHeadingWidget(
-                    title: e.mobile,
-                    color: AppColors.black,
-                  ),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
+      body: isLoading
+          ? Center(child: CircularProgressIndicator())
+          : Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 0),
+              child: ListView.builder(
+                itemCount: deliverypersonlistpage.length,
+                itemBuilder: (context, index) {
+                  final e = deliverypersonlistpage[index];
+                  return Column(
                     children: [
-                      GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => AddDeliveryperson(
-                                  deliverypersonId: e.id,
+                      ListTile(
+                        leading: Container(
+                          height: 45,
+                          width: 45,
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(color: AppColors.grey1)),
+                          child: e.imageUrl == null
+                              ? ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: Image.asset(
+                                    AppAssets.UserRounded,
+                                    width: 18,
+                                    height: 18,
+                                    //  fit: BoxFit.cover,
+                                  ),
+                                )
+                              : ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: Image.network(
+                                    AppConstants.imgBaseUrl +
+                                        e.imageUrl.toString(),
+                                    width: 18,
+                                    height: 18,
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
-                          child: Container(
-                            height: 45,
-                            width: 45,
-                            decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                border: Border.all(color: AppColors.red)),
-                            child: Icon(
-                              Icons.edit_outlined,
-                              size: 24,
-                              color: AppColors.red,
-                            ),
-                          )),
-                      const SizedBox(width: 10), // Spacing between
-                      GestureDetector(
-                          onTap: () {
-                            deleteDeleverypersonById(e.id.toString());
-                          },
-                          child: Container(
-                            height: 45,
-                            width: 45,
-                            decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                border: Border.all(color: AppColors.red)),
-                            child: Icon(
-                              Icons.delete_outline,
-                              size: 24,
-                              color: AppColors.red,
-                            ),
-                          )),
+                          //                            Image.asset(
+                          //   e.imageUrl.toString(),
+                          //   width: 18,
+                          //   height: 18,
+                          // ),
+                        ),
+                        title: HeadingWidget(
+                          title: e.fullname.toString(),
+                        ),
+                        subtitle: SubHeadingWidget(
+                          title: e.mobile,
+                          color: AppColors.black,
+                        ),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => AddDeliveryperson(
+                                        deliverypersonId: e.id,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  height: 45,
+                                  width: 45,
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(color: AppColors.red)),
+                                  child: Icon(
+                                    Icons.edit_outlined,
+                                    size: 24,
+                                    color: AppColors.red,
+                                  ),
+                                )),
+                            const SizedBox(width: 10), // Spacing between
+                            GestureDetector(
+                                onTap: () {
+                                  deleteDeleverypersonById(e.id.toString());
+                                },
+                                child: Container(
+                                  height: 45,
+                                  width: 45,
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(color: AppColors.red)),
+                                  child: Icon(
+                                    Icons.delete_outline,
+                                    size: 24,
+                                    color: AppColors.red,
+                                  ),
+                                )),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        child: Divider(
+                          color: AppColors.grey1,
+                        ),
+                      )
                     ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: Divider(
-                    color: AppColors.grey1,
-                  ),
-                )
-              ],
-            );
-          },
-        ),
-      ),
+                  );
+                },
+              ),
+            ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColors.red,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),

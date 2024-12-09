@@ -35,15 +35,15 @@ class _MainContainerState extends State<MainContainer>
   ];
 
   void _onItemTapped(int index) async {
-    // if (index == 2) {
-    //   // Handle logout
-    //   await _handleLogout();
-    // } else {
-    // Handle other navigation
-    setState(() {
-      _selectedIndex = index;
-    });
-    //}
+    if (index == 3) {
+      // Handle logout
+      await _handleLogout();
+    } else {
+      // Handle other navigation
+      setState(() {
+        _selectedIndex = index;
+      });
+    }
   }
 
   @override
@@ -130,6 +130,16 @@ class _MainContainerState extends State<MainContainer>
                 width: 25,
               ),
               label: 'Orders',
+            ),
+            BottomNavigationBarItem(
+              icon: Image.asset(
+                _selectedIndex == 3
+                    ? AppAssets.orderIconSelected
+                    : AppAssets.orderImg,
+                height: 25,
+                width: 25,
+              ),
+              label: 'LogOut',
             ),
           ],
           currentIndex: _selectedIndex,

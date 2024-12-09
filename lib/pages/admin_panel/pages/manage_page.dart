@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:namstore/constants/constants.dart';
 
 import 'package:namstore/pages/admin_panel/pages/store_list.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'delivery_person_list.dart';
 import 'report_page.dart';
@@ -14,6 +15,16 @@ class ManagePage extends StatefulWidget {
 }
 
 class _ManagePageState extends State<ManagePage> {
+  Future<void> _handleLogout() async {
+    // Clear SharedPreferences
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+
+    // Navigate to Login Page
+    Navigator.pushNamedAndRemoveUntil(
+        context, '/login', ModalRoute.withName('/login'));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -95,6 +106,18 @@ class _ManagePageState extends State<ManagePage> {
                   context,
                   MaterialPageRoute(builder: (context) => ReportPage()),
                 );
+              },
+            ),
+            ListTile(
+              leading: Image.asset(
+                AppAssets.UserRounded,
+                height: 18,
+                width: 18,
+              ),
+              title: const Text('Log Out'),
+              trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+              onTap: () {
+                _handleLogout();
               },
             ),
           ],

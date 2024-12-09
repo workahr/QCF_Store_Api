@@ -85,7 +85,7 @@ class _DeliverypersonState extends State<Deliveryperson> {
         Navigator.pushNamedAndRemoveUntil(
             context, '/home', ModalRoute.withName('/home'));
         setState(() {});
-        showInSnackBar(context, response.message);
+        showInSnackBar(context, "Delivery Boy Assigned Successfully");
       } else {
         showInSnackBar(context, response.message);
       }
@@ -112,69 +112,73 @@ class _DeliverypersonState extends State<Deliveryperson> {
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-        child: ListView.builder(
-          itemCount: deliverypersonlistpage.length,
-          itemBuilder: (context, index) {
-            final e = deliverypersonlistpage[index];
-            return ListTile(
-                leading: Container(
-                  height: 45,
-                  width: 45,
-                  decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: AppColors.grey1)),
-                  child: e.imageUrl == null
-                      ? ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: Image.asset(
-                            AppAssets.UserRounded,
-                            width: 18,
-                            height: 18,
-                          ),
-                        )
-                      : ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: Image.network(
-                            AppConstants.imgBaseUrl + e.imageUrl.toString(),
-                            width: 18,
-                            height: 18,
+      body: isLoading
+          ? Center(child: CircularProgressIndicator())
+          : Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+              child: ListView.builder(
+                itemCount: deliverypersonlistpage.length,
+                itemBuilder: (context, index) {
+                  final e = deliverypersonlistpage[index];
+                  return ListTile(
+                      leading: Container(
+                        height: 45,
+                        width: 45,
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(color: AppColors.grey1)),
+                        child: e.imageUrl == null
+                            ? ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                child: Image.asset(
+                                  AppAssets.UserRounded,
+                                  width: 18,
+                                  height: 18,
+                                ),
+                              )
+                            : ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                child: Image.network(
+                                  AppConstants.imgBaseUrl +
+                                      e.imageUrl.toString(),
+                                  width: 18,
+                                  height: 18,
+                                ),
+                              ),
+                        //  Image.asset(
+                        //   // AppAssets.UserRounded,
+                        //   e.image.toString(),
+                        //   width: 18,
+                        //   height: 18,
+                        // ),
+                      ),
+                      title: SubHeadingWidget(
+                        title: 'Name',
+                      ),
+                      subtitle: HeadingWidget(
+                        title: e.fullname.toString(),
+                      ),
+                      trailing: GestureDetector(
+                        onTap: () {
+                          assignDeliveryboy(e.id.toString());
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(8.0),
+                          decoration: BoxDecoration(
+                              border:
+                                  Border.all(color: AppColors.red, width: 1),
+                              borderRadius: BorderRadius.circular(10)),
+                          child: HeadingWidget(
+                            title: 'Assign Now',
+                            fontSize: 12.0,
+                            color: AppColors.red,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
-                  //  Image.asset(
-                  //   // AppAssets.UserRounded,
-                  //   e.image.toString(),
-                  //   width: 18,
-                  //   height: 18,
-                  // ),
-                ),
-                title: SubHeadingWidget(
-                  title: 'Name',
-                ),
-                subtitle: HeadingWidget(
-                  title: e.fullname.toString(),
-                ),
-                trailing: GestureDetector(
-                  onTap: () {
-                    assignDeliveryboy(e.id.toString());
-                  },
-                  child: Container(
-                    padding: EdgeInsets.all(8.0),
-                    decoration: BoxDecoration(
-                        border: Border.all(color: AppColors.red, width: 1),
-                        borderRadius: BorderRadius.circular(10)),
-                    child: HeadingWidget(
-                      title: 'Assign Now',
-                      fontSize: 12.0,
-                      color: AppColors.red,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ));
-          },
-        ),
-      ),
+                      ));
+                },
+              ),
+            ),
     );
   }
 }
