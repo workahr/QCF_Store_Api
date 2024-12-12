@@ -53,7 +53,7 @@ class StoreListData {
   dynamic panNo;
   dynamic terms;
   String zipcode;
-  dynamic frontImg;
+  String? frontImg;
   String onlineVisibility;
   dynamic tags;
   int status;
@@ -80,7 +80,7 @@ class StoreListData {
     required this.panNo,
     required this.terms,
     required this.zipcode,
-    required this.frontImg,
+    this.frontImg,
     required this.onlineVisibility,
     required this.tags,
     required this.status,

@@ -833,7 +833,7 @@ class _AddNewMenuState extends State<AddNewMenu> {
         };
         url = 'v1/updateitem';
       }
-      var result = await apiService.saveCar(url, postData, imageFile);
+      var result = await apiService.saveMenu(url, postData, imageFile);
       closeSnackBar(context: context);
       setState(() {
         // isLoading = false;

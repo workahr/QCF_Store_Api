@@ -554,18 +554,20 @@ class _ScreenshotPageState extends State<ScreenshotPage> {
                                   ),
                                   child: Row(
                                     children: [
-                                      e.imageUrl != null
-                                          ? Image.network(
-                                              height: 80,
-                                              width: 100,
-                                              AppConstants.imgBaseUrl +
-                                                  (e.imageUrl ?? ''),
-                                            )
-                                          : Image.asset(
-                                              AppAssets.payment,
-                                              height: 80,
-                                              width: 100,
-                                            ),
+                                      // e.imageUrl != null
+                                      //     ?
+                                      Image.network(
+                                        height: 80,
+                                        width: 100,
+                                        AppConstants.imgBaseUrl +
+                                            (e.imageUrl ?? ''),
+                                      ),
+                                      // :
+                                      //  Image.asset(
+                                      //     AppAssets.payment,
+                                      //     height: 80,
+                                      //     width: 100,
+                                      //   ),
                                       SizedBox(
                                         width: 10,
                                       ),

@@ -4,6 +4,7 @@ import 'package:namstore/constants/app_assets.dart';
 import 'package:namstore/widgets/heading_widget.dart';
 import 'package:namstore/widgets/outline_btn_widget.dart';
 import 'package:namstore/widgets/sub_heading_widget.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_constants.dart';
@@ -95,6 +96,15 @@ class _DeliverypersonState extends State<Deliveryperson> {
     }
   }
 
+  void _makePhoneCall(String phoneNumber) async {
+    final Uri telUri = Uri(scheme: 'tel', path: phoneNumber);
+    if (await canLaunchUrl(telUri)) {
+      await launchUrl(telUri);
+    } else {
+      throw 'Could not launch $telUri';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -158,24 +168,47 @@ class _DeliverypersonState extends State<Deliveryperson> {
                       subtitle: HeadingWidget(
                         title: e.fullname.toString(),
                       ),
-                      trailing: GestureDetector(
-                        onTap: () {
-                          assignDeliveryboy(e.id.toString());
-                        },
-                        child: Container(
-                          padding: EdgeInsets.all(8.0),
-                          decoration: BoxDecoration(
-                              border:
-                                  Border.all(color: AppColors.red, width: 1),
-                              borderRadius: BorderRadius.circular(10)),
-                          child: HeadingWidget(
-                            title: 'Assign Now',
-                            fontSize: 12.0,
-                            color: AppColors.red,
-                            fontWeight: FontWeight.w500,
+                      trailing: Row(mainAxisSize: MainAxisSize.min, children: [
+                        GestureDetector(
+                          onTap: () {
+                            _makePhoneCall(e.mobile.toString());
+                          },
+                          child: Container(
+                            padding: EdgeInsets.all(8.0),
+                            decoration: BoxDecoration(
+                                border:
+                                    Border.all(color: AppColors.red, width: 1),
+                                borderRadius: BorderRadius.circular(10)),
+                            child: HeadingWidget(
+                              title: 'Call Us',
+                              fontSize: 12.0,
+                              color: AppColors.red,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ),
-                      ));
+                        SizedBox(
+                          width: 5,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            assignDeliveryboy(e.id.toString());
+                          },
+                          child: Container(
+                            padding: EdgeInsets.all(8.0),
+                            decoration: BoxDecoration(
+                                border:
+                                    Border.all(color: AppColors.red, width: 1),
+                                borderRadius: BorderRadius.circular(10)),
+                            child: HeadingWidget(
+                              title: 'Assign Now',
+                              fontSize: 12.0,
+                              color: AppColors.red,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ]));
                 },
               ),
             ),

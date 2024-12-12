@@ -2411,4 +2411,38 @@ class NamFoodApiService {
       return e;
     }
   }
+
+  //store menu save
+
+  Future saveMenu(
+      String apiCtrl, Map<String, dynamic> postData, imageFile) async {
+    try {
+      final url = Uri.parse(liveApiPath + apiCtrl);
+
+      var headers = headerData;
+      var request = http.MultipartRequest(
+        'POST',
+        url,
+      );
+      request.headers.addAll(headerData);
+
+      for (var entry in postData.entries) {
+        request.fields[entry.key] = entry.value.toString();
+      }
+      if (imageFile != null) {
+        var image = await http.MultipartFile.fromPath('media', imageFile!.path);
+        request.files.add(image);
+      }
+      request.headers.addAll(headers);
+      var response = await request.send();
+      if (response.statusCode == 200) {
+        final json = await response.stream.bytesToString();
+        return json;
+      } else {
+        return [];
+      }
+    } catch (e) {
+      return e;
+    }
+  }
 }

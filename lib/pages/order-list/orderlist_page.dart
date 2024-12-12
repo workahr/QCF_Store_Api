@@ -57,7 +57,7 @@ class _OrderlistPageState extends State<OrderlistPage> {
           orderListAll = [];
           isLoading = false;
         });
-        showInSnackBar(context, response.message.toString());
+        //  showInSnackBar(context, response.message.toString());
       }
     } catch (e) {
       setState(() {
@@ -65,7 +65,7 @@ class _OrderlistPageState extends State<OrderlistPage> {
         orderListAll = [];
         isLoading = false;
       });
-      showInSnackBar(context, 'Error occurred: $e');
+      // showInSnackBar(context, 'Error occurred: $e');
     }
 
     setState(() {});

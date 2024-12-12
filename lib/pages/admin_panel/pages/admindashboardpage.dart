@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:namstore/constants/app_assets.dart';
 import 'package:namstore/constants/app_colors.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../services/comFuncService.dart';
 import '../../../services/nam_food_api_service.dart';
@@ -10,6 +11,7 @@ import '../models/admindashboard_model.dart';
 import 'delivery_person_list.dart';
 import 'deliveryperson.dart';
 import 'totalorder.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class AdminDashboardPage extends StatefulWidget {
   @override
@@ -53,7 +55,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
 
           isLoading = false;
         });
-        showInSnackBar(context, response.message.toString());
+        //  showInSnackBar(context, response.message.toString());
       }
     } catch (e) {
       setState(() {
@@ -62,7 +64,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
 
         isLoading = false;
       });
-      showInSnackBar(context, 'Error occurred: $e');
+      //  showInSnackBar(context, 'Error occurred: $e');
     }
   }
 
@@ -120,7 +122,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
           customeraddress = null;
           isLoading = false;
         });
-        showInSnackBar(context, response.message.toString());
+        //  showInSnackBar(context, response.message.toString());
       }
     } catch (e) {
       setState(() {
@@ -129,7 +131,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
         customeraddress = null;
         isLoading = false;
       });
-      showInSnackBar(context, 'Error occurred: $e');
+      //  showInSnackBar(context, 'Error occurred: $e');
     }
   }
 
@@ -158,6 +160,35 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
     setState(() {
       // Update your state variables if needed
     });
+  }
+
+  void _makePhoneCall(String phoneNumber) async {
+    final Uri telUri = Uri(scheme: 'tel', path: phoneNumber);
+    if (await canLaunchUrl(telUri)) {
+      await launchUrl(telUri);
+    } else {
+      throw 'Could not launch $telUri';
+    }
+  }
+
+  Future<void> whatsapp(String contact) async {
+    String androidUrl = "whatsapp://send?phone=$contact";
+    String iosUrl = "https://wa.me/$contact";
+    String webUrl = "https://api.whatsapp.com/send/?phone=$contact";
+    print("contact number $contact");
+    try {
+      if (await canLaunchUrl(Uri.parse(androidUrl))) {
+        await launchUrl(Uri.parse(androidUrl));
+      } else if (await canLaunchUrl(Uri.parse(iosUrl))) {
+        await launchUrl(Uri.parse(iosUrl),
+            mode: LaunchMode.externalApplication);
+      } else {
+        await launchUrl(Uri.parse(webUrl),
+            mode: LaunchMode.externalApplication);
+      }
+    } catch (e) {
+      print('Could not launch WhatsApp for $contact: $e');
+    }
   }
 
   @override
@@ -517,8 +548,34 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                                                 ),
                                               ],
                                             ),
-                                            Image.asset(AppAssets.call_iconfill,
-                                                height: 25, width: 25),
+                                            Row(children: [
+                                              GestureDetector(
+                                                  onTap: () async {
+                                                    _makePhoneCall(
+                                                        currentStoreAddress!
+                                                            .mobile
+                                                            .toString());
+                                                  },
+                                                  child: Image.asset(
+                                                      AppAssets.call_iconfill,
+                                                      height: 35,
+                                                      width: 35)),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              GestureDetector(
+                                                  onTap: () async {
+                                                    whatsapp(
+                                                        currentStoreAddress!
+                                                            .mobile
+                                                            .toString());
+                                                  },
+                                                  child: Image.asset(
+                                                      AppAssets.whatsapp_icon,
+                                                      // color: Colors.green,
+                                                      height: 35,
+                                                      width: 35)),
+                                            ])
                                           ]),
                                       SizedBox(height: 10),
                                       Text(
@@ -546,8 +603,31 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                                               ],
                                             ),
                                           ]),
-                                          Image.asset(AppAssets.call_iconfill,
-                                              height: 25, width: 25),
+                                          Row(children: [
+                                            GestureDetector(
+                                                onTap: () async {
+                                                  _makePhoneCall(e
+                                                      .customerMobile
+                                                      .toString());
+                                                },
+                                                child: Image.asset(
+                                                    AppAssets.call_iconfill,
+                                                    height: 35,
+                                                    width: 35)),
+                                            SizedBox(
+                                              width: 5,
+                                            ),
+                                            GestureDetector(
+                                                onTap: () async {
+                                                  whatsapp(e.customerMobile
+                                                      .toString());
+                                                },
+                                                child: Image.asset(
+                                                    AppAssets.whatsapp_icon,
+                                                    //  color: Colors.green,
+                                                    height: 35,
+                                                    width: 35))
+                                          ]),
                                         ],
                                       ),
                                       SizedBox(height: 10),

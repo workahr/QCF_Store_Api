@@ -63,7 +63,7 @@ class _MenuDetailsScreenState extends State<MenuDetailsScreen> {
           menudeatilslistpageAll = [];
           isLoading = false;
         });
-        showInSnackBar(context, response.message.toString());
+        //  showInSnackBar(context, response.message.toString());
       }
     } catch (e) {
       setState(() {
@@ -71,7 +71,7 @@ class _MenuDetailsScreenState extends State<MenuDetailsScreen> {
         menudeatilslistpageAll = [];
         isLoading = false;
       });
-      showInSnackBar(context, 'Error occurred: $e');
+      //  showInSnackBar(context, 'Error occurred: $e');
     }
 
     setState(() {});
@@ -97,7 +97,7 @@ class _MenuDetailsScreenState extends State<MenuDetailsScreen> {
         jsonResponse = json.decode(result);
       } catch (e) {
         print("Failed to parse JSON: $e");
-        showInSnackBar(context, "Invalid JSON format");
+        // showInSnackBar(context, "Invalid JSON format");
         setState(() => isLoading1 = false);
         return;
       }
@@ -115,7 +115,7 @@ class _MenuDetailsScreenState extends State<MenuDetailsScreen> {
         });
       } else {
         print("API Error Message: ${response.message}");
-        showInSnackBar(context, response.message);
+        //  showInSnackBar(context, response.message);
         setState(() {
           MenuListData = [];
           MenuListAll = [];
@@ -130,7 +130,7 @@ class _MenuDetailsScreenState extends State<MenuDetailsScreen> {
         MenuListAll = [];
         isLoading1 = false; // Stop loading on exception
       });
-      showInSnackBar(context, "An error occurred: $e");
+      // showInSnackBar(context, "An error occurred: $e");
     }
   }
 
@@ -157,14 +157,14 @@ class _MenuDetailsScreenState extends State<MenuDetailsScreen> {
           MyStoreDetails = null;
           isLoading = false;
         });
-        showInSnackBar(context, response.message.toString());
+        // showInSnackBar(context, response.message.toString());
       }
     } catch (e) {
       setState(() {
         MyStoreDetails = null;
         isLoading = false;
       });
-      showInSnackBar(context, 'Error occurred: $e');
+      //showInSnackBar(context, 'Error occurred: $e');
     }
 
     setState(() {});

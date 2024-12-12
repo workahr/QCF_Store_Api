@@ -81,7 +81,7 @@ class _DashboardPageState extends State<DashboardPage> {
           orderListAll = [];
           isLoading = false;
         });
-        showInSnackBar(context, response.message.toString());
+        //  showInSnackBar(context, response.message.toString());
       }
     } catch (e) {
       setState(() {
@@ -89,7 +89,7 @@ class _DashboardPageState extends State<DashboardPage> {
         orderListAll = [];
         isLoading = false;
       });
-      showInSnackBar(context, 'Error occurred: $e');
+      // showInSnackBar(context, 'Error occurred: $e');
     }
 
     setState(() {});
@@ -116,10 +116,10 @@ class _DashboardPageState extends State<DashboardPage> {
           getAllStoreOrders();
         });
       } else {
-        showInSnackBar(context, response.message.toString());
+        //   showInSnackBar(context, response.message.toString());
       }
     } catch (error) {
-      showInSnackBar(context, error.toString());
+      //   showInSnackBar(context, error.toString());
     }
   }
 
@@ -146,14 +146,14 @@ class _DashboardPageState extends State<DashboardPage> {
           MyStoreDetails = null;
           isLoading = false;
         });
-        showInSnackBar(context, response.message.toString());
+        // showInSnackBar(context, response.message.toString());
       }
     } catch (e) {
       setState(() {
         MyStoreDetails = null;
         isLoading = false;
       });
-      showInSnackBar(context, 'Error occurred: $e');
+      // showInSnackBar(context, 'Error occurred: $e');
     }
 
     setState(() {});
@@ -184,7 +184,7 @@ class _DashboardPageState extends State<DashboardPage> {
       // );
     } else {
       print(response.message.toString());
-      showInSnackBar(context, response.message.toString());
+      // showInSnackBar(context, response.message.toString());
     }
   }
 

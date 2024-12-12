@@ -42,13 +42,13 @@ class CategoryListmodel {
 
 class CategoryList {
   int categoryId;
-  int storeId;
-  String categoryName;
+  int? storeId;
+  String? categoryName;
   String? description;
-  String slug;
-  int serial;
-  dynamic imageUrl;
-  int status;
+  String? slug;
+  int? serial;
+  String? imageUrl;
+  int? status;
   int? createdBy;
   DateTime? createdDate;
   dynamic updatedBy;
@@ -56,15 +56,15 @@ class CategoryList {
 
   CategoryList({
     required this.categoryId,
-    required this.storeId,
-    required this.categoryName,
-    required this.description,
-    required this.slug,
-    required this.serial,
-    required this.imageUrl,
-    required this.status,
-    required this.createdBy,
-    required this.createdDate,
+    this.storeId,
+    this.categoryName,
+    this.description,
+    this.slug,
+    this.serial,
+    this.imageUrl,
+    this.status,
+    this.createdBy,
+    this.createdDate,
     required this.updatedBy,
     required this.updatedDate,
   });

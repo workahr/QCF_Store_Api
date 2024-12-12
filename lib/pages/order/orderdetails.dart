@@ -86,10 +86,10 @@ class _OrderDetailsState extends State<OrderDetails> {
         );
         setState(() {});
       } else {
-        showInSnackBar(context, response.message.toString());
+        // showInSnackBar(context, response.message.toString());
       }
     } catch (error) {
-      showInSnackBar(context, error.toString());
+      //  showInSnackBar(context, error.toString());
     }
   }
 
@@ -114,10 +114,10 @@ class _OrderDetailsState extends State<OrderDetails> {
           );
         });
       } else {
-        showInSnackBar(context, response.message.toString());
+        // showInSnackBar(context, response.message.toString());
       }
     } catch (error) {
-      showInSnackBar(context, error.toString());
+      //   showInSnackBar(context, error.toString());
     }
   }
 

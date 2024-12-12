@@ -550,80 +550,6 @@ class _AddStorePageState extends State<AddStorePage> {
                       borderColor: Color(0xFF2C54D6),
                       onTap: () {
                         type = 0;
-                        showActionSheet(context);
-                      }),
-                  SizedBox(height: 10),
-                  Center(
-                    child: Stack(
-                      children: [
-                        liveimgSrc != "" &&
-                                liveimgSrc != null &&
-                                imageSrc == null
-                            ? ClipRRect(
-                                borderRadius: BorderRadius.circular(16),
-                                child: Container(
-                                  width: 160,
-                                  height: 160,
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image: NetworkImage(
-                                        AppConstants.imgBaseUrl +
-                                            (liveimgSrc ?? ''),
-                                      ),
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                  child: liveimgSrc == null
-                                      ? Image.asset(
-                                          AppAssets.user,
-                                          fit: BoxFit.fill,
-                                        )
-                                      : null,
-                                ),
-                              )
-                            : imageSrc != null
-                                ? ClipRRect(
-                                    borderRadius: BorderRadius.circular(
-                                        16), // Adjust the radius as needed
-                                    child: Container(
-                                      width: 160,
-                                      height: 160,
-                                      decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                          image: FileImage(imageSrc!),
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                : SizedBox(),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    "Note: Upload image with shop name",
-                    style: TextStyle(color: Colors.black),
-                  ),
-                  SizedBox(height: 10),
-                  // Upload Passport Size Photo Button
-                  OutlineBtnWidget(
-                      title: 'Upload Passport Size Photo',
-                      titleColor: Color(0xFF2C54D6),
-                      fillColor: Color(0xFFF3F6FF),
-                      iconColor: Color(0xFF2C54D6),
-                      imageUrl: Image.asset(
-                        AppAssets.image_plus_icon,
-                        height: 25,
-                        width: 25,
-                      ),
-                      width: MediaQuery.of(context).size.width - 10,
-                      height: 50,
-                      borderColor: Color(0xFF2C54D6),
-                      onTap: () {
-                        type1 = 0;
                         showActionSheet1(context);
                       }),
                   SizedBox(height: 10),
@@ -675,7 +601,175 @@ class _AddStorePageState extends State<AddStorePage> {
                       ],
                     ),
                   ),
+                  // Center(
+                  //   child: Stack(
+                  //     children: [
+                  //       liveimgSrc != "" &&
+                  //               liveimgSrc != null &&
+                  //               imageSrc == null
+                  //           ? ClipRRect(
+                  //               borderRadius: BorderRadius.circular(16),
+                  //               child: Container(
+                  //                 width: 160,
+                  //                 height: 160,
+                  //                 decoration: BoxDecoration(
+                  //                   image: DecorationImage(
+                  //                     image: NetworkImage(
+                  //                       AppConstants.imgBaseUrl +
+                  //                           (liveimgSrc ?? ''),
+                  //                     ),
+                  //                     fit: BoxFit.cover,
+                  //                   ),
+                  //                 ),
+                  //                 child: liveimgSrc == null
+                  //                     ? Image.asset(
+                  //                         AppAssets.user,
+                  //                         fit: BoxFit.fill,
+                  //                       )
+                  //                     : null,
+                  //               ),
+                  //             )
+                  //           : imageSrc != null
+                  //               ? ClipRRect(
+                  //                   borderRadius: BorderRadius.circular(
+                  //                       16), // Adjust the radius as needed
+                  //                   child: Container(
+                  //                     width: 160,
+                  //                     height: 160,
+                  //                     decoration: BoxDecoration(
+                  //                       image: DecorationImage(
+                  //                         image: FileImage(imageSrc!),
+                  //                         fit: BoxFit.cover,
+                  //                       ),
+                  //                     ),
+                  //                   ),
+                  //                 )
+                  //               : SizedBox(),
+                  //     ],
+                  //   ),
+                  // ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    "Note: Upload image with shop name",
+                    style: TextStyle(color: Colors.black),
+                  ),
+                  SizedBox(height: 10),
+                  // Upload Passport Size Photo Button
+                  OutlineBtnWidget(
+                      title: 'Upload Passport Size Photo',
+                      titleColor: Color(0xFF2C54D6),
+                      fillColor: Color(0xFFF3F6FF),
+                      iconColor: Color(0xFF2C54D6),
+                      imageUrl: Image.asset(
+                        AppAssets.image_plus_icon,
+                        height: 25,
+                        width: 25,
+                      ),
+                      width: MediaQuery.of(context).size.width - 10,
+                      height: 50,
+                      borderColor: Color(0xFF2C54D6),
+                      onTap: () {
+                        type1 = 0;
+                        showActionSheet(context);
+                      }),
+                  SizedBox(height: 10),
 
+                  // Center(
+                  //   child: Stack(
+                  //     children: [
+                  //       liveimgSrc1 != "" &&
+                  //               liveimgSrc1 != null &&
+                  //               imageSrc1 == null
+                  //           ? ClipRRect(
+                  //               borderRadius: BorderRadius.circular(16),
+                  //               child: Container(
+                  //                 width: 160,
+                  //                 height: 160,
+                  //                 decoration: BoxDecoration(
+                  //                   image: DecorationImage(
+                  //                     image: NetworkImage(
+                  //                       AppConstants.imgBaseUrl +
+                  //                           (liveimgSrc1 ?? ''),
+                  //                     ),
+                  //                     fit: BoxFit.cover,
+                  //                   ),
+                  //                 ),
+                  //                 child: liveimgSrc1 == null
+                  //                     ? Image.asset(
+                  //                         AppAssets.user,
+                  //                         fit: BoxFit.fill,
+                  //                       )
+                  //                     : null,
+                  //               ),
+                  //             )
+                  //           : imageSrc1 != null
+                  //               ? ClipRRect(
+                  //                   borderRadius: BorderRadius.circular(
+                  //                       16), // Adjust the radius as needed
+                  //                   child: Container(
+                  //                     width: 160,
+                  //                     height: 160,
+                  //                     decoration: BoxDecoration(
+                  //                       image: DecorationImage(
+                  //                         image: FileImage(imageSrc1!),
+                  //                         fit: BoxFit.cover,
+                  //                       ),
+                  //                     ),
+                  //                   ),
+                  //                 )
+                  //               : SizedBox(),
+                  //     ],
+                  //   ),
+                  // ),
+                  Center(
+                    child: Stack(
+                      children: [
+                        liveimgSrc != "" &&
+                                liveimgSrc != null &&
+                                imageSrc == null
+                            ? ClipRRect(
+                                borderRadius: BorderRadius.circular(16),
+                                child: Container(
+                                  width: 160,
+                                  height: 160,
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: NetworkImage(
+                                        AppConstants.imgBaseUrl +
+                                            (liveimgSrc ?? ''),
+                                      ),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  child: liveimgSrc == null
+                                      ? Image.asset(
+                                          AppAssets.user,
+                                          fit: BoxFit.fill,
+                                        )
+                                      : null,
+                                ),
+                              )
+                            : imageSrc != null
+                                ? ClipRRect(
+                                    borderRadius: BorderRadius.circular(
+                                        16), // Adjust the radius as needed
+                                    child: Container(
+                                      width: 160,
+                                      height: 160,
+                                      decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                          image: FileImage(imageSrc!),
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                : SizedBox(),
+                      ],
+                    ),
+                  ),
                   SizedBox(height: 20),
                   // Text(
                   //   "Select Dish Type",
