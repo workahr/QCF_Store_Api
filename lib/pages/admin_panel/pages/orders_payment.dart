@@ -8,9 +8,11 @@ import 'package:namstore/constants/app_colors.dart';
 import '../../../services/comFuncService.dart';
 import '../../../services/nam_food_api_service.dart';
 import '../api_model/orderpayment_model.dart';
+import '../api_model/screenshot_page_model_api.dart';
 
 class OrdersPayment extends StatefulWidget {
-  const OrdersPayment({super.key});
+  int? storeId;
+  OrdersPayment({super.key, this.storeId});
 
   @override
   State<OrdersPayment> createState() => _OrdersPaymentState();
@@ -24,8 +26,8 @@ class _OrdersPaymentState extends State<OrdersPayment> {
     getOrderList();
   }
 
-  List<ListElement> ordersList = [];
-  List<ListElement> ordersListAll = [];
+  List<ScreeenShots> ordersList = [];
+  List<ScreeenShots> ordersListAll = [];
 
   bool isLoading = false;
 
@@ -44,8 +46,9 @@ class _OrdersPaymentState extends State<OrdersPayment> {
     });
 
     try {
-      var result = await apiService.getDynamicAPI('v1/getallorderbyadmin');
-      var response = ordersPaymentModelFromJson(result);
+      var result = await apiService
+          .getDynamicAPI('v1/getpaymentbystore?store_id=${widget.storeId}');
+      var response = screenshotPageModelFromJson(result);
 
       if (response.status == 'SUCCESS') {
         print("Success");
@@ -131,24 +134,26 @@ class _OrdersPaymentState extends State<OrdersPayment> {
                     ListTile(
                       contentPadding: const EdgeInsets.only(
                           top: 0.0, left: 16.0, right: 16.0, bottom: 5),
-                      title: Text(
-                        'Order ID #${order.invoiceNumber}',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
-                      ),
+                      // title:
+
+                      //  Text(
+                      //   'Order ID #${order.invoiceNumber}',
+                      //   style: const TextStyle(
+                      //     fontWeight: FontWeight.bold,
+                      //     fontSize: 18,
+                      //   ),
+                      // ),
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          for (var item in order.items)
-                            Text(
-                              '${item.quantity} ${item.quantity > 1 ? 'items' : 'item'} | ${dateFormat(order.createdDate)}',
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey,
-                              ),
-                            ),
+                          // for (var item in order.items)
+                          // Text(
+                          //   '${item.quantity} ${item.quantity > 1 ? 'items' : 'item'} | ${dateFormat(order.createdDate)}',
+                          //   style: const TextStyle(
+                          //     fontSize: 14,
+                          //     color: Colors.grey,
+                          //   ),
+                          // ),
                           const SizedBox(height: 5),
                           Text(
                             order.paymentMethod == 'Cash'
@@ -173,7 +178,7 @@ class _OrdersPaymentState extends State<OrdersPayment> {
                             ),
                           ),
                           Text(
-                            "₹${order.totalPrice}",
+                            "₹${order.amount}",
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 16,

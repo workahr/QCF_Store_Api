@@ -48,7 +48,7 @@ class _PaymentsPageState extends State<PaymentsPage> {
   @override
   void initState() {
     super.initState();
-    getallpaymentlist();
+    getPaymentpage();
   }
 
   //Payments
@@ -57,13 +57,13 @@ class _PaymentsPageState extends State<PaymentsPage> {
   List<Payments> paymentspageAll = [];
   bool isLoading = false;
 
-  Future getallpaymentlist() async {
+  Future getPaymentpage() async {
     setState(() {
       isLoading = true;
     });
 
     try {
-      var result = await apiService.getallpaymentlist();
+      var result = await apiService.getPaymentpage();
       var response = paymentsPageModelFromJson(result);
       if (response.status.toString() == 'SUCCESS') {
         setState(() {
@@ -506,7 +506,7 @@ class _PaymentsPageState extends State<PaymentsPage> {
                                 fontSize: 18.0,
                               ),
                               SubHeadingWidget(
-                                title: e.date.toString(),
+                                title: e.formattedDate.toString(),
                               ),
                               SizedBox(
                                 height: 10,
@@ -666,7 +666,9 @@ class _PaymentsPageState extends State<PaymentsPage> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  ScreenshotPage()),
+                                                  ScreenshotPage(
+                                                    storeId: e.storeId,
+                                                  )),
                                         );
                                       },
                                       child: HeadingWidget(

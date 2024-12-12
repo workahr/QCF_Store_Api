@@ -154,4 +154,5 @@ class AppAssets {
   static const String UserRounded = 'assets/images/UserRounded.png';
   static const String report = 'assets/images/report.png';
   static const String call_iconfill = 'assets/images/call_iconfill.png';
+  static const String payment = 'assets/images/payment.png';
 }

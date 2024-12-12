@@ -7,6 +7,7 @@ import 'package:namstore/widgets/svgiconButtonWidget.dart';
 import '../../constants/app_assets.dart';
 import '../../constants/app_colors.dart';
 import '../../widgets/button1_widget.dart';
+import '../../widgets/custom_text_field.dart';
 
 class MenuCategorie extends StatefulWidget {
   const MenuCategorie({super.key});
@@ -16,6 +17,109 @@ class MenuCategorie extends StatefulWidget {
 }
 
 class _MenuCategorieState extends State<MenuCategorie> {
+  TextEditingController categoryNameController = TextEditingController();
+  TextEditingController formattedCategoryNameController =
+      TextEditingController();
+  TextEditingController ordernoController = TextEditingController();
+
+  TextEditingController categoryDescriptionController = TextEditingController();
+
+  void _showAddCategoryDialog() {
+    categoryNameController.addListener(() {
+      final formattedText =
+          categoryNameController.text.toLowerCase().replaceAll(' ', '-');
+      formattedCategoryNameController.value =
+          formattedCategoryNameController.value.copyWith(
+        text: formattedText,
+        selection: TextSelection.collapsed(offset: formattedText.length),
+      );
+    });
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Add New Category'),
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 10),
+                Text(
+                  "Category Name",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                ),
+                SizedBox(height: 2),
+                CustomeTextField(
+                  control: categoryNameController,
+                  borderRadius: BorderRadius.circular(8),
+                  width: MediaQuery.of(context).size.width,
+                  borderColor: Color.fromARGB(255, 225, 225, 225),
+                ),
+                SizedBox(height: 5),
+                Text(
+                  "Serial Order No.",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                ),
+                SizedBox(height: 2),
+                CustomeTextField(
+                  control: ordernoController,
+                  borderRadius: BorderRadius.circular(8),
+                  width: MediaQuery.of(context).size.width,
+                  borderColor: Color.fromARGB(255, 225, 225, 225),
+                ),
+                SizedBox(height: 5),
+                Text(
+                  "Description",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                ),
+                SizedBox(height: 2),
+                CustomeTextField(
+                  control: categoryDescriptionController,
+                  lines: 3,
+                  borderRadius: BorderRadius.circular(8),
+                  width: MediaQuery.of(context).size.width,
+                  borderColor: Color.fromARGB(255, 225, 225, 225),
+                ),
+                SizedBox(height: 20),
+                Center(
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width / 2.5,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        categoryNameController.removeListener(() {});
+                        // addcategory();
+                        print(
+                            'Formatted Category Name: ${formattedCategoryNameController.text}');
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        padding: EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      child: Text(
+                        "Save",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    ).then((_) {
+      // Clean up the listener after dialog closes
+      categoryNameController.removeListener(() {});
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -158,7 +262,9 @@ class _MenuCategorieState extends State<MenuCategorie> {
         ),
         borderColor: (Colors.transparent),
         color: AppColors.red,
-        onTap: () {},
+        onTap: () {
+          _showAddCategoryDialog();
+        },
       )),
     );
   }

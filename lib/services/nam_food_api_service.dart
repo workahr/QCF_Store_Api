@@ -1737,6 +1737,24 @@ class NamFoodApiService {
     }
   }
 
+  // Menu List
+  Future getmenuadminList(ID) async {
+    try {
+      final url = Uri.parse('${liveApiPath}v1/getallitem_admin?store_id=$ID');
+      final response = await client.get(
+        url,
+        headers: headerData,
+      );
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        return response;
+      }
+    } catch (e) {
+      return e;
+    }
+  }
+
   // MyStoreDetails
   Future getMyStoreDetails() async {
     try {

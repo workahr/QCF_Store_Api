@@ -5,10 +5,13 @@ import 'package:namstore/constants/app_colors.dart';
 import '../../../constants/app_constants.dart';
 import '../../../services/comFuncService.dart';
 import '../../../services/nam_food_api_service.dart';
+
+import '../../store_menu/menu_details_screen.dart';
 import '../api_model/delete_store_model.dart';
 import '../api_model/store_list_model.dart';
-import '../models/adminstore_model.dart';
+
 import 'add_store_page.dart';
+import 'menu_details_screen_admin.dart';
 
 class StoreList extends StatefulWidget {
   @override
@@ -331,10 +334,15 @@ class _StoreListState extends State<StoreList> {
                             child: Center(
                               child: GestureDetector(
                                 onTap: () {
-                                  // Add "View details" functionality here
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              MenuDetailsScreenAdmin(
+                                                  storeId: e.storeId)));
                                 },
                                 child: const Text(
-                                  "View details",
+                                  "View Menu",
                                   style: TextStyle(
                                       color: Colors.red, fontSize: 14),
                                 ),
