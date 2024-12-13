@@ -6,25 +6,25 @@ import 'dart:convert';
 
 import 'package:namstore/pages/store_menu/category_list_model.dart';
 
-AddCategorymodel addCategorymodelFromJson(String str) =>
-    AddCategorymodel.fromJson(json.decode(str));
+AdminAddCategorymodel adminaddCategorymodelFromJson(String str) =>
+    AdminAddCategorymodel.fromJson(json.decode(str));
 
-String addCategorymodelToJson(AddCategorymodel data) =>
+String adminaddCategorymodelToJson(AdminAddCategorymodel data) =>
     json.encode(data.toJson());
 
-class AddCategorymodel {
+class AdminAddCategorymodel {
   String status;
   String code;
   String message;
 
-  AddCategorymodel({
+  AdminAddCategorymodel({
     required this.status,
     required this.code,
     required this.message,
   });
 
-  factory AddCategorymodel.fromJson(Map<String, dynamic> json) =>
-      AddCategorymodel(
+  factory AdminAddCategorymodel.fromJson(Map<String, dynamic> json) =>
+      AdminAddCategorymodel(
         status: json["status"],
         code: json["code"],
         message: json["message"],
