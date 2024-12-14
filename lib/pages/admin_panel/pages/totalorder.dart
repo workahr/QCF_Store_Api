@@ -506,11 +506,11 @@ class _TotalorderState extends State<Totalorder> {
                           size: 20,
                         ),
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(
-                            builder: (context) {
-                              return Individualorderdetails();
-                            },
-                          ));
+                          // Navigator.push(context, MaterialPageRoute(
+                          //   builder: (context) {
+                          //     return Individualorderdetails();
+                          //   },
+                          // ));
                         },
                       ),
                       Divider(

@@ -4,29 +4,29 @@
 
 import 'dart:convert';
 
-MenuEditAdminmodel menuEditmodelFromJson(String str) =>
-    MenuEditAdminmodel.fromJson(json.decode(str));
+AdminMenuEditmodel adminmenuEditmodelFromJson(String str) =>
+    AdminMenuEditmodel.fromJson(json.decode(str));
 
-String menuEditmodelToJson(MenuEditAdminmodel data) =>
+String adminmenuEditmodelToJson(AdminMenuEditmodel data) =>
     json.encode(data.toJson());
 
-class MenuEditAdminmodel {
+class AdminMenuEditmodel {
   String? status;
-  MenuEdit list;
+  AdminMenuEdit list;
   String? code;
   String? message;
 
-  MenuEditAdminmodel({
+  AdminMenuEditmodel({
     this.status,
     required this.list,
     this.code,
     this.message,
   });
 
-  factory MenuEditAdminmodel.fromJson(Map<String, dynamic> json) =>
-      MenuEditAdminmodel(
+  factory AdminMenuEditmodel.fromJson(Map<String, dynamic> json) =>
+      AdminMenuEditmodel(
         status: json["status"],
-        list: MenuEdit.fromJson(json["list"]),
+        list: AdminMenuEdit.fromJson(json["list"]),
         code: json["code"],
         message: json["message"],
       );
@@ -39,7 +39,7 @@ class MenuEditAdminmodel {
       };
 }
 
-class MenuEdit {
+class AdminMenuEdit {
   int itemId;
   int? storeId;
   String? itemName;
@@ -60,7 +60,7 @@ class MenuEdit {
   int? updatedBy;
   DateTime? updatedDate;
 
-  MenuEdit({
+  AdminMenuEdit({
     required this.itemId,
     this.storeId,
     this.itemName,
@@ -82,7 +82,7 @@ class MenuEdit {
     this.updatedDate,
   });
 
-  factory MenuEdit.fromJson(Map<String, dynamic> json) => MenuEdit(
+  factory AdminMenuEdit.fromJson(Map<String, dynamic> json) => AdminMenuEdit(
         itemId: json["item_id"],
         storeId: json["store_id"],
         itemName: json["item_name"],

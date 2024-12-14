@@ -10,15 +10,26 @@ import '../../../services/comFuncService.dart';
 import '../../../services/nam_food_api_service.dart';
 import '../../../widgets/heading_widget.dart';
 import '../../store_menu/menu_categorie.dart';
+import '../api_model/admin_delete_menu_model.dart';
 import '../api_model/menu_details_model.dart';
-import '../api_model/menu_edit_model.dart';
+import '../api_model/adminmenu_edit_model.dart';
 import '../api_model/menu_list_model.dart';
 import '../api_model/mystoredetails_model.dart';
 import '../api_model/storestatusupdate_model.dart';
+import 'admin_add_new_menu.dart';
 
 class MenuDetailsScreenAdmin extends StatefulWidget {
   int? storeId;
-  MenuDetailsScreenAdmin({super.key, this.storeId});
+  String? storename;
+  String? storestatus;
+  String? frontimg;
+
+  MenuDetailsScreenAdmin(
+      {super.key,
+      this.storeId,
+      this.storename,
+      this.storestatus,
+      this.frontimg});
   @override
   _MenuDetailsScreenAdminState createState() => _MenuDetailsScreenAdminState();
 }
@@ -34,8 +45,9 @@ class _MenuDetailsScreenAdminState extends State<MenuDetailsScreenAdmin> {
   void initState() {
     super.initState();
     //  getdashbordlist();
-    getMyStoreDetails();
+    // getMyStoreDetails();
     getMenuAdminList();
+    print(widget.storestatus);
   }
 
   bool isLoading = false;
@@ -70,10 +82,10 @@ class _MenuDetailsScreenAdminState extends State<MenuDetailsScreenAdmin> {
       print("Menu List data: ${response.list}");
 
       if (response.status.toUpperCase() == 'SUCCESS') {
+        print("terst");
         setState(() {
           MenuListData = response.list;
-          MenuListAll =
-              List.from(response.list); // Deep copy for further filtering
+          MenuListAll = MenuListData; // Deep copy for further filtering
           isLoading1 = false; // Stop loading after successful fetch
         });
       } else {
@@ -97,194 +109,63 @@ class _MenuDetailsScreenAdminState extends State<MenuDetailsScreenAdmin> {
     }
   }
 
-  // Future<void> getMenuAdminList() async {
-  //   await apiService.getBearerToken();
-  //   // Start loading
-  //   setState(() {
-  //     isLoading1 = true;
-  //   });
+// Delete The Menu
 
-  //   try {
-  //     // Fetch bearer token (if required by your API)
+  Future deleteMenuById(String itemid, String storeid) async {
+    await apiService.getBearerToken();
 
-  //     // Call the API to fetch menu data
-  //     var result = await apiService.getmenuadminList(widget.storeId);
+    Map<String, dynamic> postData = {"store_id": storeid, "id": itemid};
+    print("delete $postData");
 
-  //     print("Raw API Response: $result");
+    var result = await apiService.admindeleteMenuById(postData);
+    AdminDeleteMenumodel response = admindeletemenumodelFromJson(result);
 
-  //     // Check if result is a valid JSON map
-  //     if (result is Map<String, dynamic>) {
-  //       var response = MenuDetailsAdminmodel.fromJson(result);
+    if (response.status.toString() == 'SUCCESS') {
+      showInSnackBar(context, response.message.toString());
+      setState(() {
+        getMenuAdminList();
+      });
+    } else {
+      print(response.message.toString());
+      showInSnackBar(context, response.message.toString());
+    }
+  }
 
-  //       print("Parsed Response Status: ${response.status}");
+// My Store List
 
-  //       if (response.status.toUpperCase() == 'SUCCESS') {
-  //         // Update state with menu data
-  //         setState(() {
-  //           MenuListData = response.list;
-  //           MenuListAll = List.from(response.list); // Deep copy
-  //           isLoading1 = false;
-  //         });
-  //       } else {
-  //         // Handle unsuccessful status
-  //         print("Error Message: ${response.message}");
-  //         showInSnackBar(context, response.message);
+  // StoreDetails? MyStoreDetails;
 
-  //         setState(() {
-  //           MenuListData = [];
-  //           MenuListAll = [];
-  //           isLoading1 = false;
-  //         });
-  //       }
-  //     } else {
-  //       // Handle unexpected response format
-  //       print("Unexpected response format");
-  //       showInSnackBar(context, "Unexpected response format");
-
-  //       setState(() {
-  //         MenuListData = [];
-  //         MenuListAll = [];
-  //         isLoading1 = false;
-  //       });
-  //     }
-  //   } catch (e, stackTrace) {
-  //     // Handle exceptions
-  //     print("Exception: $e");
-  //     print("StackTrace: $stackTrace");
-
-  //     setState(() {
-  //       MenuListData = [];
-  //       MenuListAll = [];
-  //       isLoading1 = false;
-  //     });
-
-  //     showInSnackBar(context, "An error occurred: $e");
-  //   }
-  // }
-
-  // Future<void> getmenuadminList() async {
-  //   await apiService.getBearerToken();
-
-  //   setState(() {
-  //     isLoading1 = true; // Start loading
-  //   });
-
-  //   try {
-  //     var result = await apiService.getmenuadminList(widget.storeId);
-  //     print("API Response: $result");
-
-  //     // Ensure `result` is a Map
-  //     if (result is Map<String, dynamic>) {
-  //       var response = MenuDetailsAdminmodel.fromJson(result);
-  //       print("Parsed Response: ${response.status}");
-
-  //       if (response.status.toUpperCase() == 'SUCCESS') {
-  //         setState(() {
-  //           MenuListData = response.list;
-  //           MenuListAll = List.from(response.list); // Deep copy
-  //           isLoading1 = false;
-  //         });
-  //       } else {
-  //         print("Error Message: ${response.message}");
-  //         showInSnackBar(context, response.message);
-  //         setState(() {
-  //           MenuListData = [];
-  //           MenuListAll = [];
-  //           isLoading1 = false;
-  //         });
-  //       }
-  //     } else {
-  //       print("Unexpected response format");
-  //       showInSnackBar(context, "Unexpected response format");
-  //     }
-  //   } catch (e, stackTrace) {
-  //     print("Exception: $e");
-  //     print("StackTrace: $stackTrace");
-
-  //     setState(() {
-  //       MenuListData = [];
-  //       MenuListAll = [];
-  //       isLoading1 = false;
-  //     });
-
-  //     showInSnackBar(context, "An error occurred: $e");
-  //   }
-  // }
-
-  // Future<void> getmenuadminList() async {
+  // Future getMyStoreDetails() async {
   //   await apiService.getBearerToken();
   //   setState(() {
   //     isLoading = true;
   //   });
 
   //   try {
-  //     var result = await apiService.getmenuadminList(widget.storeId);
-  //     print("Raw API Response: $result");
-
-  //     var response = MenuDetailsAdminmodel.fromJson(result);
-  //     print("Parsed Response: ${response.status}");
-
-  //     if (response.status.toUpperCase() == 'SUCCESS') {
+  //     var result = await apiService.getMyStoreDetails();
+  //     var response = myStoreDetailsmodelFromJson(result);
+  //     if (response.status.toString() == 'SUCCESS') {
   //       setState(() {
-  //         MenuListData = response.list;
-  //         MenuListAll = List.from(response.list);
+  //         MyStoreDetails = response.list;
   //         isLoading = false;
   //       });
   //     } else {
-  //       showInSnackBar(context, response.message.toString());
   //       setState(() {
-  //         MenuListData = [];
-  //         MenuListAll = [];
+  //         MyStoreDetails = null;
   //         isLoading = false;
   //       });
+  //       showInSnackBar(context, response.message.toString());
   //     }
-  //   } catch (e, stackTrace) {
-  //     print("Exception: $e");
-  //     print("StackTrace: $stackTrace");
-  //     showInSnackBar(context, 'Error occurred: $e');
+  //   } catch (e) {
   //     setState(() {
-  //       MenuListData = [];
-  //       MenuListAll = [];
+  //       MyStoreDetails = null;
   //       isLoading = false;
   //     });
+  //     showInSnackBar(context, 'Error occurred: $e');
   //   }
+
+  //   setState(() {});
   // }
-
-// My Store List
-
-  StoreDetails? MyStoreDetails;
-
-  Future getMyStoreDetails() async {
-    await apiService.getBearerToken();
-    setState(() {
-      isLoading = true;
-    });
-
-    try {
-      var result = await apiService.getMyStoreDetails();
-      var response = myStoreDetailsmodelFromJson(result);
-      if (response.status.toString() == 'SUCCESS') {
-        setState(() {
-          MyStoreDetails = response.list;
-          isLoading = false;
-        });
-      } else {
-        setState(() {
-          MyStoreDetails = null;
-          isLoading = false;
-        });
-        showInSnackBar(context, response.message.toString());
-      }
-    } catch (e) {
-      setState(() {
-        MyStoreDetails = null;
-        isLoading = false;
-      });
-      showInSnackBar(context, 'Error occurred: $e');
-    }
-
-    setState(() {});
-  }
 
   Future updatemenustock(id, value) async {
     await apiService.getBearerToken();
@@ -296,7 +177,7 @@ class _MenuDetailsScreenAdminState extends State<MenuDetailsScreenAdmin> {
     print("item_stock $postData");
     var result = await apiService.updatemenustock(postData);
 
-    MenuEditAdminmodel response = menuEditmodelFromJson(result);
+    AdminMenuEditAdminmodel response = adminmenuEditmodelFromJson(result);
 
     if (response.status.toString() == 'SUCCESS') {
       showInSnackBar(context, response.message.toString());
@@ -321,9 +202,12 @@ class _MenuDetailsScreenAdminState extends State<MenuDetailsScreenAdmin> {
   Future updateStoreStatus(status) async {
     await apiService.getBearerToken();
 
-    Map<String, dynamic> postData = {"store_status": status};
+    Map<String, dynamic> postData = {
+      "store_status": status,
+      "store_id": widget.storeId
+    };
     print("store_status $postData");
-    var result = await apiService.updateStoreStatus(postData);
+    var result = await apiService.adminupdateStoreStatus(postData);
 
     StoreStatusUpdateAdminmodel response =
         storeStatusUpdatemodelFromJson(result);
@@ -332,14 +216,8 @@ class _MenuDetailsScreenAdminState extends State<MenuDetailsScreenAdmin> {
       showInSnackBar(context, response.message.toString());
       //    Navigator.pop(context);
       setState(() {
-        getMyStoreDetails(); // Update the state variable
+        //  getMyStoreDetails(); // Update the state variable
       });
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(
-      //     builder: (context) => Third_party_List(),
-      //   ),
-      // );
     } else {
       print(response.message.toString());
       showInSnackBar(context, response.message.toString());
@@ -375,14 +253,14 @@ class _MenuDetailsScreenAdminState extends State<MenuDetailsScreenAdmin> {
                     child: Transform.scale(
                         scale: 0.9,
                         child: Switch(
-                          value: MyStoreDetails!.storeStatus == 1, // isOnDuty,
+                          value: widget.storestatus == 1, // isOnDuty,
                           onChanged: (value1) {
                             setState(() {
                               isOnDuty = value1;
-                              if (MyStoreDetails!.storeStatus == 1) {
-                                toggleTitle = "Off Duty";
-                              } else {
+                              if (widget.storestatus == 1) {
                                 toggleTitle = "On Duty";
+                              } else {
+                                toggleTitle = "Off Duty";
                               }
                               updateStoreStatus(value1 ? 1 : 0);
                               print(value1 ? 1 : 0);
@@ -444,7 +322,7 @@ class _MenuDetailsScreenAdminState extends State<MenuDetailsScreenAdmin> {
                               // )
                               Image.network(
                                   AppConstants.imgBaseUrl +
-                                      MyStoreDetails!.frontImg.toString(),
+                                      widget.frontimg.toString(),
                                   width: 90,
                                   height: 90,
                                   fit: BoxFit.fill, errorBuilder:
@@ -462,7 +340,7 @@ class _MenuDetailsScreenAdminState extends State<MenuDetailsScreenAdmin> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(MyStoreDetails!.name.toString(),
+                            Text(widget.storename.toString(),
                                 //'Grill Chicken Arabian\nRestaurant',
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 20)),
@@ -664,12 +542,23 @@ class _MenuDetailsScreenAdminState extends State<MenuDetailsScreenAdmin> {
                                             ]),
                                         GestureDetector(
                                             onTap: () {
+                                              deleteMenuById(
+                                                  e.itemId.toString(),
+                                                  widget.storeId.toString());
+                                            },
+                                            child: Row(children: [
+                                              Image.asset(
+                                                  AppAssets.delete_round_icon),
+                                            ])),
+                                        GestureDetector(
+                                            onTap: () {
                                               Navigator.push(
                                                   context,
                                                   MaterialPageRoute(
                                                       builder: (context) =>
-                                                          AddNewMenu(
+                                                          AdminAddNewMenu(
                                                             menuId: e.itemId,
+                                                            storeId: e.storeId,
                                                           ))).then((value) {});
                                             },
                                             child: Row(
@@ -716,7 +605,9 @@ class _MenuDetailsScreenAdminState extends State<MenuDetailsScreenAdmin> {
                         onTap: () {
                           Navigator.push(context, MaterialPageRoute(
                             builder: (context) {
-                              return AddNewMenu();
+                              return AdminAddNewMenu(
+                                storeId: widget.storeId,
+                              );
                             },
                           ));
                         },

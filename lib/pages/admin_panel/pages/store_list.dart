@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:namstore/constants/app_assets.dart';
 import 'package:namstore/constants/app_colors.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../../constants/app_constants.dart';
 import '../../../services/comFuncService.dart';
@@ -87,6 +88,40 @@ class _StoreListState extends State<StoreList> {
     }
   }
 
+  Widget _buildShimmerPlaceholder() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      child: Shimmer.fromColors(
+        baseColor: Colors.grey.shade300,
+        highlightColor: Colors.grey.shade100,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(13), // Add border radius
+              child: Container(
+                width: double.infinity,
+                height: 383,
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(13), // Add border radius
+              child: Container(
+                width: double.infinity,
+                height: 283,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -106,7 +141,12 @@ class _StoreListState extends State<StoreList> {
         centerTitle: true,
       ),
       body: isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? ListView.builder(
+              itemCount: 5,
+              itemBuilder: (context, index) {
+                return _buildShimmerPlaceholder();
+              },
+            )
           : ListView.builder(
               itemCount: storedetaillistpage.length,
               shrinkWrap:
@@ -339,7 +379,12 @@ class _StoreListState extends State<StoreList> {
                                       MaterialPageRoute(
                                           builder: (context) =>
                                               MenuDetailsScreenAdmin(
-                                                  storeId: e.storeId)));
+                                                storeId: e.storeId,
+                                                storename: e.name,
+                                                storestatus:
+                                                    e.storeStatus.toString(),
+                                                frontimg: e.frontImg,
+                                              )));
                                 },
                                 child: const Text(
                                   "View Menu",

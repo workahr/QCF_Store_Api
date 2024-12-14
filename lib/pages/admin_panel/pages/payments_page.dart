@@ -2,6 +2,7 @@ import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:namstore/widgets/sub_heading_widget.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../../constants/app_colors.dart';
 import '../../../services/comFuncService.dart';
 import '../../../services/nam_food_api_service.dart';
@@ -430,6 +431,51 @@ class _PaymentsPageState extends State<PaymentsPage> {
     );
   }
 
+  Widget _buildShimmerPlaceholder() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      child: Shimmer.fromColors(
+        baseColor: Colors.grey.shade300,
+        highlightColor: Colors.grey.shade100,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(13), // Add border radius
+              child: Container(
+                width: double.infinity,
+                height: 53,
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(13), // Add border radius
+              child: Container(
+                width: double.infinity,
+                height: 283,
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(13), // Add border radius
+              child: Container(
+                width: double.infinity,
+                height: 283,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -449,7 +495,12 @@ class _PaymentsPageState extends State<PaymentsPage> {
         ),
       ),
       body: isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? ListView.builder(
+              itemCount: 4,
+              itemBuilder: (context, index) {
+                return _buildShimmerPlaceholder();
+              },
+            )
           : Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
               child: Column(
@@ -649,8 +700,8 @@ class _PaymentsPageState extends State<PaymentsPage> {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (context) =>
-                                                OrdersPayment(),
+                                            builder: (context) => OrdersPayment(
+                                                storeId: e.storeId),
                                           ),
                                         );
                                       },

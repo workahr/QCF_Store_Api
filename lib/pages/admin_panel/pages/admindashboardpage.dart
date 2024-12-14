@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:namstore/constants/app_assets.dart';
 import 'package:namstore/constants/app_colors.dart';
 import 'package:url_launcher/url_launcher.dart';
-
+import 'package:shimmer/shimmer.dart';
 import '../../../services/comFuncService.dart';
 import '../../../services/nam_food_api_service.dart';
 import '../api_model/dashboard_orderlist_model.dart';
@@ -31,7 +31,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
   List<OrderList> unassignorderdetailspage = [];
   List<OrderList> unassignorderdetailspageAll = [];
 
-  Future<void> getunassignDashboardOrderdetailslist() async {
+  Future getunassignDashboardOrderdetailslist() async {
     setState(() {
       isLoading = true;
     });
@@ -55,7 +55,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
 
           isLoading = false;
         });
-        //  showInSnackBar(context, response.message.toString());
+        showInSnackBar(context, response.message.toString());
       }
     } catch (e) {
       setState(() {
@@ -64,7 +64,8 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
 
         isLoading = false;
       });
-      //  showInSnackBar(context, 'Error occurred: $e');
+      showInSnackBar(context, 'Error occurred: $e');
+      print("admin dashboard $e");
     }
   }
 
@@ -72,14 +73,13 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
 
   List<OrderList> orderdetailslistpage = [];
   List<OrderList> orderdetailslistpageAll = [];
-  CustomerAddress? customeraddress;
-  StoreAddress? storeaddress;
+
   bool isLoading = false;
 
   int? totalOrdersCount;
   double? totalOrderPrice;
 
-  Future<void> getallDashboardOrderdetailslist() async {
+  Future getallDashboardOrderdetailslist() async {
     setState(() {
       isLoading = true;
     });
@@ -89,6 +89,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
       var response = orderListmodelFromJson(result);
 
       if (response.status == 'SUCCESS') {
+        print("hi");
         setState(() {
           orderdetailslistpage = response.list;
           orderdetailslistpageAll = orderdetailslistpage;
@@ -105,12 +106,6 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
           });
           print("Total Order Price: $totalOrderPrice");
 
-          if (orderdetailslistpage.isNotEmpty) {
-            customeraddress = orderdetailslistpage.first.customerAddress;
-          } else {
-            customeraddress = null;
-          }
-
           calculateTodayOrders();
 
           isLoading = false;
@@ -119,7 +114,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
         setState(() {
           orderdetailslistpage = [];
           orderdetailslistpageAll = [];
-          customeraddress = null;
+
           isLoading = false;
         });
         //  showInSnackBar(context, response.message.toString());
@@ -128,7 +123,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
       setState(() {
         orderdetailslistpage = [];
         orderdetailslistpageAll = [];
-        customeraddress = null;
+
         isLoading = false;
       });
       //  showInSnackBar(context, 'Error occurred: $e');
@@ -157,9 +152,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
     print("Today's Total Products: $totalTodayProducts");
     print("Today's Total Order Price: $totalTodayOrderPrice");
 
-    setState(() {
-      // Update your state variables if needed
-    });
+    setState(() {});
   }
 
   void _makePhoneCall(String phoneNumber) async {
@@ -191,6 +184,109 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
     }
   }
 
+  Widget _buildShimmerPlaceholder() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      child: Shimmer.fromColors(
+        baseColor: Colors.grey.shade300,
+        highlightColor: Colors.grey.shade100,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 5,
+            ),
+            Center(
+                child: ClipRRect(
+              borderRadius: BorderRadius.circular(13), // Add border radius
+              child: Container(
+                width: 270,
+                height: 83,
+                color: Colors.white,
+              ),
+            )),
+            SizedBox(
+              height: 20,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(13), // Add border radius
+                  child: Container(
+                    width: 170,
+                    height: 133,
+                    color: Colors.white,
+                  ),
+                ),
+                SizedBox(
+                  width: 20,
+                ),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(13), // Add border radius
+                  child: Container(
+                    width: 170,
+                    height: 133,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(13), // Add border radius
+                  child: Container(
+                    width: 170,
+                    height: 133,
+                    color: Colors.white,
+                  ),
+                ),
+                SizedBox(
+                  width: 20,
+                ),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(13), // Add border radius
+                  child: Container(
+                    width: 170,
+                    height: 133,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(13), // Add border radius
+              child: Container(
+                width: double.infinity,
+                height: 383,
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(13), // Add border radius
+              child: Container(
+                width: double.infinity,
+                height: 283,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -211,7 +307,12 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
         centerTitle: true,
       ),
       body: isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? ListView.builder(
+              itemCount: 5,
+              itemBuilder: (context, index) {
+                return _buildShimmerPlaceholder();
+              },
+            )
           : SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -456,7 +557,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                       final e = unassignorderdetailspage[index];
 
                       final currentCustomerAddress = e.customerAddress;
-                      final currentStoreAddress = e.storeAddress;
+                      // final currentStoreAddress = e.storeAddress;
                       String formattedDate = e.createdDate != null
                           ? DateFormat('dd-MM-yyyy').format(e.createdDate!)
                           : '';
@@ -548,40 +649,40 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                                                 ),
                                               ],
                                             ),
-                                            Row(children: [
-                                              GestureDetector(
-                                                  onTap: () async {
-                                                    _makePhoneCall(
-                                                        currentStoreAddress!
-                                                            .mobile
-                                                            .toString());
-                                                  },
-                                                  child: Image.asset(
-                                                      AppAssets.call_iconfill,
-                                                      height: 35,
-                                                      width: 35)),
-                                              SizedBox(
-                                                width: 5,
-                                              ),
-                                              GestureDetector(
-                                                  onTap: () async {
-                                                    whatsapp(
-                                                        currentStoreAddress!
-                                                            .mobile
-                                                            .toString());
-                                                  },
-                                                  child: Image.asset(
-                                                      AppAssets.whatsapp_icon,
-                                                      // color: Colors.green,
-                                                      height: 35,
-                                                      width: 35)),
-                                            ])
+                                            // Row(children: [
+                                            //   GestureDetector(
+                                            //       onTap: () async {
+                                            //         _makePhoneCall(
+                                            //             currentStoreAddress!
+                                            //                 .mobile
+                                            //                 .toString());
+                                            //       },
+                                            //       child: Image.asset(
+                                            //           AppAssets.call_iconfill,
+                                            //           height: 35,
+                                            //           width: 35)),
+                                            //   SizedBox(
+                                            //     width: 5,
+                                            //   ),
+                                            //   GestureDetector(
+                                            //       onTap: () async {
+                                            //         whatsapp(
+                                            //             currentStoreAddress!
+                                            //                 .mobile
+                                            //                 .toString());
+                                            //       },
+                                            //       child: Image.asset(
+                                            //           AppAssets.whatsapp_icon,
+                                            //           // color: Colors.green,
+                                            //           height: 35,
+                                            //           width: 35)),
+                                            // ])
                                           ]),
                                       SizedBox(height: 10),
-                                      Text(
-                                        "${currentStoreAddress.name ?? 'Unknown'}, ${currentStoreAddress.address ?? 'N/A'}, ${currentStoreAddress.city ?? 'N/A'}",
-                                        style: TextStyle(fontSize: 14),
-                                      ),
+                                      // Text(
+                                      //   "${currentStoreAddress!.name ?? 'Unknown'}, ${currentStoreAddress.address ?? 'N/A'}, ${currentStoreAddress.city ?? 'N/A'}",
+                                      //   style: TextStyle(fontSize: 14),
+                                      // ),
                                       SizedBox(height: 10),
                                       Row(
                                         mainAxisAlignment:
@@ -632,7 +733,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                                       ),
                                       SizedBox(height: 10),
                                       Text(
-                                        "${currentCustomerAddress.address ?? 'N/A'}, ${currentCustomerAddress.city ?? 'N/A'}, ${currentCustomerAddress.state ?? 'N/A'}",
+                                        "${currentCustomerAddress.address ?? ''}, ${currentCustomerAddress.city ?? ''}, ${currentCustomerAddress.state ?? ''}",
                                         style: TextStyle(fontSize: 14),
                                       ),
                                       Divider(

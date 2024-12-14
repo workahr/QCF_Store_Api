@@ -64,14 +64,14 @@ class _OrdersPaymentState extends State<OrdersPayment> {
           ordersList = [];
           isLoading = false;
         });
-        showInSnackBar(context, result.message.toString());
+        //showInSnackBar(context, result.message.toString());
       }
     } catch (e) {
       setState(() {
         ordersList = [];
         isLoading = false;
       });
-      showInSnackBar(context, 'Error occurred: $e');
+      // showInSnackBar(context, 'Error occurred: $e');
     }
   }
 

@@ -57,7 +57,7 @@ class _ScreenshotPageState extends State<ScreenshotPage> {
           screenshotpageAll = [];
           isLoading = false;
         });
-        showInSnackBar(context, response.message.toString());
+        //  showInSnackBar(context, response.message.toString());
       }
     } catch (e) {
       setState(() {
@@ -65,7 +65,7 @@ class _ScreenshotPageState extends State<ScreenshotPage> {
         screenshotpageAll = [];
         isLoading = false;
       });
-      showInSnackBar(context, 'Error occurred: $e');
+      // showInSnackBar(context, 'Error occurred: $e');
       print(e);
     }
 
@@ -108,7 +108,8 @@ class _ScreenshotPageState extends State<ScreenshotPage> {
           content: StatefulBuilder(
             // Use StatefulBuilder to update the dialog state
             builder: (BuildContext context, StateSetter setState) {
-              return Column(
+              return SingleChildScrollView(
+                  child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -236,7 +237,7 @@ class _ScreenshotPageState extends State<ScreenshotPage> {
                     ],
                   ),
                 ],
-              );
+              ));
             },
           ),
           actions: [
@@ -247,7 +248,7 @@ class _ScreenshotPageState extends State<ScreenshotPage> {
               },
               label: Text('Submit'),
               style: ElevatedButton.styleFrom(
-                minimumSize: Size(double.infinity, 40),
+                // minimumSize: Size(double.infinity, 40),
                 backgroundColor: Colors.red,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10)),
@@ -655,8 +656,8 @@ class _ScreenshotPageState extends State<ScreenshotPage> {
         padding: const EdgeInsets.all(16),
         child: ButtonWidget(
           title: 'Add Amount',
-          width: 250,
-          height: 45,
+          width: 250.0,
+          height: 45.0,
           color: AppColors.red,
           borderRadius: 10,
           onTap: showpayment,
