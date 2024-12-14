@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:namstore/constants/app_colors.dart';
 import 'package:namstore/widgets/heading_widget.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../constants/app_assets.dart';
 import '../../services/comFuncService.dart';
@@ -200,6 +201,109 @@ class _DashboardPageState extends State<DashboardPage> {
     }
   }
 
+  Widget _buildShimmerPlaceholder() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      child: Shimmer.fromColors(
+        baseColor: Colors.grey.shade300,
+        highlightColor: Colors.grey.shade100,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 5,
+            ),
+            Center(
+                child: ClipRRect(
+              borderRadius: BorderRadius.circular(13), // Add border radius
+              child: Container(
+                width: 270,
+                height: 83,
+                color: Colors.white,
+              ),
+            )),
+            SizedBox(
+              height: 20,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(13), // Add border radius
+                  child: Container(
+                    width: 170,
+                    height: 133,
+                    color: Colors.white,
+                  ),
+                ),
+                SizedBox(
+                  width: 20,
+                ),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(13), // Add border radius
+                  child: Container(
+                    width: 170,
+                    height: 133,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(13), // Add border radius
+                  child: Container(
+                    width: 170,
+                    height: 133,
+                    color: Colors.white,
+                  ),
+                ),
+                SizedBox(
+                  width: 20,
+                ),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(13), // Add border radius
+                  child: Container(
+                    width: 170,
+                    height: 133,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(13), // Add border radius
+              child: Container(
+                width: double.infinity,
+                height: 383,
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(13), // Add border radius
+              child: Container(
+                width: double.infinity,
+                height: 283,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -262,7 +366,12 @@ class _DashboardPageState extends State<DashboardPage> {
           automaticallyImplyLeading: false,
         ),
         body: isLoading
-            ? Center(child: CircularProgressIndicator())
+            ? ListView.builder(
+                itemCount: 5,
+                itemBuilder: (context, index) {
+                  return _buildShimmerPlaceholder();
+                },
+              )
             : SingleChildScrollView(
                 child: Padding(
                 padding: EdgeInsets.all(12.0),

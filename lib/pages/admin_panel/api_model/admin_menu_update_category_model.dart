@@ -4,25 +4,28 @@
 
 import 'dart:convert';
 
-AdminUpdateItemCategoryModel adminupdateItemCategoryModelFromJson(String str) =>
-    AdminUpdateItemCategoryModel.fromJson(json.decode(str));
+AdminMenuUpdateItemCategoryModel adminmenuupdateItemCategoryModelFromJson(
+        String str) =>
+    AdminMenuUpdateItemCategoryModel.fromJson(json.decode(str));
 
-String adminupdateItemCategoryModelToJson(AdminUpdateItemCategoryModel data) =>
+String adminmenuupdateItemCategoryModelToJson(
+        AdminMenuUpdateItemCategoryModel data) =>
     json.encode(data.toJson());
 
-class AdminUpdateItemCategoryModel {
+class AdminMenuUpdateItemCategoryModel {
   String status;
   String code;
   String message;
 
-  AdminUpdateItemCategoryModel({
+  AdminMenuUpdateItemCategoryModel({
     required this.status,
     required this.code,
     required this.message,
   });
 
-  factory AdminUpdateItemCategoryModel.fromJson(Map<String, dynamic> json) =>
-      AdminUpdateItemCategoryModel(
+  factory AdminMenuUpdateItemCategoryModel.fromJson(
+          Map<String, dynamic> json) =>
+      AdminMenuUpdateItemCategoryModel(
         status: json["status"],
         code: json["code"],
         message: json["message"],

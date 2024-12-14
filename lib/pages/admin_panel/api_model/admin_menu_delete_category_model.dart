@@ -4,25 +4,28 @@
 
 import 'dart:convert';
 
-AdminDeleteStoreByIdModel admindeleteStoreByIdModelFromJson(String str) =>
-    AdminDeleteStoreByIdModel.fromJson(json.decode(str));
+AdminMenuDeleteCategoryByIdModel adminmenudeleteategoryByIdModelFromJson(
+        String str) =>
+    AdminMenuDeleteCategoryByIdModel.fromJson(json.decode(str));
 
-String admindeleteStoreByIdModelToJson(AdminDeleteStoreByIdModel data) =>
+String adminmenudeleteategoryByIdModelToJson(
+        AdminMenuDeleteCategoryByIdModel data) =>
     json.encode(data.toJson());
 
-class AdminDeleteStoreByIdModel {
+class AdminMenuDeleteCategoryByIdModel {
   String status;
   String code;
   String message;
 
-  AdminDeleteStoreByIdModel({
+  AdminMenuDeleteCategoryByIdModel({
     required this.status,
     required this.code,
     required this.message,
   });
 
-  factory AdminDeleteStoreByIdModel.fromJson(Map<String, dynamic> json) =>
-      AdminDeleteStoreByIdModel(
+  factory AdminMenuDeleteCategoryByIdModel.fromJson(
+          Map<String, dynamic> json) =>
+      AdminMenuDeleteCategoryByIdModel(
         status: json["status"],
         code: json["code"],
         message: json["message"],

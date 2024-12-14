@@ -439,13 +439,13 @@ class _MenuCategorieState extends State<MenuCategorie> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   HeadingWidget(
-                                    title: e.categoryName.toString(),
+                                    title: 'Categories Name:',
                                   ),
                                   SizedBox(
                                     height: 10,
                                   ),
                                   HeadingWidget(
-                                    title: e.slug.toString(),
+                                    title: e.categoryName.toString(),
                                     fontWeight: FontWeight.w500,
                                     fontSize: 18.00,
                                   ),

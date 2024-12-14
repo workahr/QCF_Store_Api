@@ -1,75 +1,76 @@
 // To parse this JSON data, do
 //
-//     final categoryListmodel = categoryListmodelFromJson(jsonString);
+//     final deleteCategoryByIdModel = deleteCategoryByIdModelFromJson(jsonString);
 
 import 'dart:convert';
 
-AdminCategoryListmodel admincategoryListmodelFromJson(String str) =>
-    AdminCategoryListmodel.fromJson(json.decode(str));
+AdminMenuEditCategoryByIdModel adminmenueditCategoryByIdModelFromJson(
+        String str) =>
+    AdminMenuEditCategoryByIdModel.fromJson(json.decode(str));
 
-String admincategoryListmodelToJson(AdminCategoryListmodel data) =>
+String adminmenueditCategoryByIdModelToJson(
+        AdminMenuEditCategoryByIdModel data) =>
     json.encode(data.toJson());
 
-class AdminCategoryListmodel {
+class AdminMenuEditCategoryByIdModel {
   String status;
-  List<CategoryList> list;
+  EditCategory list;
   String code;
   String message;
 
-  AdminCategoryListmodel({
+  AdminMenuEditCategoryByIdModel({
     required this.status,
     required this.list,
     required this.code,
     required this.message,
   });
 
-  factory AdminCategoryListmodel.fromJson(Map<String, dynamic> json) =>
-      AdminCategoryListmodel(
+  factory AdminMenuEditCategoryByIdModel.fromJson(Map<String, dynamic> json) =>
+      AdminMenuEditCategoryByIdModel(
         status: json["status"],
-        list: List<CategoryList>.from(
-            json["list"].map((x) => CategoryList.fromJson(x))),
+        list: EditCategory.fromJson(json["list"]),
         code: json["code"],
         message: json["message"],
       );
 
   Map<String, dynamic> toJson() => {
         "status": status,
-        "list": List<dynamic>.from(list.map((x) => x.toJson())),
+        "list": list.toJson(),
         "code": code,
         "message": message,
       };
 }
 
-class CategoryList {
+class EditCategory {
   int categoryId;
-  int? storeId;
-  String? categoryName;
-  String? description;
-  String? slug;
-  int? serial;
-  String? imageUrl;
-  int? status;
-  int? createdBy;
-  DateTime? createdDate;
+  int storeId;
+  String categoryName;
+  dynamic description;
+  String slug;
+  dynamic serial;
+  dynamic imageUrl;
+  int status;
+  int createdBy;
+  DateTime createdDate;
   dynamic updatedBy;
   dynamic updatedDate;
 
-  CategoryList({
+  EditCategory({
     required this.categoryId,
-    this.storeId,
-    this.categoryName,
-    this.description,
-    this.slug,
-    this.serial,
-    this.imageUrl,
-    this.status,
-    this.createdBy,
-    this.createdDate,
+    required this.storeId,
+    required this.categoryName,
+    required this.description,
+    required this.slug,
+    required this.serial,
+    required this.imageUrl,
+    required this.status,
+    required this.createdBy,
+    required this.createdDate,
     required this.updatedBy,
     required this.updatedDate,
   });
 
-  factory CategoryList.fromJson(Map<String, dynamic> json) => CategoryList(
+  factory EditCategory.fromJson(Map<String, dynamic> json) => EditCategory(
         categoryId: json["category_id"],
         storeId: json["store_id"],
         categoryName: json["category_name"],
@@ -79,9 +80,7 @@ class CategoryList {
         imageUrl: json["image_url"],
         status: json["status"],
         createdBy: json["created_by"],
-        createdDate: json["created_date"] == null
-            ? null
-            : DateTime.parse(json["created_date"]),
+        createdDate: DateTime.parse(json["created_date"]),
         updatedBy: json["updated_by"],
         updatedDate: json["updated_date"],
       );
@@ -96,7 +95,7 @@ class CategoryList {
         "image_url": imageUrl,
         "status": status,
         "created_by": createdBy,
-        "created_date": createdDate?.toIso8601String(),
+        "created_date": createdDate.toIso8601String(),
         "updated_by": updatedBy,
         "updated_date": updatedDate,
       };
