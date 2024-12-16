@@ -1813,10 +1813,52 @@ class NamFoodApiService {
     }
   }
 
+  //Admin  Add Category
+
+  Future Adminaddcategory(postData, id) async {
+    try {
+      final url =
+          Uri.parse('${liveApiPath}v1/createitemcategory_admin?store_id=$id');
+      print("test1 ");
+      final response = await client.post(
+        url,
+        headers: headerData,
+        body: jsonEncode(postData),
+      );
+      print("test2 ");
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        return response;
+      }
+    } catch (e) {
+      return e;
+    }
+  }
+
   // Category List
   Future getcategoryList() async {
     try {
       final url = Uri.parse('${liveApiPath}v1/getallitemcategory');
+      final response = await client.get(
+        url,
+        headers: headerData,
+      );
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        return response;
+      }
+    } catch (e) {
+      return e;
+    }
+  }
+
+  //Admin  Category List
+  Future AdmingetcategoryList(id) async {
+    try {
+      final url =
+          Uri.parse('${liveApiPath}v1/getallitemcategory_admin?store_id=$id');
       final response = await client.get(
         url,
         headers: headerData,
@@ -2579,6 +2621,26 @@ class NamFoodApiService {
     }
   }
 
+//get categorybyid
+
+  Future Admingetcategorybyid(id, storeid) async {
+    try {
+      final url = Uri.parse(
+          '${liveApiPath}v1/getitemcategorybyid_admin?id=$id&store_id=$storeid');
+      final response = await client.get(
+        url,
+        headers: headerData,
+      );
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        return response;
+      }
+    } catch (e) {
+      return e;
+    }
+  }
+
   // delete categorybyid
   Future deletecategorybyid(postData) async {
     print('Delivery person delete test $postData');
@@ -2599,11 +2661,55 @@ class NamFoodApiService {
     }
   }
 
+  // delete categorybyid
+  Future Admindeletecategorybyid(postData, id) async {
+    print('category delete test $postData');
+    try {
+      final url =
+          Uri.parse('${liveApiPath}v1/deleteitemcategory_admin?store_id=$id');
+      final response = await client.post(
+        url,
+        headers: headerData,
+        body: jsonEncode(postData),
+      );
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        return [];
+      }
+    } catch (e) {
+      return e;
+    }
+  }
+
 // update itemcategory
 
   Future updateItemCategory(postData) async {
     try {
       final url = Uri.parse('${liveApiPath}v1/updateitemcategory');
+      final response = await client.post(url,
+          headers: headerData, body: jsonEncode(postData));
+
+      if (response.statusCode == 200) {
+        final json = response.body;
+        return json;
+      } else {
+        print('error');
+        throw Exception(
+            'Failed. Status code: ${response.statusCode} ${response.toString()}');
+      }
+    } catch (e) {
+      print('catcherror ${e}');
+      return e;
+    }
+  }
+
+  //Admin update itemcategory
+
+  Future AdminupdateItemCategory(postData, id) async {
+    try {
+      final url =
+          Uri.parse('${liveApiPath}v1/updateitemcategory_admin?store_id=$id');
       final response = await client.post(url,
           headers: headerData, body: jsonEncode(postData));
 

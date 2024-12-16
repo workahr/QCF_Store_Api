@@ -14,9 +14,9 @@ import 'order/orderdetails.dart';
 import 'store_menu/menu_details_screen.dart';
 
 class MainContainer extends StatefulWidget {
-  MainContainer({super.key, this.childWidget});
-
+  final int initialPage;
   final Widget? childWidget;
+  MainContainer({super.key, this.childWidget, this.initialPage = 0});
 
   @override
   State<MainContainer> createState() => _MainContainerState();
@@ -49,6 +49,7 @@ class _MainContainerState extends State<MainContainer>
   @override
   initState() {
     super.initState();
+    _selectedIndex = widget.initialPage;
   }
 
   @protected
@@ -157,9 +158,10 @@ class _MainContainerState extends State<MainContainer>
 // Admin Panel Main Conatiner
 
 class AdminMainContainer extends StatefulWidget {
-  AdminMainContainer({super.key, this.childWidget});
+  AdminMainContainer({super.key, this.childWidget, this.admininitialPage = 0});
 
   final Widget? childWidget;
+  final int admininitialPage;
 
   @override
   State<AdminMainContainer> createState() => _AdminMainContainerState();
@@ -192,6 +194,7 @@ class _AdminMainContainerState extends State<AdminMainContainer>
   @override
   initState() {
     super.initState();
+    _selectedIndex = widget.admininitialPage;
   }
 
   @protected

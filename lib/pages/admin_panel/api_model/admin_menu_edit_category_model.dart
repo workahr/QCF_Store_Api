@@ -14,7 +14,7 @@ String adminmenueditCategoryByIdModelToJson(
 
 class AdminMenuEditCategoryByIdModel {
   String status;
-  EditCategory list;
+  AdminEditCategory list;
   String code;
   String message;
 
@@ -28,7 +28,7 @@ class AdminMenuEditCategoryByIdModel {
   factory AdminMenuEditCategoryByIdModel.fromJson(Map<String, dynamic> json) =>
       AdminMenuEditCategoryByIdModel(
         status: json["status"],
-        list: EditCategory.fromJson(json["list"]),
+        list: AdminEditCategory.fromJson(json["list"]),
         code: json["code"],
         message: json["message"],
       );
@@ -41,36 +41,37 @@ class AdminMenuEditCategoryByIdModel {
       };
 }
 
-class EditCategory {
-  int categoryId;
-  int storeId;
-  String categoryName;
-  dynamic description;
-  String slug;
-  dynamic serial;
-  dynamic imageUrl;
-  int status;
-  int createdBy;
-  DateTime createdDate;
-  dynamic updatedBy;
-  dynamic updatedDate;
+class AdminEditCategory {
+  int? categoryId;
+  int? storeId;
+  String? categoryName;
+  String? description;
+  String? slug;
+  int? serial;
+  String? imageUrl;
+  int? status;
+  int? createdBy;
+  String? createdDate;
+  int? updatedBy;
+  String? updatedDate;
 
-  EditCategory({
-    required this.categoryId,
-    required this.storeId,
-    required this.categoryName,
-    required this.description,
-    required this.slug,
-    required this.serial,
-    required this.imageUrl,
-    required this.status,
-    required this.createdBy,
-    required this.createdDate,
-    required this.updatedBy,
-    required this.updatedDate,
+  AdminEditCategory({
+    this.categoryId,
+    this.storeId,
+    this.categoryName,
+    this.description,
+    this.slug,
+    this.serial,
+    this.imageUrl,
+    this.status,
+    this.createdBy,
+    this.createdDate,
+    this.updatedBy,
+    this.updatedDate,
   });
 
-  factory EditCategory.fromJson(Map<String, dynamic> json) => EditCategory(
+  factory AdminEditCategory.fromJson(Map<String, dynamic> json) =>
+      AdminEditCategory(
         categoryId: json["category_id"],
         storeId: json["store_id"],
         categoryName: json["category_name"],
@@ -80,7 +81,7 @@ class EditCategory {
         imageUrl: json["image_url"],
         status: json["status"],
         createdBy: json["created_by"],
-        createdDate: DateTime.parse(json["created_date"]),
+        createdDate: json["created_date"],
         updatedBy: json["updated_by"],
         updatedDate: json["updated_date"],
       );
@@ -95,7 +96,7 @@ class EditCategory {
         "image_url": imageUrl,
         "status": status,
         "created_by": createdBy,
-        "created_date": createdDate.toIso8601String(),
+        "created_date": createdDate,
         "updated_by": updatedBy,
         "updated_date": updatedDate,
       };

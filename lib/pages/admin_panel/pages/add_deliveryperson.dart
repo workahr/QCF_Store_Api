@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:namstore/constants/app_colors.dart';
 import 'package:namstore/pages/admin_panel/models/delivery_person_model.dart';
+import 'package:namstore/pages/maincontainer.dart';
 import 'package:namstore/widgets/button_widget.dart';
 import 'package:namstore/widgets/custom_text_field.dart';
 import 'package:namstore/widgets/outline_btn_widget.dart';
@@ -166,14 +168,18 @@ class _AddDeliverypersonState extends State<AddDeliveryperson> {
 
       if (response.status.toString() == 'SUCCESS') {
         showInSnackBar(context, response.message.toString());
-        Navigator.pushNamedAndRemoveUntil(
-            context, '/home', ModalRoute.withName('/home'));
-        // Navigator.push(
+
+        // Navigator.pushAndRemoveUntil(
         //   context,
         //   MaterialPageRoute(
-        //     builder: (context) => MenuDetailsScreen(),
+        //     builder: (context) => AdminMainContainer(admininitialPage: 2),
         //   ),
         // );
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+              builder: (context) => AdminMainContainer(admininitialPage: 2)),
+          (Route<dynamic> route) => false,
+        );
       } else {
         print(response.message.toString());
         showInSnackBar(context, response.message.toString());
@@ -573,6 +579,11 @@ class _AddDeliverypersonState extends State<AddDeliveryperson> {
                     labelText: 'Mobile number',
                     width: double.infinity,
                     hint: 'Mobile number',
+                    type: const TextInputType.numberWithOptions(),
+                    inputFormaters: [
+                      FilteringTextInputFormatter.allow(
+                          RegExp(r'^-?(\d+)?\.?\d{0,11}'))
+                    ],
                   ),
                   CustomeTextField(
                     control: mailController,
@@ -616,6 +627,11 @@ class _AddDeliverypersonState extends State<AddDeliveryperson> {
                     contentPadding: EdgeInsets.all(18),
                     width: double.infinity,
                     hint: 'PinCode',
+                    type: const TextInputType.numberWithOptions(),
+                    inputFormaters: [
+                      FilteringTextInputFormatter.allow(
+                          RegExp(r'^-?(\d+)?\.?\d{0,11}'))
+                    ],
                   ),
 
                   CustomeTextField(

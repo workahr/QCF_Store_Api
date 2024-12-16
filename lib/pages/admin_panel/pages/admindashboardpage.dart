@@ -330,7 +330,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                         ),
                         SizedBox(height: 10),
                         Text(
-                          "₹${totalOrderPrice}",
+                          totalOrderPrice == null ? '0' : "₹${totalOrderPrice}",
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 24,
@@ -383,7 +383,9 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                                           width: 25,
                                         ),
                                         Text(
-                                          "$totalTodayOrdersCount", // "250",
+                                          totalTodayOrdersCount == null
+                                              ? '0'
+                                              : "$totalTodayOrdersCount", // "250",
                                           style: TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold),
@@ -438,7 +440,9 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                                             width: 25,
                                           ),
                                           Text(
-                                            "$totalOrdersCount",
+                                            totalOrdersCount == null
+                                                ? '0'
+                                                : "$totalOrdersCount",
                                             style: TextStyle(
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.bold),
@@ -481,7 +485,9 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                                         width: 25,
                                       ),
                                       Text(
-                                        "₹$totalTodayOrderPrice",
+                                        totalTodayOrderPrice == null
+                                            ? '0'
+                                            : "₹$totalTodayOrderPrice",
                                         style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold),
@@ -541,7 +547,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                   ),
 
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 1.0),
+                    padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
                     child: Text(
                       "Current Orders",
                       style: TextStyle(
@@ -564,7 +570,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
 
                       return Padding(
                         padding:
-                            const EdgeInsets.fromLTRB(16.0, 10.0, 16.0, 16.0),
+                            const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
                         child: e.orderStatus != "Cancelled"
                             ? Container(
                                 decoration: BoxDecoration(

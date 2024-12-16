@@ -68,13 +68,13 @@ class _AdminAddNewMenuState extends State<AdminAddNewMenu> {
         "item_name": dishNameController.text,
         "item_type": selectedId,
         "item_desc": descriptionController.text,
-        "item_price": actualpriceController.text,
-        "item_offer_price": strickoutpriceController.text,
+        "item_price": strickoutpriceController.text,
+        "item_offer_price": offerpriceController.text,
         "item_category_id": selectedcategoryId,
         "tax_id": 0,
         "item_stock": 1,
         "item_tags": "",
-        "store_price": offerpriceController.text,
+        "store_price": actualpriceController.text,
         "item_price_type": 1,
       };
       print(postData);
@@ -89,17 +89,19 @@ class _AdminAddNewMenuState extends State<AdminAddNewMenu> {
           "item_name": dishNameController.text,
           "item_type": selectedId,
           "item_desc": descriptionController.text,
-          "item_price": actualpriceController.text,
-          "item_offer_price": strickoutpriceController.text,
+          "item_price": strickoutpriceController.text,
+          "item_offer_price": offerpriceController.text,
           "item_category_id": selectedcategoryId,
           "tax_id": 0,
           "item_stock": menuDetails!.itemStock,
           "item_tags": "",
-          "store_price": offerpriceController.text,
+          "store_price": actualpriceController.text,
           "item_price_type": 1,
         };
         url = 'v1/updateitem_admin?store_id=$Id';
       }
+
+      print(imageFile);
       var result = await apiService.AdminsaveMenu(url, postData, imageFile);
       closeSnackBar(context: context);
       setState(() {
@@ -139,10 +141,10 @@ class _AdminAddNewMenuState extends State<AdminAddNewMenu> {
         menuDetails = response.list;
         dishNameController.text = menuDetails!.itemName ?? '';
         descriptionController.text = menuDetails!.itemDesc ?? '';
-        actualpriceController.text = menuDetails!.itemPrice ?? '';
+        actualpriceController.text = menuDetails!.storePrice ?? '';
         strickoutpriceController.text =
-            (menuDetails!.itemOfferPrice ?? '').toString();
-        offerpriceController.text = menuDetails!.storePrice ?? '';
+            (menuDetails!.itemPrice ?? '').toString();
+        offerpriceController.text = menuDetails!.itemOfferPrice ?? '';
         liveimgSrc = menuDetails!.itemImageUrl ?? '';
         selectedId = menuDetails!.itemType;
 
@@ -498,7 +500,7 @@ class _AdminAddNewMenuState extends State<AdminAddNewMenu> {
                     borderColor: Color.fromARGB(255, 225, 225, 225),
                   ),
                   SizedBox(height: 16),
-                  Text("Actual price",
+                  Text("Store price",
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
                   SizedBox(height: 2),

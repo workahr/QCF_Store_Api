@@ -12,7 +12,7 @@ String adminmenucategoryListmodelToJson(AdminMenuCategoryListmodel data) =>
 
 class AdminMenuCategoryListmodel {
   String status;
-  List<CategoryList> list;
+  List<AdminCategoryList> list;
   String code;
   String message;
 
@@ -26,8 +26,8 @@ class AdminMenuCategoryListmodel {
   factory AdminMenuCategoryListmodel.fromJson(Map<String, dynamic> json) =>
       AdminMenuCategoryListmodel(
         status: json["status"],
-        list: List<CategoryList>.from(
-            json["list"].map((x) => CategoryList.fromJson(x))),
+        list: List<AdminCategoryList>.from(
+            json["list"].map((x) => AdminCategoryList.fromJson(x))),
         code: json["code"],
         message: json["message"],
       );
@@ -40,7 +40,7 @@ class AdminMenuCategoryListmodel {
       };
 }
 
-class CategoryList {
+class AdminCategoryList {
   int categoryId;
   int? storeId;
   String? categoryName;
@@ -54,7 +54,7 @@ class CategoryList {
   dynamic updatedBy;
   dynamic updatedDate;
 
-  CategoryList({
+  AdminCategoryList({
     required this.categoryId,
     this.storeId,
     this.categoryName,
@@ -69,7 +69,8 @@ class CategoryList {
     required this.updatedDate,
   });
 
-  factory CategoryList.fromJson(Map<String, dynamic> json) => CategoryList(
+  factory AdminCategoryList.fromJson(Map<String, dynamic> json) =>
+      AdminCategoryList(
         categoryId: json["category_id"],
         storeId: json["store_id"],
         categoryName: json["category_name"],

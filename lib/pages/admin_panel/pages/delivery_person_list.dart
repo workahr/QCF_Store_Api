@@ -4,6 +4,7 @@ import 'package:namstore/constants/app_assets.dart';
 import 'package:namstore/widgets/heading_widget.dart';
 import 'package:namstore/widgets/outline_btn_widget.dart';
 import 'package:namstore/widgets/sub_heading_widget.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_constants.dart';
@@ -94,6 +95,29 @@ class _DeliverypersonState extends State<DeliveryPersonList> {
     }
   }
 
+  Widget _buildShimmerPlaceholder() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      child: Shimmer.fromColors(
+        baseColor: Colors.grey.shade300,
+        highlightColor: Colors.grey.shade100,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(13), // Add border radius
+              child: Container(
+                width: double.infinity,
+                height: 83,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -112,7 +136,12 @@ class _DeliverypersonState extends State<DeliveryPersonList> {
         ),
       ),
       body: isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? ListView.builder(
+              itemCount: 8,
+              itemBuilder: (context, index) {
+                return _buildShimmerPlaceholder();
+              },
+            )
           : Padding(
               padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 0),
               child: ListView.builder(

@@ -342,24 +342,28 @@ class _StoreListState extends State<StoreList> {
                                   ],
                                 ),
                               ),
-                              Container(
-                                  width: 35.0,
-                                  height: 35.0,
-                                  decoration: BoxDecoration(
-                                    color: AppColors.red,
-                                    shape: BoxShape.circle,
-                                    // border: Border.all(
-                                    //   color: const Color.fromARGB(255, 221, 220, 220),
-                                    // ),
-                                  ),
-                                  child: Center(
-                                    child: Image.asset(
-                                      AppAssets.call_icon,
-                                      height: 25,
-                                      width: 25,
-                                      color: Colors.white,
-                                    ),
-                                  )),
+                              GestureDetector(
+                                  onTap: () {
+                                    makePhoneCall(e.mobile.toString());
+                                  },
+                                  child: Container(
+                                      width: 35.0,
+                                      height: 35.0,
+                                      decoration: BoxDecoration(
+                                        color: AppColors.red,
+                                        shape: BoxShape.circle,
+                                        // border: Border.all(
+                                        //   color: const Color.fromARGB(255, 221, 220, 220),
+                                        // ),
+                                      ),
+                                      child: Center(
+                                        child: Image.asset(
+                                          AppAssets.call_icon,
+                                          height: 25,
+                                          width: 25,
+                                          color: Colors.white,
+                                        ),
+                                      ))),
                             ],
                           ),
                         ),

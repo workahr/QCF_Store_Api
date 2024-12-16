@@ -41,55 +41,55 @@ class MyStoreDetailsmodel {
 
 class StoreDetails {
   int storeId;
-  int userId;
-  String name;
-  String mobile;
-  String email;
-  String address;
-  String city;
-  String state;
-  dynamic country;
-  dynamic logo;
-  dynamic gstNo;
-  dynamic panNo;
-  dynamic terms;
-  String zipcode;
-  dynamic frontImg;
-  String onlineVisibility;
-  dynamic tags;
+  int? userId;
+  String? name;
+  String? mobile;
+  String? email;
+  String? address;
+  String? city;
+  String? state;
+  String? country;
+  String? logo;
+  String? gstNo;
+  String? panNo;
+  String? terms;
+  String? zipcode;
+  String? frontImg;
+  String? onlineVisibility;
+  String? tags;
   int status;
-  dynamic createdBy;
-  dynamic createdDate;
-  dynamic updatedBy;
-  dynamic updatedDate;
-  dynamic slug;
-  int storeStatus;
+  int? createdBy;
+  DateTime? createdDate;
+  int? updatedBy;
+  DateTime? updatedDate;
+  String? slug;
+  int? storeStatus;
 
   StoreDetails({
     required this.storeId,
-    required this.userId,
-    required this.name,
-    required this.mobile,
-    required this.email,
-    required this.address,
-    required this.city,
-    required this.state,
-    required this.country,
-    required this.logo,
-    required this.gstNo,
-    required this.panNo,
-    required this.terms,
-    required this.zipcode,
-    required this.frontImg,
-    required this.onlineVisibility,
-    required this.tags,
+    this.userId,
+    this.name,
+    this.mobile,
+    this.email,
+    this.address,
+    this.city,
+    this.state,
+    this.country,
+    this.logo,
+    this.gstNo,
+    this.panNo,
+    this.terms,
+    this.zipcode,
+    this.frontImg,
+    this.onlineVisibility,
+    this.tags,
     required this.status,
-    required this.createdBy,
-    required this.createdDate,
-    required this.updatedBy,
-    required this.updatedDate,
-    required this.slug,
-    required this.storeStatus,
+    this.createdBy,
+    this.createdDate,
+    this.updatedBy,
+    this.updatedDate,
+    this.slug,
+    this.storeStatus,
   });
 
   factory StoreDetails.fromJson(Map<String, dynamic> json) => StoreDetails(
@@ -112,9 +112,13 @@ class StoreDetails {
         tags: json["tags"],
         status: json["status"],
         createdBy: json["created_by"],
-        createdDate: json["created_date"],
+        createdDate: json["created_date"] == null
+            ? null
+            : DateTime.parse(json["created_date"]),
         updatedBy: json["updated_by"],
-        updatedDate: json["updated_date"],
+        updatedDate: json["updated_date"] == null
+            ? null
+            : DateTime.parse(json["updated_date"]),
         slug: json["slug"],
         storeStatus: json["store_status"],
       );
@@ -139,9 +143,9 @@ class StoreDetails {
         "tags": tags,
         "status": status,
         "created_by": createdBy,
-        "created_date": createdDate,
+        "created_date": createdDate?.toIso8601String(),
         "updated_by": updatedBy,
-        "updated_date": updatedDate,
+        "updated_date": updatedDate?.toIso8601String(),
         "slug": slug,
         "store_status": storeStatus,
       };

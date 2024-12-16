@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:namstore/constants/app_colors.dart';
+import 'package:namstore/pages/maincontainer.dart';
 import 'package:namstore/widgets/custom_text_field.dart';
 
 import '../../../constants/app_assets.dart';
@@ -191,14 +192,23 @@ class _AddStorePageState extends State<AddStorePage> {
 
       if (response.status.toString() == 'SUCCESS') {
         showInSnackBar(context, response.message.toString());
-        Navigator.pushNamedAndRemoveUntil(
-            context, '/home', ModalRoute.withName('/home'));
+        // Navigator.pushNamedAndRemoveUntil(
+        //     context, '/home', ModalRoute.withName('/home'));
+
         // Navigator.push(
         //   context,
         //   MaterialPageRoute(
-        //     builder: (context) => MenuDetailsScreen(),
+        //     builder: (context) => AdminMainContainer(
+        //       admininitialPage: 2,
+        //     ),
         //   ),
         // );
+
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+              builder: (context) => AdminMainContainer(admininitialPage: 2)),
+          (Route<dynamic> route) => false,
+        );
       } else {
         print(response.message.toString());
         showInSnackBar(context, response.message.toString());
