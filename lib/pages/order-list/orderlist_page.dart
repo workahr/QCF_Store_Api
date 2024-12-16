@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:namstore/constants/app_colors.dart';
 import 'package:namstore/widgets/dashed_divider.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../constants/app_assets.dart';
 import 'package:intl/intl.dart';
 
@@ -71,6 +72,98 @@ class _OrderlistPageState extends State<OrderlistPage> {
     setState(() {});
   }
 
+  Widget _buildShimmerPlaceholder() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      child: Shimmer.fromColors(
+        baseColor: Colors.grey.shade300,
+        highlightColor: Colors.grey.shade100,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 5,
+            ),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(13), // Add border radius
+              child: Container(
+                width: double.infinity,
+                height: 50,
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(13), // Add border radius
+              child: Container(
+                width: double.infinity,
+                height: 200,
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(13), // Add border radius
+              child: Container(
+                width: double.infinity,
+                height: 250,
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(
+              height: 15,
+            ),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(13), // Add border radius
+              child: Container(
+                width: double.infinity,
+                height: 200,
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(13), // Add border radius
+              child: Container(
+                width: double.infinity,
+                height: 200,
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(13), // Add border radius
+              child: Container(
+                width: double.infinity,
+                height: 200,
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(13), // Add border radius
+              child: Container(
+                width: double.infinity,
+                height: 200,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final formattedDate = DateFormat('MMMM y').format(DateTime.now());
@@ -129,184 +222,196 @@ class _OrderlistPageState extends State<OrderlistPage> {
         backgroundColor: Color(0xFFE23744),
         automaticallyImplyLeading: false,
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 12),
-            Padding(
-                padding: EdgeInsets.only(
-                    top: 0.0, left: 16.0, right: 16.0, bottom: 5),
-                child: TextField(
-                  decoration: InputDecoration(
-                    prefixIcon: Image.asset(AppAssets.search_icon),
-                    hintText: 'Search..',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide.none,
-                    ),
-                    filled: true,
-                    fillColor: Colors.grey[200],
-                  ),
-                )),
-            SizedBox(height: 16),
-            Padding(
-              padding:
-                  EdgeInsets.only(top: 0.0, left: 30.0, right: 16.0, bottom: 5),
-              child: Text(
-                formattedDate,
-                style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400),
-              ),
-            ),
-            SizedBox(height: 8),
-            if (orderList.isNotEmpty)
-              ListView.builder(
-                  itemCount: orderList.length,
-                  shrinkWrap:
-                      true, // Let the list take only as much space as needed
-                  physics:
-                      NeverScrollableScrollPhysics(), // Disable scrolling for ListView
-                  itemBuilder: (context, index) {
-                    final e = orderList[index];
-                    String formattedDate = DateFormat('dd-MMM-yyyy')
-                        .format(DateTime.parse(e.createdDate.toString()));
-
-                    return Padding(
+      body:
+      
+       isLoading
+          ? ListView.builder(
+              itemCount: 5,
+              itemBuilder: (context, index) {
+                return _buildShimmerPlaceholder();
+              },
+            )
+          : 
+          
+          SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 12),
+                  Padding(
                       padding: EdgeInsets.only(
                           top: 0.0, left: 16.0, right: 16.0, bottom: 5),
-                      child: Container(
-                        margin: EdgeInsets.only(bottom: 16),
-                        //color: Colors.white,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: Color.fromARGB(255, 217, 216, 216),
-                            width: 0.8,
+                      child: TextField(
+                        decoration: InputDecoration(
+                          prefixIcon: Image.asset(AppAssets.search_icon),
+                          hintText: 'Search..',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide.none,
                           ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.white,
-                              spreadRadius: 2,
-                              blurRadius: 4,
-                              offset: Offset(0, 2),
-                            ),
-                          ],
+                          filled: true,
+                          fillColor: Colors.grey[200],
                         ),
-                        child: Padding(
-                          padding: EdgeInsets.all(16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    'Order ID',
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                  Text(
-                                    formattedDate, //  '29-Oct-2024',
-                                    style: TextStyle(
-                                        fontSize: 14, color: Colors.grey),
+                      )),
+                  SizedBox(height: 16),
+                  Padding(
+                    padding: EdgeInsets.only(
+                        top: 0.0, left: 30.0, right: 16.0, bottom: 5),
+                    child: Text(
+                      formattedDate,
+                      style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400),
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  if (orderList.isNotEmpty)
+                    ListView.builder(
+                        itemCount: orderList.length,
+                        shrinkWrap:
+                            true, // Let the list take only as much space as needed
+                        physics:
+                            NeverScrollableScrollPhysics(), // Disable scrolling for ListView
+                        itemBuilder: (context, index) {
+                          final e = orderList[index];
+                          String formattedDate = DateFormat('dd-MMM-yyyy')
+                              .format(DateTime.parse(e.createdDate.toString()));
+
+                          return Padding(
+                            padding: EdgeInsets.only(
+                                top: 0.0, left: 16.0, right: 16.0, bottom: 5),
+                            child: Container(
+                              margin: EdgeInsets.only(bottom: 16),
+                              //color: Colors.white,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(
+                                  color: Color.fromARGB(255, 217, 216, 216),
+                                  width: 0.8,
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.white,
+                                    spreadRadius: 2,
+                                    blurRadius: 4,
+                                    offset: Offset(0, 2),
                                   ),
                                 ],
                               ),
-                              SizedBox(height: 8),
-                              Text(
-                                "#${e.invoiceNumber.toString()}", //'#233352633356',
-                                style: TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.bold),
-                              ),
-                              SizedBox(height: 8),
-                              Text(
-                                '${e.items.length.toString()} items', //  '3 items',
-                                style:
-                                    TextStyle(fontSize: 14, color: Colors.grey),
-                              ),
-                              SizedBox(height: 10),
-                              ...e.items.map((item) {
-                                return Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                              child: Padding(
+                                padding: EdgeInsets.all(16.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          'Order ID',
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                        Text(
+                                          formattedDate, //  '29-Oct-2024',
+                                          style: TextStyle(
+                                              fontSize: 14, color: Colors.grey),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: 8),
                                     Text(
-                                        '${item.quantity.toString()} X ${item.productName.toString()}',
-                                        style: TextStyle(fontSize: 14)),
+                                      "#${e.invoiceNumber.toString()}", //'#233352633356',
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    SizedBox(height: 8),
                                     Text(
-                                        "₹${item.totalPrice.toString()}", // '₹300.00',
-                                        style: TextStyle(fontSize: 14)),
+                                      '${e.items.length.toString()} items', //  '3 items',
+                                      style: TextStyle(
+                                          fontSize: 14, color: Colors.grey),
+                                    ),
+                                    SizedBox(height: 10),
+                                    ...e.items.map((item) {
+                                      return Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                              '${item.quantity.toString()} X ${item.productName.toString()}',
+                                              style: TextStyle(fontSize: 14)),
+                                          Text(
+                                              "₹${item.totalPrice.toString()}", // '₹300.00',
+                                              style: TextStyle(fontSize: 14)),
+                                        ],
+                                      );
+                                    }),
+                                    SizedBox(height: 8),
+                                    SizedBox(height: 16),
+                                    DashedDivider(
+                                      color: Colors.grey,
+                                      height: 1,
+                                      dashWidth: 12,
+                                      spacing: 6,
+                                    ),
+                                    SizedBox(height: 10),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          'Total Bill',
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Text(
+                                          "₹${e.totalPrice.toString()}", // '₹800.00',
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: 10),
+                                    DashedDivider(
+                                      color: Colors.grey,
+                                      height: 1,
+                                      dashWidth: 12,
+                                      spacing: 6,
+                                    ),
+                                    SizedBox(height: 16),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          'Payment method:',
+                                          style: TextStyle(
+                                              fontSize: 14, color: Colors.grey),
+                                        ),
+                                        Text(
+                                          e.paymentMethod
+                                              .toString(), // 'Cash on delivery',
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black),
+                                        ),
+                                      ],
+                                    ),
                                   ],
-                                );
-                              }),
-                              SizedBox(height: 8),
-                              SizedBox(height: 16),
-                              DashedDivider(
-                                color: Colors.grey,
-                                height: 1,
-                                dashWidth: 12,
-                                spacing: 6,
+                                ),
                               ),
-                              SizedBox(height: 10),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    'Total Bill',
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(
-                                    "₹${e.totalPrice.toString()}", // '₹800.00',
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 10),
-                              DashedDivider(
-                                color: Colors.grey,
-                                height: 1,
-                                dashWidth: 12,
-                                spacing: 6,
-                              ),
-                              SizedBox(height: 16),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    'Payment method:',
-                                    style: TextStyle(
-                                        fontSize: 14, color: Colors.grey),
-                                  ),
-                                  Text(
-                                    e.paymentMethod
-                                        .toString(), // 'Cash on delivery',
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  }),
-          ],
-        ),
-      ),
+                            ),
+                          );
+                        }),
+                ],
+              ),
+            ),
     );
   }
 }

@@ -201,107 +201,234 @@ class _DashboardPageState extends State<DashboardPage> {
     }
   }
 
-  Widget _buildShimmerPlaceholder() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-      child: Shimmer.fromColors(
-        baseColor: Colors.grey.shade300,
-        highlightColor: Colors.grey.shade100,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: 5,
-            ),
-            Center(
-                child: ClipRRect(
-              borderRadius: BorderRadius.circular(13), // Add border radius
-              child: Container(
-                width: 270,
-                height: 83,
-                color: Colors.white,
+  Widget _buildShimmerPlaceholder(int selectedIndex) {
+    if (selectedIndex == 0) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        child: Shimmer.fromColors(
+          baseColor: Colors.grey.shade300,
+          highlightColor: Colors.grey.shade100,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 10,
               ),
-            )),
-            SizedBox(
-              height: 20,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(13), // Add border radius
-                  child: Container(
-                    width: 170,
-                    height: 133,
-                    color: Colors.white,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(13),
+                    child: Container(
+                      width: 100,
+                      height: 40,
+                      color: const Color.fromARGB(255, 36, 22, 22),
+                    ),
                   ),
-                ),
-                SizedBox(
-                  width: 20,
-                ),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(13), // Add border radius
-                  child: Container(
-                    width: 170,
-                    height: 133,
-                    color: Colors.white,
+                  SizedBox(
+                    width: 20,
                   ),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 30,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(13), // Add border radius
-                  child: Container(
-                    width: 170,
-                    height: 133,
-                    color: Colors.white,
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(13),
+                    child: Container(
+                      width: 100,
+                      height: 40,
+                      color: Colors.white,
+                    ),
                   ),
-                ),
-                SizedBox(
-                  width: 20,
-                ),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(13), // Add border radius
-                  child: Container(
-                    width: 170,
-                    height: 133,
-                    color: Colors.white,
+                  SizedBox(
+                    width: 20,
                   ),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 30,
-            ),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(13), // Add border radius
-              child: Container(
-                width: double.infinity,
-                height: 383,
-                color: Colors.white,
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(13),
+                    child: Container(
+                      width: 100,
+                      height: 40,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
               ),
-            ),
-            SizedBox(
-              height: 30,
-            ),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(13), // Add border radius
-              child: Container(
-                width: double.infinity,
-                height: 283,
-                color: Colors.white,
+              SizedBox(
+                height: 20,
               ),
-            ),
-          ],
+              ClipRRect(
+                borderRadius: BorderRadius.circular(13),
+                child: Container(
+                  width: double.infinity,
+                  height: 80,
+                  color: Colors.white,
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(13),
+                child: Container(
+                  width: double.infinity,
+                  height: 80,
+                  color: Colors.white,
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(13),
+                child: Container(
+                  width: double.infinity,
+                  height: 80,
+                  color: Colors.white,
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(13),
+                child: Container(
+                  width: double.infinity,
+                  height: 80,
+                  color: Colors.white,
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(13),
+                child: Container(
+                  width: double.infinity,
+                  height: 80,
+                  color: Colors.white,
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(13),
+                child: Container(
+                  width: double.infinity,
+                  height: 80,
+                  color: Colors.white,
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(13),
+                child: Container(
+                  width: double.infinity,
+                  height: 80,
+                  color: Colors.white,
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(13),
+                child: Container(
+                  width: double.infinity,
+                  height: 80,
+                  color: Colors.white,
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    } else {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        child: Shimmer.fromColors(
+          baseColor: Colors.grey.shade300,
+          highlightColor: Colors.grey.shade100,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 5,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(13),
+                    child: Container(
+                      width: 100,
+                      height: 40,
+                      color: const Color.fromARGB(255, 36, 22, 22),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(13),
+                    child: Container(
+                      width: 100,
+                      height: 40,
+                      color: Colors.white,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(13),
+                    child: Container(
+                      width: 100,
+                      height: 40,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 30,
+              ),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(13),
+                child: Container(
+                  width: double.infinity,
+                  height: 50,
+                  color: Colors.white,
+                ),
+              ),
+              SizedBox(
+                height: 30,
+              ),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(13),
+                child: Container(
+                  width: double.infinity,
+                  height: 250,
+                  color: Colors.white,
+                ),
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(13),
+                child: Container(
+                  width: double.infinity,
+                  height: 250,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
   }
 
   @override
@@ -369,7 +496,7 @@ class _DashboardPageState extends State<DashboardPage> {
             ? ListView.builder(
                 itemCount: 5,
                 itemBuilder: (context, index) {
-                  return _buildShimmerPlaceholder();
+                  return _buildShimmerPlaceholder(selectedIndex);
                 },
               )
             : SingleChildScrollView(

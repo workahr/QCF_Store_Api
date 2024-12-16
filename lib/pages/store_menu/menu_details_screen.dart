@@ -5,6 +5,7 @@ import 'package:namstore/constants/app_assets.dart';
 import 'package:namstore/constants/app_colors.dart';
 import 'package:namstore/pages/store_menu/add_new_menu.dart';
 import 'package:namstore/pages/store_menu/edit_menu.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../constants/app_constants.dart';
 import '../../services/comFuncService.dart';
@@ -229,6 +230,100 @@ class _MenuDetailsScreenState extends State<MenuDetailsScreen> {
     }
   }
 
+  Widget _buildShimmerPlaceholder() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      child: Shimmer.fromColors(
+        baseColor: Colors.grey.shade300,
+        highlightColor: Colors.grey.shade100,
+        child: Stack(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 5),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(13), // Add border radius
+                  child: Container(
+                    width: double.infinity,
+                    height: 150,
+                    color: Colors.white,
+                  ),
+                ),
+                SizedBox(height: 30),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(13), // Add border radius
+                  child: Container(
+                    width: double.infinity,
+                    height: 50,
+                    color: Colors.white,
+                  ),
+                ),
+                SizedBox(height: 30),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(13), // Add border radius
+                  child: Container(
+                    width: double.infinity,
+                    height: 150,
+                    color: Colors.white,
+                  ),
+                ),
+                SizedBox(height: 15),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(13), // Add border radius
+                  child: Container(
+                    width: double.infinity,
+                    height: 150,
+                    color: Colors.white,
+                  ),
+                ),
+                SizedBox(height: 15),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(13), // Add border radius
+                  child: Container(
+                    width: double.infinity,
+                    height: 150,
+                    color: Colors.white,
+                  ),
+                ),
+                SizedBox(height: 15),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(13), // Add border radius
+                  child: Container(
+                    width: double.infinity,
+                    height: 150,
+                    color: Colors.white,
+                  ),
+                ),
+                SizedBox(height: 15),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(13), // Add border radius
+                  child: Container(
+                    width: double.infinity,
+                    height: 150,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+            Positioned(
+              bottom: 0,
+              right: 0,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(50), // Make it rounded
+                child: Container(
+                  width: 100,
+                  height: 100,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -288,293 +383,331 @@ class _MenuDetailsScreenState extends State<MenuDetailsScreen> {
         backgroundColor: Color(0xFFE23744),
         automaticallyImplyLeading: false,
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-                padding: EdgeInsets.only(
-                    top: 16.0, left: 16.0, right: 16.0, bottom: 0),
-                child: Container(
-                  margin: EdgeInsets.only(bottom: 16),
-                  //color: Colors.white,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: const Color.fromARGB(255, 217, 216, 216),
-                      width: 0.8,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.white,
-                        spreadRadius: 2,
-                        blurRadius: 4,
-                        offset: Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Row(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child:
-                              //  Image.asset(
-                              //   AppAssets.restaurant_briyani,
-                              //   height: 100,
-                              //   width: 100,
-                              // )
-                              Image.network(
-                                  AppConstants.imgBaseUrl +
-                                      MyStoreDetails!.frontImg.toString(),
-                                  width: 90,
-                                  height: 90,
-                                  fit: BoxFit.fill, errorBuilder:
-                                      (BuildContext context, Object exception,
-                                          StackTrace? stackTrace) {
-                            return Image.asset(
-                              AppAssets.restaurant_briyani,
-                              width: 90,
-                              height: 90,
-                              // fit: BoxFit.cover,
-                            );
-                          }),
-                        ),
-                        SizedBox(width: 12),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(MyStoreDetails!.name.toString(),
-                                //'Grill Chicken Arabian\nRestaurant',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 20)),
-                            SizedBox(height: 8),
-                            Text('South Indian Foods',
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 14)),
-                            SizedBox(height: 4),
-                            // Text('Open Time: 8.30am - 11.00pm',
-                            //     style: TextStyle(
-                            //         color: Colors.black, fontSize: 14)),
+      body: isLoading
+          ? ListView.builder(
+              itemCount: 5,
+              itemBuilder: (context, index) {
+                return _buildShimmerPlaceholder();
+              },
+            )
+          : SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                      padding: EdgeInsets.only(
+                          top: 16.0, left: 16.0, right: 16.0, bottom: 0),
+                      child: Container(
+                        margin: EdgeInsets.only(bottom: 16),
+                        //color: Colors.white,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: const Color.fromARGB(255, 217, 216, 216),
+                            width: 0.8,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.white,
+                              spreadRadius: 2,
+                              blurRadius: 4,
+                              offset: Offset(0, 2),
+                            ),
                           ],
                         ),
-                      ],
-                    ),
-                  ),
-                )),
-            Padding(
-                padding: EdgeInsets.only(
-                    top: 0.0, left: 16.0, right: 16.0, bottom: 5),
-                child: TextField(
-                  decoration: InputDecoration(
-                    prefixIcon: Image.asset(AppAssets.search_icon),
-                    hintText: 'Find your dishes',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide.none,
-                    ),
-                    filled: true,
-                    fillColor: Colors.grey[200],
-                  ),
-                )),
-            SizedBox(height: 16),
-            Padding(
-                padding: EdgeInsets.only(
-                    top: 5.0, left: 16.0, right: 16.0, bottom: 5),
-                child: Text('Menus',
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 18))),
-            SizedBox(height: 8),
-            isLoading1
-                ? Center(child: CircularProgressIndicator())
-                : ListView.builder(
-                    itemCount: MenuListData.length,
-                    shrinkWrap:
-                        true, // Let the list take only as much space as needed
-                    physics:
-                        NeverScrollableScrollPhysics(), // Disable scrolling for ListView
-                    itemBuilder: (context, index) {
-                      final e = MenuListData[index];
-                      return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.only(
-                                  top: 5.0, left: 16.0, right: 16.0, bottom: 8),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(8),
-                                    child: Image.network(
+                        child: Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child:
+                                    //  Image.asset(
+                                    //   AppAssets.restaurant_briyani,
+                                    //   height: 100,
+                                    //   width: 100,
+                                    // )
+                                    Image.network(
                                         AppConstants.imgBaseUrl +
-                                            e.itemImageUrl.toString(),
+                                            MyStoreDetails!.frontImg.toString(),
                                         width: 90,
                                         height: 90,
                                         fit: BoxFit.fill, errorBuilder:
                                             (BuildContext context,
                                                 Object exception,
                                                 StackTrace? stackTrace) {
-                                      return Image.asset(
-                                        AppAssets.store_menu_briyani,
-                                        width: 90,
-                                        height: 90,
-                                        // fit: BoxFit.cover,
-                                      );
-                                    }),
-
-                                    //     Image.asset(
-                                    //   e.itemImageUrl
-                                    //       .toString(), // AppAssets.store_menu_briyani,
-                                    //   width: 90,
-                                    //   height: 90,
-                                    //   fit: BoxFit.cover,
-                                    // ),
-                                  ),
-                                  SizedBox(width: 12),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            e.itemType == 1
-                                                ? Image.asset(
-                                                    AppAssets.nonveg_icon)
-                                                : Image.asset(
-                                                    AppAssets.veg_icon),
-                                            SizedBox(width: 4),
-                                            Text(
-                                                e.itemType == 1
-                                                    ? "Non-Veg"
-                                                    : "Veg", //'Non-Veg',
-                                                style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 14)),
-                                          ],
-                                        ),
-                                        Text(
-                                            e.itemName
-                                                .toString(), //'Chicken Biryani',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 18)),
-                                        SizedBox(height: 4),
-                                        Text("₹${e.storePrice}", //'₹250.00',
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 14)),
-                                      ],
-                                    ),
-                                  ),
+                                  return Image.asset(
+                                    AppAssets.restaurant_briyani,
+                                    width: 90,
+                                    height: 90,
+                                    // fit: BoxFit.cover,
+                                  );
+                                }),
+                              ),
+                              SizedBox(width: 12),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(MyStoreDetails!.name.toString(),
+                                      //'Grill Chicken Arabian\nRestaurant',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20)),
+                                  SizedBox(height: 8),
+                                  Text('South Indian Foods',
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 14)),
+                                  SizedBox(height: 4),
+                                  // Text('Open Time: 8.30am - 11.00pm',
+                                  //     style: TextStyle(
+                                  //         color: Colors.black, fontSize: 14)),
                                 ],
                               ),
-                            ),
-                            Container(
-                                height: 50,
-                                decoration: BoxDecoration(
-                                  border: Border(
-                                    top: BorderSide(
-                                      color: Color.fromARGB(255, 217, 216, 216),
-                                      width: 0.8,
-                                    ),
-                                    bottom: BorderSide(
-                                      color: Color.fromARGB(255, 217, 216, 216),
-                                      width: 0.8,
+                            ],
+                          ),
+                        ),
+                      )),
+                  Padding(
+                      padding: EdgeInsets.only(
+                          top: 0.0, left: 16.0, right: 16.0, bottom: 5),
+                      child: TextField(
+                        decoration: InputDecoration(
+                          prefixIcon: Image.asset(AppAssets.search_icon),
+                          hintText: 'Find your dishes',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide.none,
+                          ),
+                          filled: true,
+                          fillColor: Colors.grey[200],
+                        ),
+                      )),
+                  SizedBox(height: 16),
+                  Padding(
+                      padding: EdgeInsets.only(
+                          top: 5.0, left: 16.0, right: 16.0, bottom: 5),
+                      child: Text('Menus',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 18))),
+                  SizedBox(height: 8),
+                  isLoading1
+                      ? Center(child: CircularProgressIndicator())
+                      : ListView.builder(
+                          itemCount: MenuListData.length,
+                          shrinkWrap:
+                              true, // Let the list take only as much space as needed
+                          physics:
+                              NeverScrollableScrollPhysics(), // Disable scrolling for ListView
+                          itemBuilder: (context, index) {
+                            final e = MenuListData[index];
+                            return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                        top: 5.0,
+                                        left: 16.0,
+                                        right: 16.0,
+                                        bottom: 8),
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          child: Image.network(
+                                              AppConstants.imgBaseUrl +
+                                                  e.itemImageUrl.toString(),
+                                              width: 90,
+                                              height: 90,
+                                              fit: BoxFit.fill, errorBuilder:
+                                                  (BuildContext context,
+                                                      Object exception,
+                                                      StackTrace? stackTrace) {
+                                            return Image.asset(
+                                              AppAssets.store_menu_briyani,
+                                              width: 90,
+                                              height: 90,
+                                              // fit: BoxFit.cover,
+                                            );
+                                          }),
+
+                                          //     Image.asset(
+                                          //   e.itemImageUrl
+                                          //       .toString(), // AppAssets.store_menu_briyani,
+                                          //   width: 90,
+                                          //   height: 90,
+                                          //   fit: BoxFit.cover,
+                                          // ),
+                                        ),
+                                        SizedBox(width: 12),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  e.itemType == 1
+                                                      ? Image.asset(
+                                                          AppAssets.nonveg_icon)
+                                                      : Image.asset(
+                                                          AppAssets.veg_icon),
+                                                  SizedBox(width: 4),
+                                                  Text(
+                                                      e.itemType == 1
+                                                          ? "Non-Veg"
+                                                          : "Veg", //'Non-Veg',
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 14)),
+                                                ],
+                                              ),
+                                              Text(
+                                                  e.itemName
+                                                      .toString(), //'Chicken Biryani',
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 18)),
+                                              SizedBox(height: 4),
+                                              Text(
+                                                  "₹${e.storePrice}", //'₹250.00',
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 14)),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Color.fromARGB(255, 246, 245, 245),
-                                    ),
-                                  ],
-                                ),
-                                child: Padding(
-                                    padding: EdgeInsets.only(
-                                        top: 10,
-                                        bottom: 10,
-                                        left: 10,
-                                        right: 40),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Row(
-                                            // mainAxisAlignment: MainAxisAlignment.center,
+                                  Container(
+                                      height: 50,
+                                      decoration: BoxDecoration(
+                                        border: Border(
+                                          top: BorderSide(
+                                            color: Color.fromARGB(
+                                                255, 217, 216, 216),
+                                            width: 0.8,
+                                          ),
+                                          bottom: BorderSide(
+                                            color: Color.fromARGB(
+                                                255, 217, 216, 216),
+                                            width: 0.8,
+                                          ),
+                                        ),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Color.fromARGB(
+                                                255, 246, 245, 245),
+                                          ),
+                                        ],
+                                      ),
+                                      child: Padding(
+                                          padding: EdgeInsets.only(
+                                              top: 10,
+                                              bottom: 10,
+                                              left: 10,
+                                              right: 40),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Padding(
-                                                  padding: const EdgeInsets
-                                                      .symmetric(vertical: 0.0),
-                                                  child: Transform.scale(
-                                                      scale: 0.8,
-                                                      child: Switch(
-                                                        value: e.itemStock == 1,
-                                                        onChanged: (value) {
-                                                          setState(() {
-                                                            e.itemStock =
-                                                                value ? 1 : 0;
+                                              Row(
+                                                  // mainAxisAlignment: MainAxisAlignment.center,
+                                                  children: [
+                                                    Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .symmetric(
+                                                                vertical: 0.0),
+                                                        child: Transform.scale(
+                                                            scale: 0.8,
+                                                            child: Switch(
+                                                              value:
+                                                                  e.itemStock ==
+                                                                      1,
+                                                              onChanged:
+                                                                  (value) {
+                                                                setState(() {
+                                                                  e.itemStock =
+                                                                      value
+                                                                          ? 1
+                                                                          : 0;
 
-                                                            updatemenustock(
-                                                                e.itemId,
-                                                                value ? 1 : 0);
-                                                            //  print(e.itemStock);
-                                                          });
-                                                        },
-                                                        activeColor:
-                                                            Colors.white,
-                                                        activeTrackColor:
-                                                            Colors.green,
-                                                        inactiveThumbColor:
-                                                            Colors.white,
-                                                        inactiveTrackColor:
-                                                            Colors.grey[300],
-                                                      ))),
-                                              Text(
-                                                  e.itemStock == 1
-                                                      ? 'In Stock'
-                                                      : 'Out of Stock',
-                                                  style: TextStyle(
-                                                      color: e.itemStock == 1
-                                                          ? Colors.green
-                                                          : AppColors.red,
-                                                      fontSize: 18.0))
-                                            ]),
-                                        GestureDetector(
-                                            onTap: () {
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          AddNewMenu(
-                                                            menuId: e.itemId,
-                                                          ))).then((value) {});
-                                            },
-                                            child: Row(
-                                                // mainAxisAlignment: MainAxisAlignment.center,
-                                                children: [
-                                                  Image.asset(
-                                                      AppAssets.edit_icon),
-                                                  Text(' Edit',
-                                                      style: TextStyle(
-                                                          color: AppColors.red,
-                                                          fontSize: 18.0))
-                                                ])),
-                                      ],
-                                    ))),
-                            SizedBox(
-                              height: 10,
-                            ),
-                          ]);
-                    }),
-          ],
-        ),
-      ),
+                                                                  updatemenustock(
+                                                                      e.itemId,
+                                                                      value
+                                                                          ? 1
+                                                                          : 0);
+                                                                  //  print(e.itemStock);
+                                                                });
+                                                              },
+                                                              activeColor:
+                                                                  Colors.white,
+                                                              activeTrackColor:
+                                                                  Colors.green,
+                                                              inactiveThumbColor:
+                                                                  Colors.white,
+                                                              inactiveTrackColor:
+                                                                  Colors.grey[
+                                                                      300],
+                                                            ))),
+                                                    Text(
+                                                        e.itemStock == 1
+                                                            ? 'In Stock'
+                                                            : 'Out of Stock',
+                                                        style: TextStyle(
+                                                            color:
+                                                                e.itemStock == 1
+                                                                    ? Colors
+                                                                        .green
+                                                                    : AppColors
+                                                                        .red,
+                                                            fontSize: 18.0))
+                                                  ]),
+                                              GestureDetector(
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder:
+                                                                (context) =>
+                                                                    AddNewMenu(
+                                                                      menuId: e
+                                                                          .itemId,
+                                                                    ))).then(
+                                                        (value) {});
+                                                  },
+                                                  child: Row(
+                                                      // mainAxisAlignment: MainAxisAlignment.center,
+                                                      children: [
+                                                        Image.asset(AppAssets
+                                                            .edit_icon),
+                                                        Text(' Edit',
+                                                            style: TextStyle(
+                                                                color: AppColors
+                                                                    .red,
+                                                                fontSize: 18.0))
+                                                      ])),
+                                            ],
+                                          ))),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                ]);
+                          }),
+                ],
+              ),
+            ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           showModalBottomSheet(

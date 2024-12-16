@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:namstore/widgets/button_widget.dart';
 import 'package:namstore/widgets/heading_widget.dart';
 import 'package:namstore/widgets/svgiconButtonWidget.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../constants/app_assets.dart';
 import '../../constants/app_colors.dart';
@@ -375,6 +376,99 @@ class _MenuCategorieState extends State<MenuCategorie> {
     ).then((_) {
       editcategoryNameController.removeListener(() {});
     });
+  }
+
+
+   Widget _buildShimmerPlaceholder() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      child: Shimmer.fromColors(
+        baseColor: Colors.grey.shade300,
+        highlightColor: Colors.grey.shade100,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 5,
+            ),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(13), // Add border radius
+              child: Container(
+                width: double.infinity,
+                height: 150,
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(13), // Add border radius
+              child: Container(
+                width: double.infinity,
+                height: 50,
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(13), // Add border radius
+              child: Container(
+                width: double.infinity,
+                height: 150,
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(
+              height: 15,
+            ),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(13), // Add border radius
+              child: Container(
+                width: double.infinity,
+                height: 150,
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(
+              height: 15,
+            ),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(13), // Add border radius
+              child: Container(
+                width: double.infinity,
+                height: 150,
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(
+              height: 15,
+            ),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(13), // Add border radius
+              child: Container(
+                width: double.infinity,
+                height: 150,
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(
+              height: 15,
+            ),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(13), // Add border radius
+              child: Container(
+                width: double.infinity,
+                height: 150,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
