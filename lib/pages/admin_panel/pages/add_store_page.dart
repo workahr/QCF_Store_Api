@@ -405,9 +405,19 @@ class _AddStorePageState extends State<AddStorePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    "User Name",
-                    style: TextStyle(color: Colors.black),
+                  RichText(
+                    text: TextSpan(
+                      text: 'User Name',
+                      style: TextStyle(color: Colors.black),
+                      children: [
+                        TextSpan(
+                          text: '  *',
+                          style: TextStyle(
+                              color: Colors
+                                  .red), // You can style the asterisk differently
+                        ),
+                      ],
+                    ),
                   ),
                   CustomeTextField(
                     width: double.infinity,
@@ -415,9 +425,19 @@ class _AddStorePageState extends State<AddStorePage> {
                     // labelText: "Location",
                     borderColor: Color(0xFFEEEEEE),
                   ),
-                  Text(
-                    "Password",
-                    style: TextStyle(color: Colors.black),
+                  RichText(
+                    text: TextSpan(
+                      text: 'Password',
+                      style: TextStyle(color: Colors.black),
+                      children: [
+                        TextSpan(
+                          text: '  *',
+                          style: TextStyle(
+                              color: Colors
+                                  .red), // You can style the asterisk differently
+                        ),
+                      ],
+                    ),
                   ),
                   CustomeTextField(
                     width: double.infinity,
@@ -425,9 +445,19 @@ class _AddStorePageState extends State<AddStorePage> {
                     // labelText: "Location",
                     borderColor: Color(0xFFEEEEEE),
                   ),
-                  Text(
-                    "Store Name",
-                    style: TextStyle(color: Colors.black),
+                  RichText(
+                    text: TextSpan(
+                      text: 'Store Name',
+                      style: TextStyle(color: Colors.black),
+                      children: [
+                        TextSpan(
+                          text: '  *',
+                          style: TextStyle(
+                              color: Colors
+                                  .red), // You can style the asterisk differently
+                        ),
+                      ],
+                    ),
                   ),
                   CustomeTextField(
                     control: storeNameController,
@@ -447,9 +477,19 @@ class _AddStorePageState extends State<AddStorePage> {
                     borderColor: Color(0xFFEEEEEE),
                   ),
 
-                  Text(
-                    "Address",
-                    style: TextStyle(color: Colors.black),
+                  RichText(
+                    text: TextSpan(
+                      text: 'Address',
+                      style: TextStyle(color: Colors.black),
+                      children: [
+                        TextSpan(
+                          text: '  *',
+                          style: TextStyle(
+                              color: Colors
+                                  .red), // You can style the asterisk differently
+                        ),
+                      ],
+                    ),
                   ),
                   CustomeTextField(
                     width: double.infinity,
@@ -458,9 +498,19 @@ class _AddStorePageState extends State<AddStorePage> {
                     // labelText: "Address",
                     borderColor: Color(0xFFEEEEEE),
                   ),
-                  Text(
-                    "City",
-                    style: TextStyle(color: Colors.black),
+                  RichText(
+                    text: TextSpan(
+                      text: 'City',
+                      style: TextStyle(color: Colors.black),
+                      children: [
+                        TextSpan(
+                          text: '  *',
+                          style: TextStyle(
+                              color: Colors
+                                  .red), // You can style the asterisk differently
+                        ),
+                      ],
+                    ),
                   ),
                   CustomeTextField(
                     width: double.infinity,
@@ -469,9 +519,19 @@ class _AddStorePageState extends State<AddStorePage> {
                     // labelText: "Address",
                     borderColor: Color(0xFFEEEEEE),
                   ),
-                  Text(
-                    "State",
-                    style: TextStyle(color: Colors.black),
+                  RichText(
+                    text: TextSpan(
+                      text: 'State',
+                      style: TextStyle(color: Colors.black),
+                      children: [
+                        TextSpan(
+                          text: '  *',
+                          style: TextStyle(
+                              color: Colors
+                                  .red), // You can style the asterisk differently
+                        ),
+                      ],
+                    ),
                   ),
                   CustomeTextField(
                     width: double.infinity,
@@ -481,9 +541,19 @@ class _AddStorePageState extends State<AddStorePage> {
                     borderColor: Color(0xFFEEEEEE),
                   ),
 
-                  Text(
-                    "Pincode",
-                    style: TextStyle(color: Colors.black),
+                  RichText(
+                    text: TextSpan(
+                      text: 'Pincode',
+                      style: TextStyle(color: Colors.black),
+                      children: [
+                        TextSpan(
+                          text: '  *',
+                          style: TextStyle(
+                              color: Colors
+                                  .red), // You can style the asterisk differently
+                        ),
+                      ],
+                    ),
                   ),
                   CustomeTextField(
                     width: double.infinity,
@@ -515,9 +585,19 @@ class _AddStorePageState extends State<AddStorePage> {
                     borderColor: Color(0xFFEEEEEE),
                   ),
 
-                  Text(
-                    "Owner Name",
-                    style: TextStyle(color: Colors.black),
+                  RichText(
+                    text: TextSpan(
+                      text: 'Owner Name',
+                      style: TextStyle(color: Colors.black),
+                      children: [
+                        TextSpan(
+                          text: '  *',
+                          style: TextStyle(
+                              color: Colors
+                                  .red), // You can style the asterisk differently
+                        ),
+                      ],
+                    ),
                   ),
                   CustomeTextField(
                     width: double.infinity,
@@ -526,9 +606,19 @@ class _AddStorePageState extends State<AddStorePage> {
                     borderColor: Color(0xFFEEEEEE),
                   ),
 
-                  Text(
-                    "Mobile Number",
-                    style: TextStyle(color: Colors.black),
+                  RichText(
+                    text: TextSpan(
+                      text: 'Mobile Number',
+                      style: TextStyle(color: Colors.black),
+                      children: [
+                        TextSpan(
+                          text: '  *',
+                          style: TextStyle(
+                              color: Colors
+                                  .red), // You can style the asterisk differently
+                        ),
+                      ],
+                    ),
                   ),
                   CustomeTextField(
                     width: double.infinity,
@@ -662,7 +752,7 @@ class _AddStorePageState extends State<AddStorePage> {
                     height: 10,
                   ),
                   Text(
-                    "Note: Upload image with shop name",
+                    "Note: Upload a image of Shop Owner",
                     style: TextStyle(color: Colors.black),
                   ),
                   SizedBox(height: 10),
@@ -846,7 +936,38 @@ class _AddStorePageState extends State<AddStorePage> {
                   Center(
                     child: ElevatedButton(
                       onPressed: () {
-                        addstoredetails();
+                        if (userNameController.text == '' ||
+                            userNameController.text == null) {
+                          showInSnackBar(context, "Please Enter Username ");
+                        } else if (passwordNameController.text == '' ||
+                            passwordNameController.text == null) {
+                          showInSnackBar(context, "Please Enter Password");
+                          print("Please Enter Password ");
+                        } else if (storeNameController.text == '' ||
+                            storeNameController.text == null) {
+                          showInSnackBar(context, "Please Enter Store Name ");
+                        } else if (addressController.text == '' ||
+                            addressController.text == null) {
+                          showInSnackBar(context, "Please Enter Address ");
+                        } else if (cityController.text == '' ||
+                            cityController.text == null) {
+                          showInSnackBar(context, "Please Enter City ");
+                        } else if (stateController.text == '' ||
+                            stateController.text == null) {
+                          showInSnackBar(context, "Please Enter State ");
+                        } else if (zipcodeController.text == '' ||
+                            zipcodeController.text == null) {
+                          showInSnackBar(context, "Please Enter Pincode");
+                        } else if (ownerNameController.text == '' ||
+                            ownerNameController.text == null) {
+                          showInSnackBar(context, "Please Enter Owner Name");
+                        } else if (mobileNumberController.text == '' ||
+                            mobileNumberController.text == null) {
+                          showInSnackBar(
+                              context, "Please Enter Mobile Number ");
+                        } else {
+                          addstoredetails();
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.red,
@@ -857,7 +978,7 @@ class _AddStorePageState extends State<AddStorePage> {
                         ),
                       ),
                       child: Text(
-                        "Save",
+                        widget.storeId == null ? 'Save' : 'Update',
                         style: TextStyle(color: Colors.white, fontSize: 16),
                       ),
                     ),

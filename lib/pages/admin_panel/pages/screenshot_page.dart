@@ -102,6 +102,17 @@ class _ScreenshotPageState extends State<ScreenshotPage> {
     };
   }
 
+  String dateFormat(dynamic date) {
+    try {
+      DateTime dateTime = date is DateTime ? date : DateTime.parse(date);
+
+      String formattedDate = DateFormat('dd-MMM-yyyy').format(dateTime);
+      return "$formattedDate";
+    } catch (e) {
+      return "Invalid date"; // Fallback for invalid date format
+    }
+  }
+
   void showpayment() {
     showDialog(
       context: context,
@@ -120,7 +131,7 @@ class _ScreenshotPageState extends State<ScreenshotPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   HeadingWidget(
-                    title: 'Pay amount',
+                    title: 'Pay Amount',
                     fontSize: 20.0,
                   ),
                   SizedBox(height: 10),
@@ -274,7 +285,16 @@ class _ScreenshotPageState extends State<ScreenshotPage> {
             Center(
                 child: ElevatedButton.icon(
               onPressed: () {
-                addpayment();
+                if (enteramount.text == '' || enteramount.text == null) {
+                  showInSnackBar(context, "Please Enter Amount ");
+                } else if (selectedValue == '' ||
+                    selectedValue == null ||
+                    selectedValue == "cash_on_delivery") {
+                  showInSnackBar(context, "Please Enter Payment Option");
+                  print("Please Enter Password ");
+                } else {
+                  addpayment();
+                }
               },
               label: Text('Submit'),
               style: ElevatedButton.styleFrom(
@@ -324,7 +344,7 @@ class _ScreenshotPageState extends State<ScreenshotPage> {
       showInSnackBar(context, "Payment Entry Added Successfully");
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(
-            builder: (context) => AdminMainContainer(admininitialPage: 2)),
+            builder: (context) => AdminMainContainer(admininitialPage: 1)),
         (Route<dynamic> route) => false,
       );
     } else {
@@ -704,7 +724,7 @@ class _ScreenshotPageState extends State<ScreenshotPage> {
                               height: 14,
                             ),
                             HeadingWidget(
-                              title: e.createdDate.toString(),
+                              title: dateFormat(e.createdDate.toString()),
                             ),
                             SizedBox(
                               height: 10,
@@ -729,7 +749,9 @@ class _ScreenshotPageState extends State<ScreenshotPage> {
                                               title: 'Amount',
                                             ),
                                             HeadingWidget(
-                                              title: "₹${e.amount}",
+                                              title: e.amount == null
+                                                  ? "₹"
+                                                  : "₹${e.amount}",
                                             )
                                           ],
                                         ),
@@ -774,12 +796,24 @@ class _ScreenshotPageState extends State<ScreenshotPage> {
                                           children: [
                                             // e.imageUrl != null
                                             //     ?
-                                            Image.network(
-                                              height: 80,
-                                              width: 100,
-                                              AppConstants.imgBaseUrl +
-                                                  (e.imageUrl ?? ''),
-                                            ),
+                                            e.imageUrl == null
+                                                ? ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12),
+                                                    child: Image.asset(
+                                                      AppAssets.moneyIcon,
+                                                      width: 28,
+                                                      height: 28,
+                                                      //  fit: BoxFit.cover,
+                                                    ),
+                                                  )
+                                                : Image.network(
+                                                    height: 80,
+                                                    width: 100,
+                                                    AppConstants.imgBaseUrl +
+                                                        (e.imageUrl ?? ''),
+                                                  ),
                                             // :
                                             //  Image.asset(
                                             //     AppAssets.payment,

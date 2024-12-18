@@ -214,16 +214,11 @@ class _MenuDetailsScreenState extends State<MenuDetailsScreen> {
 
     if (response.status.toString() == 'SUCCESS') {
       showInSnackBar(context, response.message.toString());
-      //    Navigator.pop(context);
+    
       setState(() {
-        getMyStoreDetails(); // Update the state variable
+        getMyStoreDetails(); 
       });
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(
-      //     builder: (context) => Third_party_List(),
-      //   ),
-      // );
+     
     } else {
       print(response.message.toString());
       showInSnackBar(context, response.message.toString());

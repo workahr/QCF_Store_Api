@@ -5,6 +5,7 @@ import 'package:namstore/constants/app_assets.dart';
 import 'package:namstore/constants/app_colors.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
+import 'package:namstore/pages/maincontainer.dart';
 
 import '../../../constants/app_constants.dart';
 import '../../../services/comFuncService.dart';
@@ -111,14 +112,19 @@ class _AdminAddNewMenuState extends State<AdminAddNewMenu> {
 
       if (response.status.toString() == 'SUCCESS') {
         showInSnackBar(context, response.message.toString());
-        Navigator.pushNamedAndRemoveUntil(
-            context, '/home', ModalRoute.withName('/home'));
+        // Navigator.pushNamedAndRemoveUntil(
+        //     context, '/home', ModalRoute.withName('/home'));
         // Navigator.push(
         //   context,
         //   MaterialPageRoute(
         //     builder: (context) => MenuDetailsScreen(),
         //   ),
         // );
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+              builder: (context) => AdminMainContainer(admininitialPage: 2)),
+          (Route<dynamic> route) => false,
+        );
       } else {
         print(response.message.toString());
         showInSnackBar(context, response.message.toString());
@@ -500,7 +506,7 @@ class _AdminAddNewMenuState extends State<AdminAddNewMenu> {
                     borderColor: Color.fromARGB(255, 225, 225, 225),
                   ),
                   SizedBox(height: 16),
-                  Text("Store price",
+                  Text("Store Org price",
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
                   SizedBox(height: 2),
@@ -526,7 +532,7 @@ class _AdminAddNewMenuState extends State<AdminAddNewMenu> {
                     // boxRadius: BorderRadius.all(Radius.circular(1)),
                   ),
                   SizedBox(height: 16),
-                  Text("Offer price",
+                  Text("Selling price",
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
                   SizedBox(height: 2),
@@ -686,7 +692,7 @@ class _AdminAddNewMenuState extends State<AdminAddNewMenu> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                      child: Text("Save",
+                      child: Text(widget.menuId == null ? 'Save' : 'Update',
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold)),
                     ),

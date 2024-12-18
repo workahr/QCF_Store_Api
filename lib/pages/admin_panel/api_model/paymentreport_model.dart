@@ -44,29 +44,29 @@ class PaymentList {
   int id;
   DateTime date;
   int storeId;
-  dynamic orderIds;
-  String amount;
-  String paymentMethod;
+  String? orderIds;
+  String? amount;
+  String? paymentMethod;
   String? imageUrl;
   int status;
-  int createdBy;
+  int? createdBy;
   DateTime createdDate;
-  String storeName;
-  String storeMobile;
+  String? storeName;
+  String? storeMobile;
 
   PaymentList({
     required this.id,
     required this.date,
     required this.storeId,
-    required this.orderIds,
-    required this.amount,
-    required this.paymentMethod,
-    required this.imageUrl,
+    this.orderIds,
+    this.amount,
+    this.paymentMethod,
+    this.imageUrl,
     required this.status,
-    required this.createdBy,
+    this.createdBy,
     required this.createdDate,
-    required this.storeName,
-    required this.storeMobile,
+    this.storeName,
+    this.storeMobile,
   });
 
   factory PaymentList.fromJson(Map<String, dynamic> json) => PaymentList(

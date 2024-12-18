@@ -441,7 +441,7 @@ class _PaymentsPageState extends State<PaymentsPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ClipRRect(
-              borderRadius: BorderRadius.circular(13), // Add border radius
+              borderRadius: BorderRadius.circular(13),
               child: Container(
                 width: double.infinity,
                 height: 53,
@@ -452,7 +452,7 @@ class _PaymentsPageState extends State<PaymentsPage> {
               height: 10,
             ),
             ClipRRect(
-              borderRadius: BorderRadius.circular(13), // Add border radius
+              borderRadius: BorderRadius.circular(13),
               child: Container(
                 width: double.infinity,
                 height: 283,
@@ -463,7 +463,7 @@ class _PaymentsPageState extends State<PaymentsPage> {
               height: 10,
             ),
             ClipRRect(
-              borderRadius: BorderRadius.circular(13), // Add border radius
+              borderRadius: BorderRadius.circular(13),
               child: Container(
                 width: double.infinity,
                 height: 283,
@@ -517,6 +517,21 @@ class _PaymentsPageState extends State<PaymentsPage> {
                           hint: 'Search',
                           hintColor: AppColors.grey,
                           borderColor: AppColors.grey1,
+                          onChanged: (value) {
+                            if (value != '') {
+                              print('value $value');
+                              value = value.toString().toLowerCase();
+                              paymentspage = paymentspageAll!
+                                  .where((Payments e) => e.name
+                                      .toString()
+                                      .toLowerCase()
+                                      .contains(value))
+                                  .toList();
+                            } else {
+                              paymentspage = paymentspageAll;
+                            }
+                            setState(() {});
+                          },
                         ),
                       ),
                       const SizedBox(width: 10),

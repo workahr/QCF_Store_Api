@@ -73,25 +73,33 @@ class _DeliverypersonState extends State<DeliveryPersonList> {
   }
 
   Future deleteDeleverypersonById(String userid) async {
-    await apiService.getBearerToken();
+    final dialogBoxResult = await showAlertDialogInfo(
+        context: context,
+        title: 'Are you sure?',
+        msg: 'You want to delete this data',
+        status: 'danger',
+        okBtn: false);
+    if (dialogBoxResult == 'OK') {
+      await apiService.getBearerToken();
 
-    Map<String, dynamic> postData = {"user_id": userid};
-    print("delete $postData");
+      Map<String, dynamic> postData = {"user_id": userid};
+      print("delete $postData");
 
-    var result = await apiService.deleteDeleverypersonById(postData);
-    DeleteDeliveryPersonmodel response =
-        deleteDeliveryPersonmodelFromJson(result);
+      var result = await apiService.deleteDeleverypersonById(postData);
+      DeleteDeliveryPersonmodel response =
+          deleteDeliveryPersonmodelFromJson(result);
 
-    if (!mounted) return; // Ensure widget is still in the tree
+      if (!mounted) return; // Ensure widget is still in the tree
 
-    if (response.status.toString() == 'SUCCESS') {
-      showInSnackBar(context, response.message.toString());
-      setState(() {
-        getalldeliverypersonlist();
-      });
-    } else {
-      print(response.message.toString());
-      showInSnackBar(context, response.message.toString());
+      if (response.status.toString() == 'SUCCESS') {
+        showInSnackBar(context, response.message.toString());
+        setState(() {
+          getalldeliverypersonlist();
+        });
+      } else {
+        print(response.message.toString());
+        showInSnackBar(context, response.message.toString());
+      }
     }
   }
 
@@ -124,7 +132,7 @@ class _DeliverypersonState extends State<DeliveryPersonList> {
       appBar: AppBar(
         toolbarHeight: 100.0,
         title: const Text(
-          'Delivery person list',
+          'Delivery Persons',
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: AppColors.red,

@@ -25,13 +25,21 @@ class MenuDetailsScreenAdmin extends StatefulWidget {
   String? storename;
   String? storestatus;
   String? frontimg;
+  String? address;
+  String? city;
+  String? state;
+  String? zipcode;
 
   MenuDetailsScreenAdmin(
       {super.key,
       this.storeId,
       this.storename,
       this.storestatus,
-      this.frontimg});
+      this.frontimg,
+      this.address,
+      this.city,
+      this.state,
+      this.zipcode});
   @override
   _MenuDetailsScreenAdminState createState() => _MenuDetailsScreenAdminState();
 }
@@ -114,22 +122,30 @@ class _MenuDetailsScreenAdminState extends State<MenuDetailsScreenAdmin> {
 // Delete The Menu
 
   Future deleteMenuById(String itemid, String storeid) async {
-    await apiService.getBearerToken();
+    final dialogBoxResult = await showAlertDialogInfo(
+        context: context,
+        title: 'Are you sure?',
+        msg: 'You want to delete this data',
+        status: 'danger',
+        okBtn: false);
+    if (dialogBoxResult == 'OK') {
+      await apiService.getBearerToken();
 
-    Map<String, dynamic> postData = {"store_id": storeid, "id": itemid};
-    print("delete $postData");
+      Map<String, dynamic> postData = {"store_id": storeid, "id": itemid};
+      print("delete $postData");
 
-    var result = await apiService.admindeleteMenuById(postData);
-    AdminDeleteMenumodel response = admindeletemenumodelFromJson(result);
+      var result = await apiService.admindeleteMenuById(postData);
+      AdminDeleteMenumodel response = admindeletemenumodelFromJson(result);
 
-    if (response.status.toString() == 'SUCCESS') {
-      showInSnackBar(context, response.message.toString());
-      setState(() {
-        getMenuAdminList();
-      });
-    } else {
-      print(response.message.toString());
-      showInSnackBar(context, response.message.toString());
+      if (response.status.toString() == 'SUCCESS') {
+        showInSnackBar(context, response.message.toString());
+        setState(() {
+          getMenuAdminList();
+        });
+      } else {
+        print(response.message.toString());
+        showInSnackBar(context, response.message.toString());
+      }
     }
   }
 
@@ -390,13 +406,17 @@ class _MenuDetailsScreenAdminState extends State<MenuDetailsScreenAdmin> {
                                           fontWeight: FontWeight.bold,
                                           fontSize: 20)),
                                   SizedBox(height: 8),
-                                  Text('South Indian Foods',
+                                  Text(
+                                      "${widget.address.toString()},${widget.city.toString()},",
+                                      //'South Indian Foods',
                                       style: TextStyle(
                                           color: Colors.black, fontSize: 14)),
                                   SizedBox(height: 4),
-                                  // Text('Open Time: 8.30am - 11.00pm',
-                                  //     style: TextStyle(
-                                  //         color: Colors.black, fontSize: 14)),
+                                  Text(
+                                      "${widget.state.toString()}-${widget.zipcode.toString()},",
+                                      //'South Indian Foods',
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 14)),
                                 ],
                               ),
                             ],
@@ -417,6 +437,21 @@ class _MenuDetailsScreenAdminState extends State<MenuDetailsScreenAdmin> {
                           filled: true,
                           fillColor: Colors.grey[200],
                         ),
+                        onChanged: (value) {
+                          if (value != '') {
+                            print('value $value');
+                            value = value.toString().toLowerCase();
+                            MenuListData = MenuListAll!
+                                .where((MenuDetails e) => e.itemName
+                                    .toString()
+                                    .toLowerCase()
+                                    .contains(value))
+                                .toList();
+                          } else {
+                            MenuListData = MenuListAll;
+                          }
+                          setState(() {});
+                        },
                       )),
                   SizedBox(height: 16),
                   Padding(
@@ -517,13 +552,59 @@ class _MenuDetailsScreenAdminState extends State<MenuDetailsScreenAdmin> {
                                                           FontWeight.bold,
                                                       fontSize: 18)),
                                               SizedBox(height: 4),
-                                              Text(
-                                                  "₹${e.storePrice}", //'₹250.00',
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    "Store Org Price  : ",
+                                                    style: TextStyle(
+                                                        color: Colors.black,
+                                                        // fontWeight:
+                                                        //     FontWeight.bold,
+                                                        fontSize: 14),
+                                                  ),
+                                                  Text(
+                                                      "₹${e.storePrice}", //'₹250.00',
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 14)),
+                                                ],
+                                              ),
+                                              Row(children: [
+                                                Text(
+                                                  "Strick Out Price : ",
                                                   style: TextStyle(
                                                       color: Colors.black,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 14)),
+                                                      // fontWeight:
+                                                      //     FontWeight.bold,
+                                                      fontSize: 14),
+                                                ),
+                                                Text(
+                                                    "₹${e.itemPrice}", //'₹250.00',
+                                                    style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 14))
+                                              ]),
+                                              Row(children: [
+                                                Text(
+                                                  "Selling Price      : ",
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      // fontWeight:
+                                                      //     FontWeight.bold,
+                                                      fontSize: 14),
+                                                ),
+                                                Text(
+                                                    "₹${e.itemOfferPrice}", //'₹250.00',
+                                                    style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 14))
+                                              ]),
                                             ],
                                           ),
                                         ),
@@ -554,10 +635,10 @@ class _MenuDetailsScreenAdminState extends State<MenuDetailsScreenAdmin> {
                                       ),
                                       child: Padding(
                                           padding: EdgeInsets.only(
-                                              top: 10,
-                                              bottom: 10,
-                                              left: 10,
-                                              right: 40),
+                                              top: 5,
+                                              bottom: 5,
+                                              left: 5,
+                                              right: 20),
                                           child: Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
@@ -627,30 +708,25 @@ class _MenuDetailsScreenAdminState extends State<MenuDetailsScreenAdmin> {
                                                         .delete_round_icon),
                                                   ])),
                                               GestureDetector(
-                                                  onTap: () {
-                                                    Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                AdminAddNewMenu(
-                                                                  menuId:
-                                                                      e.itemId,
-                                                                  storeId:
-                                                                      e.storeId,
-                                                                ))).then(
-                                                        (value) {});
-                                                  },
-                                                  child: Row(
-                                                      // mainAxisAlignment: MainAxisAlignment.center,
-                                                      children: [
-                                                        Image.asset(AppAssets
-                                                            .edit_icon),
-                                                        Text(' Edit',
-                                                            style: TextStyle(
-                                                                color: AppColors
-                                                                    .red,
-                                                                fontSize: 18.0))
-                                                      ])),
+                                                onTap: () {
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              AdminAddNewMenu(
+                                                                menuId:
+                                                                    e.itemId,
+                                                                storeId:
+                                                                    e.storeId,
+                                                              ))).then(
+                                                      (value) {});
+                                                },
+                                                child: Image.asset(
+                                                  AppAssets.edit_rounded_icon,
+                                                  height: 60,
+                                                  width: 60,
+                                                ),
+                                              ),
                                             ],
                                           ))),
                                   SizedBox(

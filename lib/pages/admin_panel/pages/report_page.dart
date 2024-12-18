@@ -75,7 +75,7 @@ class _ReportPageState extends State<ReportPage> {
           children: [
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
               ClipRRect(
-                borderRadius: BorderRadius.circular(13), // Add border radius
+                borderRadius: BorderRadius.circular(13),
                 child: Container(
                   width: 250,
                   height: 53,
@@ -83,7 +83,7 @@ class _ReportPageState extends State<ReportPage> {
                 ),
               ),
               ClipRRect(
-                borderRadius: BorderRadius.circular(13), // Add border radius
+                borderRadius: BorderRadius.circular(13),
                 child: Container(
                   width: 80,
                   height: 53,
@@ -98,7 +98,7 @@ class _ReportPageState extends State<ReportPage> {
               borderRadius: BorderRadius.circular(13), // Add border radius
               child: Container(
                 width: double.infinity,
-                height: 583,
+                height: 683,
                 color: Colors.white,
               ),
             ),
@@ -276,7 +276,10 @@ class _ReportPageState extends State<ReportPage> {
                                         ),
                                         Expanded(
                                           flex: 2,
-                                          child: Text(e.amount.toString()),
+                                          child: Text(
+                                              e.amount.toString() == 'null'
+                                                  ? ""
+                                                  : e.amount.toString()),
                                         ),
                                       ],
                                     ),

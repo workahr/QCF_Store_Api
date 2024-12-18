@@ -690,6 +690,7 @@ class _AddNewMenuState extends State<AddNewMenu> {
                           endTimeController.text = picked.format(context);
                         });
                       }
+                      print(selectedEndTime);
                     },
                   ),
                   SizedBox(height: 16),

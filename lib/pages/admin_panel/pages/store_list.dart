@@ -69,22 +69,30 @@ class _StoreListState extends State<StoreList> {
   }
 
   Future deleteStoreById(String storeid, String userid) async {
-    await apiService.getBearerToken();
+    final dialogBoxResult = await showAlertDialogInfo(
+        context: context,
+        title: 'Are you sure?',
+        msg: 'You want to delete this data',
+        status: 'danger',
+        okBtn: false);
+    if (dialogBoxResult == 'OK') {
+      await apiService.getBearerToken();
 
-    Map<String, dynamic> postData = {"user_id": userid, "store_id": storeid};
-    print("delete $postData");
+      Map<String, dynamic> postData = {"user_id": userid, "store_id": storeid};
+      print("delete $postData");
 
-    var result = await apiService.deleteStoreById(postData);
-    DeleteStoremodel response = deleteStoremodelFromJson(result);
+      var result = await apiService.deleteStoreById(postData);
+      DeleteStoremodel response = deleteStoremodelFromJson(result);
 
-    if (response.status.toString() == 'SUCCESS') {
-      showInSnackBar(context, response.message.toString());
-      setState(() {
-        getStoreList();
-      });
-    } else {
-      print(response.message.toString());
-      showInSnackBar(context, response.message.toString());
+      if (response.status.toString() == 'SUCCESS') {
+        showInSnackBar(context, response.message.toString());
+        setState(() {
+          getStoreList();
+        });
+      } else {
+        print(response.message.toString());
+        showInSnackBar(context, response.message.toString());
+      }
     }
   }
 
@@ -112,7 +120,7 @@ class _StoreListState extends State<StoreList> {
               borderRadius: BorderRadius.circular(13), // Add border radius
               child: Container(
                 width: double.infinity,
-                height: 283,
+                height: 383,
                 color: Colors.white,
               ),
             ),
@@ -136,7 +144,7 @@ class _StoreListState extends State<StoreList> {
         ),
         title: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [Text("Store List", style: TextStyle(color: Colors.white))],
+          children: [Text("Stores", style: TextStyle(color: Colors.white))],
         ),
         centerTitle: true,
       ),
@@ -170,7 +178,7 @@ class _StoreListState extends State<StoreList> {
                             Image.network(
                                 AppConstants.imgBaseUrl + e.frontImg.toString(),
                                 width: double.infinity,
-                                height: 90,
+                                height: 180,
                                 fit: BoxFit.fill, errorBuilder:
                                     (BuildContext context, Object exception,
                                         StackTrace? stackTrace) {
@@ -388,10 +396,14 @@ class _StoreListState extends State<StoreList> {
                                                 storestatus:
                                                     e.storeStatus.toString(),
                                                 frontimg: e.frontImg,
+                                                address: e.address,
+                                                city: e.city,
+                                                state: e.state,
+                                                zipcode: e.zipcode,
                                               )));
                                 },
                                 child: const Text(
-                                  "View Menu",
+                                  "View Menus",
                                   style: TextStyle(
                                       color: Colors.red, fontSize: 14),
                                 ),

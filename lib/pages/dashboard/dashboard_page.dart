@@ -993,19 +993,27 @@ class _DashboardPageState extends State<DashboardPage> {
                                               ],
                                             ),
                                             // Call Icon in a round container
-                                            Container(
-                                              padding: const EdgeInsets.all(10),
-                                              decoration: const BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                color: Colors.red,
-                                              ),
-                                              child: Image.asset(
-                                                AppAssets.call_icon,
-                                                width: 23.0,
-                                                height: 23.0,
-                                                color: AppColors.light,
-                                              ),
-                                            ),
+                                            GestureDetector(
+                                                onTap: () {
+                                                  makePhoneCall(item
+                                                      .deliveryBoyMobile
+                                                      .toString());
+                                                },
+                                                child: Container(
+                                                  padding:
+                                                      const EdgeInsets.all(10),
+                                                  decoration:
+                                                      const BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    color: Colors.red,
+                                                  ),
+                                                  child: Image.asset(
+                                                    AppAssets.call_icon,
+                                                    width: 23.0,
+                                                    height: 23.0,
+                                                    color: AppColors.light,
+                                                  ),
+                                                )),
                                           ],
                                         ),
                                       const SizedBox(height: 10.0),

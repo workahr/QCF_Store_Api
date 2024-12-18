@@ -49,10 +49,10 @@ class StoreDetails {
   String? city;
   String? state;
   String? country;
-  String? logo;
+  String? logo; // Make nullable
   String? gstNo;
   String? panNo;
-  String? terms;
+  String? terms; // Make nullable
   String? zipcode;
   String? frontImg;
   String? onlineVisibility;
@@ -62,7 +62,7 @@ class StoreDetails {
   DateTime? createdDate;
   int? updatedBy;
   DateTime? updatedDate;
-  String? slug;
+  String? slug; // Make nullable
   int? storeStatus;
 
   StoreDetails({

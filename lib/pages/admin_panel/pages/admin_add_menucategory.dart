@@ -133,19 +133,27 @@ class _AdminAddMenuCategoryState extends State<AdminAddMenuCategory> {
 
 //delete
   Future<void> Admindeletecategorybyid(String categoryId) async {
-    await apiService.getBearerToken();
-    Map<String, dynamic> postData = {
-      "id": categoryId,
-    };
-    var result =
-        await apiService.Admindeletecategorybyid(postData, widget.storeId);
-    AdminMenuDeleteCategoryByIdModel response =
-        adminmenudeleteategoryByIdModelFromJson(result);
-    if (response.status.toString() == 'SUCCESS') {
-      showInSnackBar(context, response.message.toString());
-      getCategoryList();
-    } else {
-      showInSnackBar(context, response.message.toString());
+    final dialogBoxResult = await showAlertDialogInfo(
+        context: context,
+        title: 'Are you sure?',
+        msg: 'You want to delete this data',
+        status: 'danger',
+        okBtn: false);
+    if (dialogBoxResult == 'OK') {
+      await apiService.getBearerToken();
+      Map<String, dynamic> postData = {
+        "id": categoryId,
+      };
+      var result =
+          await apiService.Admindeletecategorybyid(postData, widget.storeId);
+      AdminMenuDeleteCategoryByIdModel response =
+          adminmenudeleteategoryByIdModelFromJson(result);
+      if (response.status.toString() == 'SUCCESS') {
+        showInSnackBar(context, response.message.toString());
+        getCategoryList();
+      } else {
+        showInSnackBar(context, response.message.toString());
+      }
     }
   }
 

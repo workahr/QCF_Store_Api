@@ -157,6 +157,21 @@ class _OrdersPaymentState extends State<OrdersPayment> {
                         filled: true,
                         fillColor: Colors.grey[200],
                       ),
+                      onChanged: (value) {
+                        if (value != '') {
+                          print('value $value');
+                          value = value.toString().toLowerCase();
+                          ordersList = ordersListAll!
+                              .where((ScreeenShots e) => e.amount
+                                  .toString()
+                                  .toLowerCase()
+                                  .contains(value))
+                              .toList();
+                        } else {
+                          ordersList = ordersListAll;
+                        }
+                        setState(() {});
+                      },
                     )),
                 const SizedBox(height: 10),
                 Expanded(
@@ -220,7 +235,9 @@ class _OrdersPaymentState extends State<OrdersPayment> {
                                   ),
                                 ),
                                 Text(
-                                  "₹${order.amount}",
+                                  order.amount == null
+                                      ? "₹"
+                                      : "₹${order.amount}",
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16,

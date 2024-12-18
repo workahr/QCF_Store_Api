@@ -37,7 +37,7 @@ class _MyAppState extends State<LoginManagement> with WidgetsBindingObserver {
         MaterialPageRoute(builder: (context) => MainContainer()),
         (Route<dynamic> route) => false,
       );
-    } else {
+    } else if (loginuser == 1) {
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => AdminMainContainer()),
         (Route<dynamic> route) => false,

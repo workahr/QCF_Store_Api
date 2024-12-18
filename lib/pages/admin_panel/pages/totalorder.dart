@@ -96,6 +96,17 @@ class _TotalorderState extends State<Totalorder> {
     };
   }
 
+  String dateFormat(dynamic date) {
+    try {
+      DateTime dateTime = date is DateTime ? date : DateTime.parse(date);
+
+      String formattedDate = DateFormat('dd-MMM-yyyy').format(dateTime);
+      return "$formattedDate";
+    } catch (e) {
+      return "Invalid date"; // Fallback for invalid date format
+    }
+  }
+
   void _showFilterSheet() {
     showModalBottomSheet(
       context: context,
@@ -470,6 +481,21 @@ class _TotalorderState extends State<Totalorder> {
                     hintColor: AppColors.grey,
                     borderColor: AppColors.grey1,
                     width: double.infinity,
+                    onChanged: (value) {
+                      if (value != '') {
+                        print('value $value');
+                        value = value.toString().toLowerCase();
+                        indivualorderpage = indivualorderpageAll!
+                            .where((OrderList e) => e.invoiceNumber
+                                .toString()
+                                .toLowerCase()
+                                .contains(value))
+                            .toList();
+                      } else {
+                        indivualorderpage = indivualorderpageAll;
+                      }
+                      setState(() {});
+                    },
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -499,7 +525,7 @@ class _TotalorderState extends State<Totalorder> {
                         ),
                         subtitle: SubHeadingWidget(
                           title:
-                              '${e.totalProduct.toString()}items | ${e.createdDate.toString()}',
+                              '${e.totalProduct.toString()}items | ${dateFormat(e.createdDate.toString())}',
                         ),
                         trailing: const Icon(
                           Icons.arrow_forward_ios,
@@ -508,7 +534,33 @@ class _TotalorderState extends State<Totalorder> {
                         onTap: () {
                           Navigator.push(context, MaterialPageRoute(
                             builder: (context) {
-                              return Individualorderdetails();
+                              return Individualorderdetails(
+                                  invoiceNumber: e.invoiceNumber.toString(),
+                                  items: e.items,
+                                  date: e.createdDate != null
+                                      ? DateFormat('dd-MM-yyyy')
+                                          .format(e.createdDate!)
+                                      : '',
+                                  username: e.customerName,
+                                  usermobilenumber: e.customerMobile,
+                                  useraddress: e.customerAddress.address,
+                                  useraddressline2:
+                                      e.customerAddress.addressLine2,
+                                  userlandmark: e.customerAddress.landmark,
+                                  usercity: e.customerAddress.city,
+                                  userstate: e.customerAddress.state,
+                                  userpincode: e.customerAddress.pincode,
+                                  // storename: e.storeAddress.name,
+                                  // storemobilenumber: e.storeAddress.mobile,
+                                  // storeaddress: e.storeAddress.address,
+                                  // storeaddressline2: e.storeAddress.city,
+                                  // storelandmark: e.storeAddress.state,
+                                  // storepincode: e.storeAddress.zipcode.toString(),
+                                  deliveryboyname: e.deliveryBoyName,
+                                  deliveryboymobilenumber: e.deliveryBoyMobile,
+                                  totalPrice: e.totalPrice,
+                                  deliverycharge: e.deliveryCharges,
+                                  paymentMethod: e.paymentMethod);
                             },
                           ));
                         },

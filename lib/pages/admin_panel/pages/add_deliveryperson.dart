@@ -540,7 +540,7 @@ class _AddDeliverypersonState extends State<AddDeliveryperson> {
               bottom: Radius.circular(30),
             ),
           ),
-          title: Text("Add delivery person",
+          title: Text("Add Delivery Person",
               style: TextStyle(color: Colors.white)),
         ),
         body: SingleChildScrollView(
@@ -935,11 +935,47 @@ class _AddDeliverypersonState extends State<AddDeliveryperson> {
                   Center(
                     child: ButtonWidget(
                       borderRadius: 10,
-                      title: 'Save',
+                      title:
+                          widget.deliverypersonId == null ? 'Save' : 'Update',
                       color: AppColors.red,
                       width: 150,
                       onTap: () {
-                        adddeliveryperson();
+                        if (userNameController.text == '' ||
+                            userNameController.text == null) {
+                          showInSnackBar(context, "Please Enter Username ");
+                        } else if (passwordNameController.text == '' ||
+                            passwordNameController.text == null) {
+                          showInSnackBar(context, "Please Enter Password");
+                          print("Please Enter Password ");
+                        } else if (fullNameController.text == '' ||
+                            fullNameController.text == null) {
+                          showInSnackBar(context, "Please Enter Full Name ");
+                        } else if (mobileNumberController.text == '' ||
+                            mobileNumberController.text == null) {
+                          showInSnackBar(
+                              context, "Please Enter Mobile Number ");
+                        } else if (addressController.text == '' ||
+                            addressController.text == null) {
+                          showInSnackBar(context, "Please Enter Address ");
+                        } else if (cityController.text == '' ||
+                            cityController.text == null) {
+                          showInSnackBar(context, "Please Enter City ");
+                        } else if (zipcodeController.text == '' ||
+                            zipcodeController.text == null) {
+                          showInSnackBar(context, "Please Enter Pincode");
+                        } else if (vehicleNoController.text == '' ||
+                            vehicleNoController.text == null) {
+                          showInSnackBar(
+                              context, "Please Enter Vehicle Number ");
+                        } else if (vehicleNameController.text == '' ||
+                            vehicleNameController.text == null) {
+                          showInSnackBar(context, "Please Enter Vehicle Name");
+                        } else if (licenseNoController.text == '' ||
+                            licenseNoController.text == null) {
+                          showInSnackBar(context, "Please Enter License No.");
+                        } else {
+                          adddeliveryperson();
+                        }
                       },
                     ),
                   )

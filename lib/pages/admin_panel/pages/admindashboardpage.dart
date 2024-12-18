@@ -7,6 +7,7 @@ import 'package:shimmer/shimmer.dart';
 import '../../../services/comFuncService.dart';
 import '../../../services/nam_food_api_service.dart';
 import '../api_model/dashboard_orderlist_model.dart';
+import '../api_model/deliveryperson_list_model.dart';
 import '../models/admindashboard_model.dart';
 import 'delivery_person_list.dart';
 import 'deliveryperson.dart';
@@ -26,6 +27,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
     super.initState();
     getallDashboardOrderdetailslist();
     getunassignDashboardOrderdetailslist();
+    getalldeliverypersonlist();
   }
 
   List<OrderList> unassignorderdetailspage = [];
@@ -55,7 +57,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
 
           isLoading = false;
         });
-        showInSnackBar(context, response.message.toString());
+        // showInSnackBar(context, response.message.toString());
       }
     } catch (e) {
       setState(() {
@@ -64,7 +66,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
 
         isLoading = false;
       });
-      showInSnackBar(context, 'Error occurred: $e');
+      // showInSnackBar(context, 'Error occurred: $e');
       print("admin dashboard $e");
     }
   }
@@ -181,6 +183,46 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
       }
     } catch (e) {
       print('Could not launch WhatsApp for $contact: $e');
+    }
+  }
+
+  List<ListDeliveryPerson> DeliveryPerson = [];
+  List<ListDeliveryPerson> DeliveryPersonAll = [];
+
+  Future getalldeliverypersonlist() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      var result = await apiService.getalldeliverypersonlist();
+      var response = getallDeliveryPersonmodelFromJson(result);
+
+      if (response.status == 'SUCCESS') {
+        setState(() {
+          DeliveryPerson = response.list;
+          DeliveryPersonAll = DeliveryPerson;
+
+          isLoading = false;
+        });
+      } else {
+        setState(() {
+          DeliveryPerson = [];
+          DeliveryPersonAll = [];
+
+          isLoading = false;
+        });
+        showInSnackBar(context, response.message.toString());
+      }
+    } catch (e) {
+      setState(() {
+        DeliveryPerson = [];
+        DeliveryPersonAll = [];
+
+        isLoading = false;
+      });
+      showInSnackBar(context, 'Error occurred: $e');
+      print("admin dashboard $e");
     }
   }
 
@@ -530,7 +572,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                                         width: 25,
                                       ),
                                       Text(
-                                        "1,500",
+                                        '${DeliveryPerson.length}',
                                         style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold),
@@ -825,16 +867,23 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                                                                       16)),
                                                         ],
                                                       ),
-                                                      CircleAvatar(
-                                                        radius: 15,
-                                                        backgroundColor:
-                                                            AppColors.red,
-                                                        child: Image.asset(
-                                                            AppAssets.call_icon,
-                                                            height: 25,
-                                                            color:
-                                                                Colors.white),
-                                                      ),
+                                                      GestureDetector(
+                                                          onTap: () async {
+                                                            _makePhoneCall(e
+                                                                .deliveryBoyMobile
+                                                                .toString());
+                                                          },
+                                                          child: CircleAvatar(
+                                                            radius: 15,
+                                                            backgroundColor:
+                                                                AppColors.red,
+                                                            child: Image.asset(
+                                                                AppAssets
+                                                                    .call_icon,
+                                                                height: 25,
+                                                                color: Colors
+                                                                    .white),
+                                                          )),
                                                     ],
                                                   ),
                                                 ],

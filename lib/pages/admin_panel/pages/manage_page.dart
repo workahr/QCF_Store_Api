@@ -56,7 +56,7 @@ class _ManagePageState extends State<ManagePage> {
                 height: 18, // Adjusted for better visibility
                 width: 18,
               ),
-              title: const Text('Store list'),
+              title: const Text('Store List'),
               trailing: const Icon(Icons.arrow_forward_ios, size: 16),
               onTap: () {
                 Navigator.push(
@@ -72,7 +72,7 @@ class _ManagePageState extends State<ManagePage> {
                 height: 18,
                 width: 18,
               ),
-              title: const Text('Delivery person list'),
+              title: const Text('Delivery Person List'),
               trailing: const Icon(Icons.arrow_forward_ios, size: 16),
               onTap: () {
                 Navigator.push(
@@ -87,7 +87,7 @@ class _ManagePageState extends State<ManagePage> {
                 height: 18,
                 width: 18,
               ),
-              title: const Text('Manage password'),
+              title: const Text('Manage Password'),
               trailing: const Icon(Icons.arrow_forward_ios, size: 16),
               onTap: () {
                 // Add navigation or functionality here

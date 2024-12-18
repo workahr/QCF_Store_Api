@@ -154,17 +154,25 @@ class _MenuCategorieState extends State<MenuCategorie> {
 
 //delete
   Future<void> deletecategorybyid(String categoryId) async {
-    await apiService.getBearerToken();
-    Map<String, dynamic> postData = {
-      "id": categoryId,
-    };
-    var result = await apiService.deletecategorybyid(postData);
-    DeleteStoreByIdModel response = deleteStoreByIdModelFromJson(result);
-    if (response.status.toString() == 'SUCCESS') {
-      showInSnackBar(context, response.message.toString());
-      getCategoryList();
-    } else {
-      showInSnackBar(context, response.message.toString());
+    final dialogBoxResult = await showAlertDialogInfo(
+        context: context,
+        title: 'Are you sure?',
+        msg: 'You want to delete this data',
+        status: 'danger',
+        okBtn: false);
+    if (dialogBoxResult == 'OK') {
+      await apiService.getBearerToken();
+      Map<String, dynamic> postData = {
+        "id": categoryId,
+      };
+      var result = await apiService.deletecategorybyid(postData);
+      DeleteStoreByIdModel response = deleteStoreByIdModelFromJson(result);
+      if (response.status.toString() == 'SUCCESS') {
+        showInSnackBar(context, response.message.toString());
+        getCategoryList();
+      } else {
+        showInSnackBar(context, response.message.toString());
+      }
     }
   }
 
@@ -378,8 +386,7 @@ class _MenuCategorieState extends State<MenuCategorie> {
     });
   }
 
-
-   Widget _buildShimmerPlaceholder() {
+  Widget _buildShimmerPlaceholder() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       child: Shimmer.fromColors(

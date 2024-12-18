@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:namstore/pages/admin_panel/pages/add_store_page.dart';
+import 'package:namstore/pages/admin_panel/pages/admin_home_page.dart';
 import 'package:namstore/pages/admin_panel/pages/admindashboardpage.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import '../constants/app_assets.dart';
 import 'admin_panel/pages/manage_page.dart';
@@ -174,6 +176,7 @@ class _AdminMainContainerState extends State<AdminMainContainer>
 
   final List pageId = [1, 5, 8, 12, 15];
   static List<Widget> pageOptions = <Widget>[
+    AdminHomePage(),
     AdminDashboardPage(),
     PaymentsPage(),
     ManagePage()
@@ -260,6 +263,18 @@ class _AdminMainContainerState extends State<AdminMainContainer>
             BottomNavigationBarItem(
               icon: Image.asset(
                 _selectedIndex == 1
+                    ? AppAssets.homeIconSelected // Selected icon
+                    : AppAssets.home_icon,
+                height: 25,
+                width: 25,
+              ),
+              label: 'Dashboard',
+
+              //   backgroundColor: Color(0xFFE23744)
+            ),
+            BottomNavigationBarItem(
+              icon: Image.asset(
+                _selectedIndex == 2
                     ? AppAssets.menuIconSelected
                     : AppAssets.menuIcon,
                 height: 25,
@@ -269,7 +284,7 @@ class _AdminMainContainerState extends State<AdminMainContainer>
             ),
             BottomNavigationBarItem(
               icon: Image.asset(
-                _selectedIndex == 2
+                _selectedIndex == 3
                     ? AppAssets.orderIconSelected
                     : AppAssets.orderImg,
                 height: 25,

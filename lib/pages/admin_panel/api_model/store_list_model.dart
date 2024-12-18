@@ -41,55 +41,55 @@ class StoreListmodel {
 class StoreListData {
   int storeId;
   int userId;
-  String name;
-  String mobile;
-  String email;
-  String address;
-  String city;
-  String state;
-  dynamic country;
-  dynamic logo;
-  dynamic gstNo;
-  dynamic panNo;
-  dynamic terms;
-  String zipcode;
+  String? name;
+  String? mobile;
+  String? email;
+  String? address;
+  String? city;
+  String? state;
+  String? country;
+  String? logo;
+  String? gstNo;
+  String? panNo;
+  String? terms;
+  String? zipcode;
   String? frontImg;
-  String onlineVisibility;
-  dynamic tags;
+  String? onlineVisibility;
+  String? tags;
   int status;
-  dynamic createdBy;
+  int? createdBy;
   dynamic createdDate;
   dynamic updatedBy;
   dynamic updatedDate;
   dynamic slug;
-  int storeStatus;
+  int? storeStatus;
   String? owner_name;
 
   StoreListData({
     required this.storeId,
     required this.userId,
-    required this.name,
-    required this.mobile,
-    required this.email,
-    required this.address,
-    required this.city,
-    required this.state,
-    required this.country,
-    required this.logo,
-    required this.gstNo,
-    required this.panNo,
-    required this.terms,
-    required this.zipcode,
+    this.name,
+    this.mobile,
+    this.email,
+    this.address,
+    this.city,
+    this.state,
+    this.country,
+    this.logo,
+    this.gstNo,
+    this.panNo,
+    this.terms,
+    this.zipcode,
     this.frontImg,
-    required this.onlineVisibility,
-    required this.tags,
+    this.onlineVisibility,
+    this.tags,
     required this.status,
-    required this.createdBy,
+    this.createdBy,
     required this.createdDate,
     required this.updatedBy,
     required this.updatedDate,
     required this.slug,
-    required this.storeStatus,
+    this.storeStatus,
     this.owner_name,
   });
 
