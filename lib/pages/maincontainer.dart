@@ -263,8 +263,8 @@ class _AdminMainContainerState extends State<AdminMainContainer>
             BottomNavigationBarItem(
               icon: Image.asset(
                 _selectedIndex == 1
-                    ? AppAssets.homeIconSelected // Selected icon
-                    : AppAssets.home_icon,
+                    ? AppAssets.dashboard_fill // Selected icon
+                    : AppAssets.dashboard_outline,
                 height: 25,
                 width: 25,
               ),
@@ -275,8 +275,8 @@ class _AdminMainContainerState extends State<AdminMainContainer>
             BottomNavigationBarItem(
               icon: Image.asset(
                 _selectedIndex == 2
-                    ? AppAssets.menuIconSelected
-                    : AppAssets.menuIcon,
+                    ? AppAssets.wallet_fill
+                    : AppAssets.wallet_outline,
                 height: 25,
                 width: 25,
               ),
@@ -285,8 +285,8 @@ class _AdminMainContainerState extends State<AdminMainContainer>
             BottomNavigationBarItem(
               icon: Image.asset(
                 _selectedIndex == 3
-                    ? AppAssets.orderIconSelected
-                    : AppAssets.orderImg,
+                    ? AppAssets.user_fill
+                    : AppAssets.UserRounded,
                 height: 25,
                 width: 25,
               ),

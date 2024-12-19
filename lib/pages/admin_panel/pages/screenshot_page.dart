@@ -1,5 +1,6 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:namstore/pages/dashboard/dashboard_page.dart';
@@ -142,6 +143,11 @@ class _ScreenshotPageState extends State<ScreenshotPage> {
                         control: enteramount,
                         width: double.infinity,
                         hint: 'Enter Amount',
+                        type: const TextInputType.numberWithOptions(),
+                        inputFormaters: [
+                          FilteringTextInputFormatter.allow(
+                              RegExp(r'^-?(\d+)?\.?\d{0,11}'))
+                        ],
                       ),
                       HeadingWidget(
                         title: 'Select payment method',

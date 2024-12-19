@@ -156,4 +156,9 @@ class AppAssets {
   static const String call_iconfill = 'assets/images/call_iconfill.png';
   static const String payment = 'assets/images/payment.png';
   static const String whatsapp_icon = 'assets/images/whatsapp_icon.png';
+  static const String wallet_fill = 'assets/images/Wallet_fill.png';
+  static const String wallet_outline = 'assets/images/Wallet_outline.png';
+  static const String user_fill = 'assets/images/User_fill.png';
+  static const String dashboard_fill = 'assets/images/dashboard.png';
+  static const String dashboard_outline = 'assets/images/dashboard_outline.png';
 }
