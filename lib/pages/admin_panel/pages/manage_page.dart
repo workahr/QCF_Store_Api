@@ -5,6 +5,7 @@ import 'package:namstore/pages/admin_panel/pages/store_list.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'delivery_person_list.dart';
+import 'manage_password_page.dart';
 import 'report_page.dart';
 
 class ManagePage extends StatefulWidget {
@@ -90,7 +91,10 @@ class _ManagePageState extends State<ManagePage> {
               title: const Text('Manage Password'),
               trailing: const Icon(Icons.arrow_forward_ios, size: 16),
               onTap: () {
-                // Add navigation or functionality here
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ManagePasswordPage()),
+                );
               },
             ),
             ListTile(

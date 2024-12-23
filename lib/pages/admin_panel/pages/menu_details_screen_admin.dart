@@ -18,6 +18,7 @@ import '../api_model/menu_list_model.dart';
 import '../api_model/mystoredetails_model.dart';
 import '../api_model/storestatusupdate_model.dart';
 import 'admin_add_menucategory.dart';
+import 'admin_add_menuvariant.dart';
 import 'admin_add_new_menu.dart';
 
 class MenuDetailsScreenAdmin extends StatefulWidget {
@@ -286,52 +287,52 @@ class _MenuDetailsScreenAdminState extends State<MenuDetailsScreenAdmin> {
           Icons.menu,
           color: Colors.white,
         ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                HeadingWidget(
-                  title: toggleTitle.toString(),
-                  color: Colors.white,
-                  fontSize: 18.0,
-                ),
-                SizedBox(
-                  width: 8.0,
-                ),
-                Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 0.0),
-                    child: Transform.scale(
-                        scale: 0.9,
-                        child: Switch(
-                          value: widget.storestatus == 1, // isOnDuty,
-                          onChanged: (value1) {
-                            setState(() {
-                              isOnDuty = value1;
-                              if (widget.storestatus == 1) {
-                                toggleTitle = "On Duty";
-                              } else {
-                                toggleTitle = "Off Duty";
-                              }
-                              updateStoreStatus(value1 ? 1 : 0);
-                              print(value1 ? 1 : 0);
-                            });
-                          },
-                          activeColor: Colors.white,
-                          activeTrackColor: Colors.green,
-                          inactiveThumbColor: Colors.grey,
-                          inactiveTrackColor: Colors.grey.shade300,
-                        ))),
-              ],
-            ),
-          )
-        ],
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(30),
-          ),
-        ),
+        // actions: [
+        //   Padding(
+        //     padding: const EdgeInsets.all(10.0),
+        //     child: Row(
+        //       mainAxisAlignment: MainAxisAlignment.end,
+        //       children: [
+        //         HeadingWidget(
+        //           title: toggleTitle.toString(),
+        //           color: Colors.white,
+        //           fontSize: 18.0,
+        //         ),
+        //         SizedBox(
+        //           width: 8.0,
+        //         ),
+        //       Padding(
+        //           padding: const EdgeInsets.symmetric(vertical: 0.0),
+        //           child: Transform.scale(
+        //               scale: 0.9,
+        //               child: Switch(
+        //                 value: widget.storestatus == 1, // isOnDuty,
+        //                 onChanged: (value1) {
+        //                   setState(() {
+        //                     isOnDuty = value1;
+        //                     if (widget.storestatus == 1) {
+        //                       toggleTitle = "On Duty";
+        //                     } else {
+        //                       toggleTitle = "Off Duty";
+        //                     }
+        //                     updateStoreStatus(value1 ? 1 : 0);
+        //                     print(value1 ? 1 : 0);
+        //                   });
+        //                 },
+        //                 activeColor: Colors.white,
+        //                 activeTrackColor: Colors.green,
+        //                 inactiveThumbColor: Colors.grey,
+        //                 inactiveTrackColor: Colors.grey.shade300,
+        //               ))),
+        //     ],
+        //   ),
+        // )
+        // ],
+        // shape: const RoundedRectangleBorder(
+        //   borderRadius: BorderRadius.vertical(
+        //     bottom: Radius.circular(30),
+        //   ),
+        // ),
         backgroundColor: Color(0xFFE23744),
         automaticallyImplyLeading: false,
       ),
@@ -706,6 +707,24 @@ class _MenuDetailsScreenAdminState extends State<MenuDetailsScreenAdmin> {
                                                   child: Row(children: [
                                                     Image.asset(AppAssets
                                                         .delete_round_icon),
+                                                  ])),
+                                              GestureDetector(
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                AdminAddMenuvariant(
+                                                                  menuId: e
+                                                                      .itemCategoryId,
+                                                                  storeId:
+                                                                      e.storeId,
+                                                                ))).then(
+                                                        (value) {});
+                                                  },
+                                                  child: Row(children: [
+                                                    Image.asset(AppAssets
+                                                        .edit_rounded_icon),
                                                   ])),
                                               GestureDetector(
                                                 onTap: () {

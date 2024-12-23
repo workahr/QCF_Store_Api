@@ -346,25 +346,77 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
             SizedBox(
               height: 30,
             ),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(13), // Add border radius
-              child: Container(
-                width: double.infinity,
-                height: 383,
-                color: Colors.white,
-              ),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(13), // Add border radius
+                  child: Container(
+                    width: 170,
+                    height: 133,
+                    color: Colors.white,
+                  ),
+                ),
+                SizedBox(
+                  width: 20,
+                ),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(13), // Add border radius
+                  child: Container(
+                    width: 170,
+                    height: 133,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
             ),
             SizedBox(
               height: 30,
             ),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(13), // Add border radius
-              child: Container(
-                width: double.infinity,
-                height: 283,
-                color: Colors.white,
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(13), // Add border radius
+                  child: Container(
+                    width: 170,
+                    height: 133,
+                    color: Colors.white,
+                  ),
+                ),
+                SizedBox(
+                  width: 20,
+                ),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(13), // Add border radius
+                  child: Container(
+                    width: 170,
+                    height: 133,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
             ),
+            // ClipRRect(
+            //   borderRadius: BorderRadius.circular(13), // Add border radius
+            //   child: Container(
+            //     width: double.infinity,
+            //     height: 383,
+            //     color: Colors.white,
+            //   ),
+            // ),
+            // SizedBox(
+            //   height: 30,
+            // ),
+            // ClipRRect(
+            //   borderRadius: BorderRadius.circular(13), // Add border radius
+            //   child: Container(
+            //     width: double.infinity,
+            //     height: 283,
+            //     color: Colors.white,
+            //   ),
+            // ),
           ],
         ),
       ),

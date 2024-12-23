@@ -175,40 +175,40 @@ class _OrderDetailsState extends State<OrderDetails> {
                                 ),
                               ],
                             ),
-                            InkWell(
-                              onTap: () {
-                                // Handle order notification tap
-                                makePhoneCall(widget.mobilenumber.toString());
-                              },
-                              child: Container(
-                                height: 30,
-                                width: 120,
-                                padding: EdgeInsets.all(3.0),
-                                decoration: BoxDecoration(
-                                    //color: AppColors.light,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(8.0)),
-                                    border: Border.all(color: AppColors.red)),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Image.asset(
-                                      AppAssets.call_icon,
-                                      width: 23.0,
-                                      height: 23.0,
-                                    ),
-                                    SizedBox(
-                                      width: 5.0,
-                                    ),
-                                    Text(
-                                      'Call Customer',
-                                      style: TextStyle(
-                                          color: AppColors.red, fontSize: 13),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
+                            // InkWell(
+                            //   onTap: () {
+                            //     // Handle order notification tap
+                            //     makePhoneCall(widget.mobilenumber.toString());
+                            //   },
+                            //   child: Container(
+                            //     height: 30,
+                            //     width: 120,
+                            //     padding: EdgeInsets.all(3.0),
+                            //     decoration: BoxDecoration(
+                            //         //color: AppColors.light,
+                            //         borderRadius:
+                            //             BorderRadius.all(Radius.circular(8.0)),
+                            //         border: Border.all(color: AppColors.red)),
+                            //     child: Row(
+                            //       mainAxisAlignment: MainAxisAlignment.center,
+                            //       children: [
+                            //         Image.asset(
+                            //           AppAssets.call_icon,
+                            //           width: 23.0,
+                            //           height: 23.0,
+                            //         ),
+                            //         SizedBox(
+                            //           width: 5.0,
+                            //         ),
+                            //         Text(
+                            //           'Call Customer',
+                            //           style: TextStyle(
+                            //               color: AppColors.red, fontSize: 13),
+                            //         ),
+                            //       ],
+                            //     ),
+                            //   ),
+                            // ),
                           ]),
                       const SizedBox(height: 5),
                       HeadingWidget(title: widget.orderId.toString()),

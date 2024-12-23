@@ -966,28 +966,56 @@ class _DashboardPageState extends State<DashboardPage> {
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,
                                                   children: [
-                                                    Text(
-                                                      'Name',
-                                                      style: TextStyle(
-                                                        fontSize: 14,
-                                                        color: AppColors.black,
-                                                      ),
-                                                    ),
-                                                    SizedBox(height: 4),
-                                                    if (item.deliveryBoyName
-                                                            .toString() !=
-                                                        "null")
+                                                    Row(children: [
                                                       Text(
-                                                        item.deliveryBoyName
-                                                            .toString(),
+                                                        'Name           : ',
                                                         style: TextStyle(
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          decorationColor:
-                                                              Colors.blue,
+                                                          fontSize: 14,
+                                                          color:
+                                                              AppColors.black,
                                                         ),
                                                       ),
+                                                      SizedBox(height: 4),
+                                                      if (item.deliveryBoyName
+                                                              .toString() !=
+                                                          "null")
+                                                        Text(
+                                                          item.deliveryBoyName
+                                                              .toString(),
+                                                          style: TextStyle(
+                                                            fontSize: 16,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            decorationColor:
+                                                                Colors.blue,
+                                                          ),
+                                                        ),
+                                                    ]),
+                                                    Row(children: [
+                                                      Text(
+                                                        'Pickup Code: ',
+                                                        style: TextStyle(
+                                                          fontSize: 14,
+                                                          color:
+                                                              AppColors.black,
+                                                        ),
+                                                      ),
+                                                      SizedBox(height: 4),
+                                                      if (item.deliveryBoyName
+                                                              .toString() !=
+                                                          "null")
+                                                        Text(
+                                                          item.deliveryBoyName
+                                                              .toString(),
+                                                          style: TextStyle(
+                                                            fontSize: 16,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            decorationColor:
+                                                                Colors.blue,
+                                                          ),
+                                                        ),
+                                                    ])
                                                   ],
                                                 ),
                                               ],
@@ -1032,47 +1060,46 @@ class _DashboardPageState extends State<DashboardPage> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                          if (item.deliveryBoyMobile != null)
-                                            InkWell(
-                                              onTap: () {
-                                                // Handle order notification tap
-                                                makePhoneCall(item
-                                                    .deliveryBoyMobile
-                                                    .toString());
-                                              },
-                                              child: Container(
-                                                // height: 40,
-                                                // width: 120,
-                                                padding: EdgeInsets.all(7.0),
-                                                decoration: BoxDecoration(
-                                                    //color: AppColors.light,
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(
-                                                                8.0)),
-                                                    border: Border.all(
-                                                        color: AppColors.red)),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Image.asset(
-                                                      AppAssets.call_icon,
-                                                      width: 23.0,
-                                                      height: 23.0,
-                                                    ),
-                                                    SizedBox(
-                                                      width: 5.0,
-                                                    ),
-                                                    Text(
-                                                      'Call DeliveryBoy',
-                                                      style: TextStyle(
-                                                          color: AppColors.red),
-                                                    ),
-                                                  ],
-                                                ),
+                                          //  if (item.deliveryBoyMobile != null)
+                                          InkWell(
+                                            onTap: () {
+                                              // Handle order notification tap
+                                              makePhoneCall(item
+                                                  .deliveryBoyMobile
+                                                  .toString());
+                                            },
+                                            child: Container(
+                                              // height: 40,
+                                              // width: 120,
+                                              padding: EdgeInsets.all(7.0),
+                                              decoration: BoxDecoration(
+                                                  //color: AppColors.light,
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(8.0)),
+                                                  border: Border.all(
+                                                      color: AppColors.red)),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Image.asset(
+                                                    AppAssets.call_icon,
+                                                    width: 23.0,
+                                                    height: 23.0,
+                                                  ),
+                                                  SizedBox(
+                                                    width: 5.0,
+                                                  ),
+                                                  Text(
+                                                    'Call DeliveryBoy',
+                                                    style: TextStyle(
+                                                        color: AppColors.red),
+                                                  ),
+                                                ],
                                               ),
                                             ),
+                                          ),
                                           SvgIconButtonWidget(
                                               title: ' Done ',
                                               // color: AppColors.light,

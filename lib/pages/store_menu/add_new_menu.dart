@@ -632,67 +632,67 @@ class _AddNewMenuState extends State<AddNewMenu> {
                     width: MediaQuery.of(context).size.width,
                   ),
                   SizedBox(height: 16),
-                  Text("Available Start Time",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-                  SizedBox(height: 8),
-                  TextFormField(
-                    controller: startTimeController,
-                    readOnly: true, // Prevent manual editing
-                    decoration: InputDecoration(
-                      hintText: "Select start time",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      suffixIcon: Icon(Icons.access_time),
-                    ),
-                    onTap: () async {
-                      TimeOfDay? picked = await showTimePicker(
-                        context: context,
-                        initialTime: TimeOfDay.now(),
-                      );
+                  // Text("Available Start Time",
+                  //     style:
+                  //         TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                  // SizedBox(height: 8),
+                  // TextFormField(
+                  //   controller: startTimeController,
+                  //   readOnly: true, // Prevent manual editing
+                  //   decoration: InputDecoration(
+                  //     hintText: "Select start time",
+                  //     border: OutlineInputBorder(
+                  //       borderRadius: BorderRadius.circular(8),
+                  //     ),
+                  //     suffixIcon: Icon(Icons.access_time),
+                  //   ),
+                  //   onTap: () async {
+                  //     TimeOfDay? picked = await showTimePicker(
+                  //       context: context,
+                  //       initialTime: TimeOfDay.now(),
+                  //     );
 
-                      if (picked != null) {
-                        setState(() {
-                          selectedStartTime = picked;
-                          startTimeController.text = picked.format(context);
-                        });
-                      }
-                    },
-                  ),
+                  //     if (picked != null) {
+                  //       setState(() {
+                  //         selectedStartTime = picked;
+                  //         startTimeController.text = picked.format(context);
+                  //       });
+                  //     }
+                  //   },
+                  // ),
 
-                  SizedBox(height: 16),
+                  // SizedBox(height: 16),
 
-                  // End Time Picker
-                  Text("Available End Time",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-                  SizedBox(height: 8),
-                  TextFormField(
-                    controller: endTimeController,
-                    readOnly: true,
-                    decoration: InputDecoration(
-                      hintText: "Select end time",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      suffixIcon: Icon(Icons.access_time),
-                    ),
-                    onTap: () async {
-                      TimeOfDay? picked = await showTimePicker(
-                        context: context,
-                        initialTime: TimeOfDay.now(),
-                      );
+                  // // End Time Picker
+                  // Text("Available End Time",
+                  //     style:
+                  //         TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                  // SizedBox(height: 8),
+                  // TextFormField(
+                  //   controller: endTimeController,
+                  //   readOnly: true,
+                  //   decoration: InputDecoration(
+                  //     hintText: "Select end time",
+                  //     border: OutlineInputBorder(
+                  //       borderRadius: BorderRadius.circular(8),
+                  //     ),
+                  //     suffixIcon: Icon(Icons.access_time),
+                  //   ),
+                  //   onTap: () async {
+                  //     TimeOfDay? picked = await showTimePicker(
+                  //       context: context,
+                  //       initialTime: TimeOfDay.now(),
+                  //     );
 
-                      if (picked != null) {
-                        setState(() {
-                          selectedEndTime = picked;
-                          endTimeController.text = picked.format(context);
-                        });
-                      }
-                      print(selectedEndTime);
-                    },
-                  ),
+                  //     if (picked != null) {
+                  //       setState(() {
+                  //         selectedEndTime = picked;
+                  //         endTimeController.text = picked.format(context);
+                  //       });
+                  //     }
+                  //     print(selectedEndTime);
+                  //   },
+                  // ),
                   SizedBox(height: 16),
                   OutlineBtnWidget(
                       title: 'Upload Image of Dish',

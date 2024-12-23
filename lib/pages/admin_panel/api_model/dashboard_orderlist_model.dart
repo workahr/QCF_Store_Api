@@ -56,7 +56,7 @@ class OrderList {
   String? deliveryBoyMobile;
   List<Item> items;
   CustomerAddress customerAddress;
-  //StoreAddress storeAddress;
+  StoreAddress storeAddress;
 
   OrderList({
     this.invoiceNumber,
@@ -76,7 +76,7 @@ class OrderList {
     this.deliveryBoyMobile,
     required this.items,
     required this.customerAddress,
-    // required this.storeAddress,
+    required this.storeAddress,
   });
 
   factory OrderList.fromJson(Map<String, dynamic> json) => OrderList(
@@ -97,7 +97,7 @@ class OrderList {
         deliveryBoyMobile: json["delivery_boy_mobile"],
         items: List<Item>.from(json["items"].map((x) => Item.fromJson(x))),
         customerAddress: CustomerAddress.fromJson(json["customer_address"]),
-        //  storeAddress: StoreAddress.fromJson(json["store_address"]),
+        storeAddress: StoreAddress.fromJson(json["store_address"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -118,7 +118,7 @@ class OrderList {
         "delivery_boy_mobile": deliveryBoyMobile,
         "items": List<dynamic>.from(items.map((x) => x.toJson())),
         "customer_address": customerAddress.toJson(),
-        //  "store_address": storeAddress.toJson(),
+        "store_address": storeAddress.toJson(),
       };
 }
 

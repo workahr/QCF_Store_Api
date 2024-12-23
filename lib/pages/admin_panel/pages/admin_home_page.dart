@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../constants/app_assets.dart';
@@ -9,6 +10,7 @@ import '../../../services/nam_food_api_service.dart';
 import '../../../widgets/custom_text_field.dart';
 import '../api_model/dashboard_orderlist_model.dart';
 import 'deliveryperson.dart';
+import 'edit_order.dart';
 
 class AdminHomePage extends StatefulWidget {
   const AdminHomePage({super.key});
@@ -137,6 +139,124 @@ class _AdminHomePageState extends State<AdminHomePage> {
     }
   }
 
+  Widget _buildShimmerPlaceholder() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      child: Shimmer.fromColors(
+        baseColor: Colors.grey.shade300,
+        highlightColor: Colors.grey.shade100,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 30,
+            ),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(13), // Add border radius
+              child: Container(
+                width: double.infinity,
+                height: 383,
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(13), // Add border radius
+              child: Container(
+                width: double.infinity,
+                height: 283,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showpickupconfirmDialog(List<Item> items) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: SingleChildScrollView(
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              // widget.orderitems.map((e) {
+              // return
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          'Order ${items.length.toString()} items',
+                          style: TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.red,
+                          ),
+                        ),
+                        SizedBox(width: 8),
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(18),
+                            color: Colors.green,
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 4),
+                          child: Text(
+                            "#${items[0].orderId.toString()}",
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 15),
+
+                    ...items.map((e) {
+                      return _buildItemDetailCard(
+                        e.quantity.toString(),
+                        e.productName.toString(),
+                      );
+                    }).toList(), //
+                  ],
+                ),
+              )
+            ]
+                    // }).toList(),
+                    ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildItemDetailCard(String qty, String name) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(10.0),
+      margin: EdgeInsets.only(bottom: 10.0),
+      decoration: BoxDecoration(
+        color: Colors.grey[100],
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey[300]!),
+      ),
+      child: Text(
+        "$qty x $name",
+        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -156,1243 +276,1423 @@ class _AdminHomePageState extends State<AdminHomePage> {
         ),
         centerTitle: true,
       ),
-      body: Padding(
-        padding: EdgeInsets.all(10.0),
-        child: Column(children: [
-          // Order Status Tabs
-          // SizedBox(
-          //   height: 10.0,
-          // ),
-          Padding(
-              padding: EdgeInsets.fromLTRB(0, 10.0, 0, 20.0),
-              child: SingleChildScrollView(
-                  scrollDirection:
-                      Axis.horizontal, // Enable horizontal scrolling
-                  child: Container(
-                    color: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 6),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        _buildStatusTab(
-                            'New Order (${unassigneddeliveryboy.length.toString()})',
-                            0),
-                        _buildStatusTab(
-                            'Onward (${inprogress.length.toString()})', 1),
-                        _buildStatusTab(
-                            'Sent (${orderdelivered.length.toString()})', 2),
-                        _buildStatusTab(
-                            'Canceled ${canceledorder.length.toString()})', 3),
+      body: isLoading
+          ? ListView.builder(
+              itemCount: 5,
+              itemBuilder: (context, index) {
+                return _buildShimmerPlaceholder();
+              },
+            )
+          : Padding(
+              padding: EdgeInsets.all(10.0),
+              child: Column(children: [
+                // Order Status Tabs
+                // SizedBox(
+                //   height: 10.0,
+                // ),
+                Padding(
+                    padding: EdgeInsets.fromLTRB(0, 10.0, 0, 8.0),
+                    child: SingleChildScrollView(
+                        scrollDirection:
+                            Axis.horizontal, // Enable horizontal scrolling
+                        child: Container(
+                          color: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 6),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              _buildStatusTab(
+                                  'New Order (${unassigneddeliveryboy.length.toString()})',
+                                  0),
+                              _buildStatusTab(
+                                  'Onward (${inprogress.length.toString()})',
+                                  1),
+                              _buildStatusTab(
+                                  'Sent (${orderdelivered.length.toString()})',
+                                  2),
+                              _buildStatusTab(
+                                  'Canceled ${canceledorder.length.toString()})',
+                                  3),
 
-                        // _buildStatusTab('New Order', 0),
-                        // _buildStatusTab('Progress', 1),
-                        // _buildStatusTab('Delivered', 2),
-                        // _buildStatusTab('Canceled', 3),
-                      ],
-                    ),
-                  ))),
+                              // _buildStatusTab('New Order', 0),
+                              // _buildStatusTab('Progress', 1),
+                              // _buildStatusTab('Delivered', 2),
+                              // _buildStatusTab('Canceled', 3),
+                            ],
+                          ),
+                        ))),
 
 //New Order
 
-          SizedBox(
-              width: MediaQuery.of(context).size.width / 1.1,
-              child: CustomeTextField(
-                prefixIcon: Icon(
-                  Icons.search,
-                  color: AppColors.red,
-                ),
-                hint: 'Search Orders',
-                hintColor: AppColors.grey,
-                borderColor: AppColors.grey,
-                onChanged: (value) {
-                  value = value.trim().toLowerCase();
-                  setState(() {
-                    if (selectedIndex == 0) {
-                      unassigneddeliveryboy = value.isNotEmpty
-                          ? orderdetailslistpageAll
-                              .where((order) =>
-                                  order.orderStatus == "Order Placed" &&
-                                  order.deliveryPartnerId == '0' &&
-                                  (order.customerAddress.orderId
-                                          ?.toString()
-                                          .toLowerCase()
-                                          .contains(value) ??
-                                      false))
-                              .toList()
-                          : orderdetailslistpageAll
-                              .where((order) =>
-                                  order.orderStatus == "Order Placed" &&
-                                  order.deliveryPartnerId == '0')
-                              .toList();
-                    } else if (selectedIndex == 1) {
-                      inprogress = value.isNotEmpty
-                          ? orderdetailslistpageAll
-                              .where((order) =>
-                                  order.orderStatus != "Order Delivered" &&
-                                  order.deliveryPartnerId != '0' &&
-                                  (order.customerAddress.orderId
-                                          ?.toString()
-                                          .toLowerCase()
-                                          .contains(value) ??
-                                      false))
-                              .toList()
-                          : orderdetailslistpageAll
-                              .where((order) =>
-                                  order.orderStatus != "Order Delivered" &&
-                                  order.deliveryPartnerId != '0')
-                              .toList();
-                    } else if (selectedIndex == 2) {
-                      orderdelivered = value.isNotEmpty
-                          ? orderdetailslistpageAll
-                              .where((order) =>
-                                  order.orderStatus == "Order Delivered" &&
-                                  order.deliveryPartnerId != '0' &&
-                                  (order.customerAddress.orderId
-                                          ?.toString()
-                                          .toLowerCase()
-                                          .contains(value) ??
-                                      false))
-                              .toList()
-                          : orderdetailslistpageAll
-                              .where((order) =>
-                                  order.orderStatus == "Order Delivered" &&
-                                  order.deliveryPartnerId != '0')
-                              .toList();
-                    } else if (selectedIndex == 3) {
-                      canceledorder = value.isNotEmpty
-                          ? orderdetailslistpageAll
-                              .where((order) =>
-                                  order.orderStatus == "Cancelled" &&
-                                  (order.deliveryPartnerId != '0' ||
-                                      order.deliveryPartnerId == '0') &&
-                                  (order.customerAddress.orderId
-                                          ?.toString()
-                                          .toLowerCase()
-                                          .contains(value) ??
-                                      false))
-                              .toList()
-                          : orderdetailslistpageAll
-                              .where((order) =>
-                                  order.orderStatus == "Cancelled" &&
-                                  (order.deliveryPartnerId != '0' ||
-                                      order.deliveryPartnerId == '0'))
-                              .toList();
-                    }
-                  });
-                },
+                SizedBox(
+                    width: MediaQuery.of(context).size.width / 1.1,
+                    child: CustomeTextField(
+                      prefixIcon: Icon(
+                        Icons.search,
+                        color: AppColors.red,
+                      ),
+                      hint: 'Search Orders',
+                      hintColor: AppColors.grey,
+                      borderColor: AppColors.grey,
+                      onChanged: (value) {
+                        value = value.trim().toLowerCase();
+                        setState(() {
+                          if (selectedIndex == 0) {
+                            unassigneddeliveryboy = value.isNotEmpty
+                                ? orderdetailslistpageAll
+                                    .where((order) =>
+                                        order.orderStatus == "Order Placed" &&
+                                        order.deliveryPartnerId == '0' &&
+                                        (order.customerAddress.orderId
+                                                ?.toString()
+                                                .toLowerCase()
+                                                .contains(value) ??
+                                            false))
+                                    .toList()
+                                : orderdetailslistpageAll
+                                    .where((order) =>
+                                        order.orderStatus == "Order Placed" &&
+                                        order.deliveryPartnerId == '0')
+                                    .toList();
+                          } else if (selectedIndex == 1) {
+                            inprogress = value.isNotEmpty
+                                ? orderdetailslistpageAll
+                                    .where((order) =>
+                                        order.orderStatus !=
+                                            "Order Delivered" &&
+                                        order.deliveryPartnerId != '0' &&
+                                        (order.customerAddress.orderId
+                                                ?.toString()
+                                                .toLowerCase()
+                                                .contains(value) ??
+                                            false))
+                                    .toList()
+                                : orderdetailslistpageAll
+                                    .where((order) =>
+                                        order.orderStatus !=
+                                            "Order Delivered" &&
+                                        order.deliveryPartnerId != '0')
+                                    .toList();
+                          } else if (selectedIndex == 2) {
+                            orderdelivered = value.isNotEmpty
+                                ? orderdetailslistpageAll
+                                    .where((order) =>
+                                        order.orderStatus ==
+                                            "Order Delivered" &&
+                                        order.deliveryPartnerId != '0' &&
+                                        (order.customerAddress.orderId
+                                                ?.toString()
+                                                .toLowerCase()
+                                                .contains(value) ??
+                                            false))
+                                    .toList()
+                                : orderdetailslistpageAll
+                                    .where((order) =>
+                                        order.orderStatus ==
+                                            "Order Delivered" &&
+                                        order.deliveryPartnerId != '0')
+                                    .toList();
+                          } else if (selectedIndex == 3) {
+                            canceledorder = value.isNotEmpty
+                                ? orderdetailslistpageAll
+                                    .where((order) =>
+                                        order.orderStatus == "Cancelled" &&
+                                        (order.deliveryPartnerId != '0' ||
+                                            order.deliveryPartnerId == '0') &&
+                                        (order.customerAddress.orderId
+                                                ?.toString()
+                                                .toLowerCase()
+                                                .contains(value) ??
+                                            false))
+                                    .toList()
+                                : orderdetailslistpageAll
+                                    .where((order) =>
+                                        order.orderStatus == "Cancelled" &&
+                                        (order.deliveryPartnerId != '0' ||
+                                            order.deliveryPartnerId == '0'))
+                                    .toList();
+                          }
+                        });
+                      },
 
-                //  },
-              )),
+                      //  },
+                    )),
 
-          if (selectedIndex == 0 && unassigneddeliveryboy.isNotEmpty)
-            Expanded(
-                child: ListView.builder(
-              itemCount: unassigneddeliveryboy.length,
-              shrinkWrap: true,
-              physics: AlwaysScrollableScrollPhysics(),
-              itemBuilder: (context, index) {
-                final e = unassigneddeliveryboy[index];
+                if (selectedIndex == 0 && unassigneddeliveryboy.isNotEmpty)
+                  Expanded(
+                      child: ListView.builder(
+                    itemCount: unassigneddeliveryboy.length,
+                    shrinkWrap: true,
+                    physics: AlwaysScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      final e = unassigneddeliveryboy[index];
 
-                final currentCustomerAddress = e.customerAddress;
-                // final currentStoreAddress = e.storeAddress;
-                String formattedDate = e.createdDate != null
-                    ? DateFormat('dd-MM-yyyy').format(e.createdDate!)
-                    : '';
+                      final currentCustomerAddress = e.customerAddress;
+                      final currentStoreAddress = e.storeAddress;
+                      String formattedDate = e.createdDate != null
+                          ? DateFormat('dd-MM-yyyy').format(e.createdDate!)
+                          : '';
 
-                return Padding(
-                  padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
-                  child: e.orderStatus != "Cancelled"
-                      ? Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: Colors.grey.shade300),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "Order ID #${currentCustomerAddress.orderId ?? ''}",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16),
-                                    ),
-                                    Text(
-                                      "Date : ${formattedDate ?? ''}",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16),
-                                    ),
-                                  ],
+                      return Padding(
+                        padding:
+                            const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
+                        child: e.orderStatus != "Cancelled"
+                            ? Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                  border:
+                                      Border.all(color: Colors.grey.shade300),
                                 ),
-                                SizedBox(height: 5),
-                                Row(
-                                  children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: e.orderStatus ==
-                                                    "Order Confirmed" ||
-                                                e.orderStatus ==
-                                                    "On Delivery" ||
-                                                e.orderStatus == "Order Placed"
-                                            ? Colors.green
-                                            : AppColors.red,
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      padding: const EdgeInsets.all(5.0),
-                                      child: Text(
-                                        e.orderStatus ?? 'Unknown Status',
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Divider(color: Colors.grey),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: 10),
-                                Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Icon(Icons.location_on_outlined),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text("Pick Point: ",
-                                                  style:
-                                                      TextStyle(fontSize: 16)),
-                                              Container(
-                                                  height: 1,
-                                                  color: Colors.black,
-                                                  width: 80),
-                                            ],
+                                          Text(
+                                            "Order ID #${currentCustomerAddress.orderId ?? ''}",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16),
+                                          ),
+                                          Text(
+                                            "Date : ${formattedDate ?? ''}",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16),
                                           ),
                                         ],
                                       ),
-                                      // Row(children: [
-                                      //   GestureDetector(
-                                      //       onTap: () async {
-                                      //         _makePhoneCall(
-                                      //             currentStoreAddress!
-                                      //                 .mobile
-                                      //                 .toString());
-                                      //       },
-                                      //       child: Image.asset(
-                                      //           AppAssets.call_iconfill,
-                                      //           height: 35,
-                                      //           width: 35)),
-                                      //   SizedBox(
-                                      //     width: 5,
-                                      //   ),
-                                      //   GestureDetector(
-                                      //       onTap: () async {
-                                      //         whatsapp(
-                                      //             currentStoreAddress!
-                                      //                 .mobile
-                                      //                 .toString());
-                                      //       },
-                                      //       child: Image.asset(
-                                      //           AppAssets.whatsapp_icon,
-                                      //           // color: Colors.green,
-                                      //           height: 35,
-                                      //           width: 35)),
-                                      // ])
-                                    ]),
-                                SizedBox(height: 10),
-                                // Text(
-                                //   "${currentStoreAddress!.name ?? 'Unknown'}, ${currentStoreAddress.address ?? 'N/A'}, ${currentStoreAddress.city ?? 'N/A'}",
-                                //   style: TextStyle(fontSize: 14),
-                                // ),
-                                SizedBox(height: 10),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(children: [
-                                      Icon(Icons.location_on_outlined),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                      SizedBox(height: 5),
+                                      Row(
                                         children: [
-                                          Text("Delivery Point:",
-                                              style: TextStyle(fontSize: 16)),
                                           Container(
-                                              height: 1,
-                                              color: Colors.black,
-                                              width: 110),
+                                            decoration: BoxDecoration(
+                                              color: e.orderStatus ==
+                                                          "Order Confirmed" ||
+                                                      e.orderStatus ==
+                                                          "On Delivery" ||
+                                                      e.orderStatus ==
+                                                          "Order Placed"
+                                                  ? Colors.green
+                                                  : AppColors.red,
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                            ),
+                                            padding: const EdgeInsets.all(5.0),
+                                            child: Text(
+                                              e.orderStatus ?? 'Unknown Status',
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Divider(color: Colors.grey),
+                                          ),
                                         ],
                                       ),
-                                    ]),
-                                    Row(children: [
-                                      GestureDetector(
-                                          onTap: () async {
-                                            _makePhoneCall(
-                                                e.customerMobile.toString());
-                                          },
-                                          child: Image.asset(
-                                              AppAssets.call_iconfill,
-                                              height: 35,
-                                              width: 35)),
-                                      SizedBox(
-                                        width: 5,
-                                      ),
-                                      GestureDetector(
-                                          onTap: () async {
-                                            whatsapp(
-                                                e.customerMobile.toString());
-                                          },
-                                          child: Image.asset(
-                                              AppAssets.whatsapp_icon,
-                                              //  color: Colors.green,
-                                              height: 35,
-                                              width: 35))
-                                    ]),
-                                  ],
-                                ),
-                                SizedBox(height: 10),
-                                Text(
-                                  "${currentCustomerAddress.address ?? ''}, ${currentCustomerAddress.city ?? ''}, ${currentCustomerAddress.state ?? ''}",
-                                  style: TextStyle(fontSize: 14),
-                                ),
-                                Divider(height: 20, color: Color(0xFFE8E8E8)),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text("Total Amount:",
-                                        style: TextStyle(fontSize: 14)),
-                                    Text("₹${e.totalPrice ?? '0.00'}",
-                                        style: TextStyle(fontSize: 14)),
-                                  ],
-                                ),
-                                Divider(height: 20, color: Color(0xFFE8E8E8)),
-                                if (e.orderStatus != "Cancelled")
-                                  e.deliveryPartnerId == '0'
-                                      ? GestureDetector(
-                                          onTap: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    Deliveryperson(
-                                                  orderId:
-                                                      currentCustomerAddress
-                                                          .orderId,
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                "Click to Assign Delivery Person",
-                                                style: TextStyle(
-                                                    fontSize: 16,
-                                                    color: AppColors.red),
-                                              ),
-                                              Image.asset(
-                                                  AppAssets.forward_icon,
-                                                  height: 25,
-                                                  width: 25),
-                                            ],
-                                          ),
-                                        )
-                                      : Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                      SizedBox(height: 10),
+                                      Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Text("Delivery Person Details:",
-                                                style: TextStyle(fontSize: 14)),
-                                            SizedBox(height: 10),
                                             Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
                                               children: [
-                                                Row(
+                                                Icon(
+                                                    Icons.location_on_outlined),
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
                                                   children: [
-                                                    CircleAvatar(
-                                                      radius: 15,
-                                                      backgroundColor:
-                                                          Colors.grey[300],
-                                                      child: Image.asset(
-                                                          AppAssets.UserRounded,
-                                                          height: 20),
-                                                    ),
-                                                    SizedBox(width: 10),
-                                                    Text(
-                                                        e.deliveryBoyName ?? '',
+                                                    Text("Pick Point: ",
                                                         style: TextStyle(
                                                             fontSize: 16)),
+                                                    Container(
+                                                        height: 1,
+                                                        color: Colors.black,
+                                                        width: 80),
                                                   ],
-                                                ),
-                                                CircleAvatar(
-                                                  radius: 15,
-                                                  backgroundColor:
-                                                      AppColors.red,
-                                                  child: Image.asset(
-                                                      AppAssets.call_icon,
-                                                      height: 25,
-                                                      color: Colors.white),
                                                 ),
                                               ],
                                             ),
-                                          ],
-                                        ),
-                              ],
-                            ),
-                          ),
-                        )
-                      : null,
-                );
-              },
-            )),
+                                            Row(children: [
+                                              GestureDetector(
+                                                  onTap: () async {
+                                                    _makePhoneCall(
+                                                        currentStoreAddress!
+                                                            .mobile
+                                                            .toString());
+                                                  },
+                                                  child: Image.asset(
+                                                      AppAssets.call_iconfill,
+                                                      height: 35,
+                                                      width: 35)),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              GestureDetector(
+                                                  onTap: () async {
+                                                    whatsapp(
+                                                        currentStoreAddress!
+                                                            .mobile
+                                                            .toString());
+                                                  },
+                                                  child: Image.asset(
+                                                      AppAssets.whatsapp_icon,
+                                                      // color: Colors.green,
+                                                      height: 35,
+                                                      width: 35)),
+                                            ])
+                                          ]),
+                                      SizedBox(height: 10),
+                                      Text(
+                                        "${currentStoreAddress!.name ?? 'Unknown'}, ${currentStoreAddress.address ?? 'N/A'}, ${currentStoreAddress.city ?? 'N/A'}",
+                                        style: TextStyle(fontSize: 14),
+                                      ),
+                                      SizedBox(height: 10),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Row(children: [
+                                            Icon(Icons.location_on_outlined),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text("Delivery Point:",
+                                                    style: TextStyle(
+                                                        fontSize: 16)),
+                                                Container(
+                                                    height: 1,
+                                                    color: Colors.black,
+                                                    width: 110),
+                                              ],
+                                            ),
+                                          ]),
+                                          Row(children: [
+                                            GestureDetector(
+                                                onTap: () async {
+                                                  _makePhoneCall(e
+                                                      .customerMobile
+                                                      .toString());
+                                                },
+                                                child: Image.asset(
+                                                    AppAssets.call_iconfill,
+                                                    height: 35,
+                                                    width: 35)),
+                                            SizedBox(
+                                              width: 5,
+                                            ),
+                                            GestureDetector(
+                                                onTap: () async {
+                                                  whatsapp(e.customerMobile
+                                                      .toString());
+                                                },
+                                                child: Image.asset(
+                                                    AppAssets.whatsapp_icon,
+                                                    //  color: Colors.green,
+                                                    height: 35,
+                                                    width: 35))
+                                          ]),
+                                        ],
+                                      ),
+                                      SizedBox(height: 10),
+                                      Text(
+                                        "${currentCustomerAddress.address ?? ''}, ${currentCustomerAddress.city ?? ''}, ${currentCustomerAddress.state ?? ''}",
+                                        style: TextStyle(fontSize: 14),
+                                      ),
+                                      Divider(
+                                          height: 20, color: Color(0xFFE8E8E8)),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text("Total Amount:",
+                                              style: TextStyle(fontSize: 14)),
+                                          Text("₹${e.totalPrice ?? '0.00'}",
+                                              style: TextStyle(fontSize: 14)),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Divider(
+                                          height: 20, color: Color(0xFFE8E8E8)),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            InkWell(
+                                              onTap: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        Editorder(
+                                                            invoiceNumber: e
+                                                                .invoiceNumber),
+                                                  ),
+                                                );
+                                              },
+                                              child: Container(
+                                                padding: EdgeInsets.all(8.0),
+                                                decoration: BoxDecoration(
+                                                    color: AppColors.red,
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                8.0)),
+                                                    border: Border.all(
+                                                        color: AppColors.red)),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                      'Edit Order',
+                                                      style: TextStyle(
+                                                          color:
+                                                              AppColors.white),
+                                                    ),
+                                                    Image.asset(
+                                                      AppAssets.forward_icon,
+                                                      height: 25,
+                                                      width: 25,
+                                                      color: Colors.white,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            InkWell(
+                                              onTap: () {
+                                                _showpickupconfirmDialog(
+                                                    e.items);
+                                              },
+                                              child: Container(
+                                                padding: EdgeInsets.all(8.0),
+                                                decoration: BoxDecoration(
+                                                    color: AppColors.red,
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                8.0)),
+                                                    border: Border.all(
+                                                        color: AppColors.red)),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                      'View Menu',
+                                                      style: TextStyle(
+                                                          color:
+                                                              AppColors.white),
+                                                    ),
+                                                    Image.asset(
+                                                      AppAssets.forward_icon,
+                                                      height: 25,
+                                                      width: 25,
+                                                      color: Colors.white,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            )
+                                          ]),
+                                      Divider(
+                                          height: 20, color: Color(0xFFE8E8E8)),
+                                      if (e.orderStatus != "Cancelled")
+                                        e.deliveryPartnerId == '0'
+                                            ? GestureDetector(
+                                                onTap: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          Deliveryperson(
+                                                        orderId:
+                                                            currentCustomerAddress
+                                                                .orderId,
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Text(
+                                                      "Click to Assign Delivery Person",
+                                                      style: TextStyle(
+                                                          fontSize: 16,
+                                                          color: AppColors.red),
+                                                    ),
+                                                    Image.asset(
+                                                        AppAssets.forward_icon,
+                                                        height: 25,
+                                                        width: 25),
+                                                  ],
+                                                ),
+                                              )
+                                            : Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                      "Delivery Person Details:",
+                                                      style: TextStyle(
+                                                          fontSize: 14)),
+                                                  SizedBox(height: 10),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Row(
+                                                        children: [
+                                                          CircleAvatar(
+                                                            radius: 15,
+                                                            backgroundColor:
+                                                                Colors
+                                                                    .grey[300],
+                                                            child: Image.asset(
+                                                                AppAssets
+                                                                    .UserRounded,
+                                                                height: 20),
+                                                          ),
+                                                          SizedBox(width: 10),
+                                                          Text(
+                                                              e.deliveryBoyName ??
+                                                                  '',
+                                                              style: TextStyle(
+                                                                  fontSize:
+                                                                      16)),
+                                                        ],
+                                                      ),
+                                                      CircleAvatar(
+                                                        radius: 15,
+                                                        backgroundColor:
+                                                            AppColors.red,
+                                                        child: Image.asset(
+                                                            AppAssets.call_icon,
+                                                            height: 25,
+                                                            color:
+                                                                Colors.white),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                    ],
+                                  ),
+                                ),
+                              )
+                            : null,
+                      );
+                    },
+                  )),
 
 // Order In progress
 
-          if (selectedIndex == 1 && inprogress.isNotEmpty)
-            Expanded(
-                child: ListView.builder(
-              itemCount: inprogress.length,
-              shrinkWrap: true,
-              physics: AlwaysScrollableScrollPhysics(),
-              itemBuilder: (context, index) {
-                final e = inprogress[index];
+                if (selectedIndex == 1 && inprogress.isNotEmpty)
+                  Expanded(
+                      child: ListView.builder(
+                    itemCount: inprogress.length,
+                    shrinkWrap: true,
+                    physics: AlwaysScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      final e = inprogress[index];
 
-                final currentCustomerAddress = e.customerAddress;
-                // final currentStoreAddress = e.storeAddress;
-                String formattedDate = e.createdDate != null
-                    ? DateFormat('dd-MM-yyyy').format(e.createdDate!)
-                    : '';
+                      final currentCustomerAddress = e.customerAddress;
+                      final currentStoreAddress = e.storeAddress;
+                      String formattedDate = e.createdDate != null
+                          ? DateFormat('dd-MM-yyyy').format(e.createdDate!)
+                          : '';
 
-                return Padding(
-                  padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
-                  child: e.orderStatus != "Cancelled"
-                      ? Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: Colors.grey.shade300),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "Order ID #${currentCustomerAddress.orderId ?? ''}",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16),
-                                    ),
-                                    Text(
-                                      "Date : ${formattedDate ?? ''}",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16),
-                                    ),
-                                  ],
+                      return Padding(
+                        padding:
+                            const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
+                        child: e.orderStatus != "Cancelled"
+                            ? Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                  border:
+                                      Border.all(color: Colors.grey.shade300),
                                 ),
-                                SizedBox(height: 5),
-                                Row(
-                                  children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: e.orderStatus ==
-                                                    "Order Confirmed" ||
-                                                e.orderStatus ==
-                                                    "On Delivery" ||
-                                                e.orderStatus == "Order Placed"
-                                            ? Colors.green
-                                            : AppColors.red,
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      padding: const EdgeInsets.all(5.0),
-                                      child: Text(
-                                        e.orderStatus ?? 'Unknown Status',
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Divider(color: Colors.grey),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: 10),
-                                Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Icon(Icons.location_on_outlined),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text("Pick Point: ",
-                                                  style:
-                                                      TextStyle(fontSize: 16)),
-                                              Container(
-                                                  height: 1,
-                                                  color: Colors.black,
-                                                  width: 80),
-                                            ],
+                                          Text(
+                                            "Order ID #${currentCustomerAddress.orderId ?? ''}",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16),
+                                          ),
+                                          Text(
+                                            "Date : ${formattedDate ?? ''}",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16),
                                           ),
                                         ],
                                       ),
-                                      // Row(children: [
-                                      //   GestureDetector(
-                                      //       onTap: () async {
-                                      //         _makePhoneCall(
-                                      //             currentStoreAddress!
-                                      //                 .mobile
-                                      //                 .toString());
-                                      //       },
-                                      //       child: Image.asset(
-                                      //           AppAssets.call_iconfill,
-                                      //           height: 35,
-                                      //           width: 35)),
-                                      //   SizedBox(
-                                      //     width: 5,
-                                      //   ),
-                                      //   GestureDetector(
-                                      //       onTap: () async {
-                                      //         whatsapp(
-                                      //             currentStoreAddress!
-                                      //                 .mobile
-                                      //                 .toString());
-                                      //       },
-                                      //       child: Image.asset(
-                                      //           AppAssets.whatsapp_icon,
-                                      //           // color: Colors.green,
-                                      //           height: 35,
-                                      //           width: 35)),
-                                      // ])
-                                    ]),
-                                SizedBox(height: 10),
-                                // Text(
-                                //   "${currentStoreAddress!.name ?? 'Unknown'}, ${currentStoreAddress.address ?? 'N/A'}, ${currentStoreAddress.city ?? 'N/A'}",
-                                //   style: TextStyle(fontSize: 14),
-                                // ),
-                                SizedBox(height: 10),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(children: [
-                                      Icon(Icons.location_on_outlined),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                      SizedBox(height: 5),
+                                      Row(
                                         children: [
-                                          Text("Delivery Point:",
-                                              style: TextStyle(fontSize: 16)),
                                           Container(
-                                              height: 1,
-                                              color: Colors.black,
-                                              width: 110),
+                                            decoration: BoxDecoration(
+                                              color: e.orderStatus ==
+                                                          "Order Confirmed" ||
+                                                      e.orderStatus ==
+                                                          "On Delivery" ||
+                                                      e.orderStatus ==
+                                                          "Order Placed"
+                                                  ? Colors.green
+                                                  : AppColors.red,
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                            ),
+                                            padding: const EdgeInsets.all(5.0),
+                                            child: Text(
+                                              e.orderStatus ?? 'Unknown Status',
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Divider(color: Colors.grey),
+                                          ),
                                         ],
                                       ),
-                                    ]),
-                                    Row(children: [
-                                      GestureDetector(
-                                          onTap: () async {
-                                            _makePhoneCall(
-                                                e.customerMobile.toString());
-                                          },
-                                          child: Image.asset(
-                                              AppAssets.call_iconfill,
-                                              height: 35,
-                                              width: 35)),
-                                      SizedBox(
-                                        width: 5,
-                                      ),
-                                      GestureDetector(
-                                          onTap: () async {
-                                            whatsapp(
-                                                e.customerMobile.toString());
-                                          },
-                                          child: Image.asset(
-                                              AppAssets.whatsapp_icon,
-                                              //  color: Colors.green,
-                                              height: 35,
-                                              width: 35))
-                                    ]),
-                                  ],
-                                ),
-                                SizedBox(height: 10),
-                                Text(
-                                  "${currentCustomerAddress.address ?? ''}, ${currentCustomerAddress.city ?? ''}, ${currentCustomerAddress.state ?? ''}",
-                                  style: TextStyle(fontSize: 14),
-                                ),
-                                Divider(height: 20, color: Color(0xFFE8E8E8)),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text("Total Amount:",
-                                        style: TextStyle(fontSize: 14)),
-                                    Text("₹${e.totalPrice ?? '0.00'}",
-                                        style: TextStyle(fontSize: 14)),
-                                  ],
-                                ),
-                                Divider(height: 20, color: Color(0xFFE8E8E8)),
-                                if (e.orderStatus != "Cancelled")
-                                  e.deliveryPartnerId == '0'
-                                      ? GestureDetector(
-                                          onTap: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    Deliveryperson(
-                                                  orderId:
-                                                      currentCustomerAddress
-                                                          .orderId,
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                "Click to Assign Delivery Person",
-                                                style: TextStyle(
-                                                    fontSize: 16,
-                                                    color: AppColors.red),
-                                              ),
-                                              Image.asset(
-                                                  AppAssets.forward_icon,
-                                                  height: 25,
-                                                  width: 25),
-                                            ],
-                                          ),
-                                        )
-                                      : Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                      SizedBox(height: 10),
+                                      Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Text("Delivery Person Details:",
-                                                style: TextStyle(fontSize: 14)),
-                                            SizedBox(height: 10),
                                             Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
                                               children: [
-                                                Row(
+                                                Icon(
+                                                    Icons.location_on_outlined),
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
                                                   children: [
-                                                    CircleAvatar(
-                                                      radius: 15,
-                                                      backgroundColor:
-                                                          Colors.grey[300],
-                                                      child: Image.asset(
-                                                          AppAssets.UserRounded,
-                                                          height: 20),
-                                                    ),
-                                                    SizedBox(width: 10),
-                                                    Text(
-                                                        e.deliveryBoyName ?? '',
+                                                    Text("Pick Point: ",
                                                         style: TextStyle(
                                                             fontSize: 16)),
+                                                    Container(
+                                                        height: 1,
+                                                        color: Colors.black,
+                                                        width: 80),
                                                   ],
-                                                ),
-                                                CircleAvatar(
-                                                  radius: 15,
-                                                  backgroundColor:
-                                                      AppColors.red,
-                                                  child: Image.asset(
-                                                      AppAssets.call_icon,
-                                                      height: 25,
-                                                      color: Colors.white),
                                                 ),
                                               ],
                                             ),
-                                          ],
-                                        ),
-                              ],
-                            ),
-                          ),
-                        )
-                      : null,
-                );
-              },
-            )),
-
-          // Order Delivered
-
-          if (selectedIndex == 2 && orderdelivered.isNotEmpty)
-            Expanded(
-                child: ListView.builder(
-              itemCount: orderdelivered.length,
-              shrinkWrap: true,
-              physics: AlwaysScrollableScrollPhysics(),
-              itemBuilder: (context, index) {
-                final e = orderdelivered[index];
-
-                final currentCustomerAddress = e.customerAddress;
-                // final currentStoreAddress = e.storeAddress;
-                String formattedDate = e.createdDate != null
-                    ? DateFormat('dd-MM-yyyy').format(e.createdDate!)
-                    : '';
-
-                return Padding(
-                  padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
-                  child: e.orderStatus != "Cancelled"
-                      ? Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: Colors.grey.shade300),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "Order ID #${currentCustomerAddress.orderId ?? ''}",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16),
-                                    ),
-                                    Text(
-                                      "Date : ${formattedDate ?? ''}",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: 5),
-                                Row(
-                                  children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: e.orderStatus ==
-                                                    "Order Confirmed" ||
-                                                e.orderStatus ==
-                                                    "On Delivery" ||
-                                                e.orderStatus == "Order Placed"
-                                            ? Colors.green
-                                            : AppColors.red,
-                                        borderRadius: BorderRadius.circular(20),
+                                            Row(children: [
+                                              GestureDetector(
+                                                  onTap: () async {
+                                                    _makePhoneCall(
+                                                        currentStoreAddress!
+                                                            .mobile
+                                                            .toString());
+                                                  },
+                                                  child: Image.asset(
+                                                      AppAssets.call_iconfill,
+                                                      height: 35,
+                                                      width: 35)),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              GestureDetector(
+                                                  onTap: () async {
+                                                    whatsapp(
+                                                        currentStoreAddress!
+                                                            .mobile
+                                                            .toString());
+                                                  },
+                                                  child: Image.asset(
+                                                      AppAssets.whatsapp_icon,
+                                                      // color: Colors.green,
+                                                      height: 35,
+                                                      width: 35)),
+                                            ])
+                                          ]),
+                                      SizedBox(height: 10),
+                                      Text(
+                                        "${currentStoreAddress!.name ?? 'Unknown'}, ${currentStoreAddress.address ?? 'N/A'}, ${currentStoreAddress.city ?? 'N/A'}",
+                                        style: TextStyle(fontSize: 14),
                                       ),
-                                      padding: const EdgeInsets.all(5.0),
-                                      child: Text(
-                                        e.orderStatus ?? 'Unknown Status',
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Divider(color: Colors.grey),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: 10),
-                                Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
+                                      SizedBox(height: 10),
                                       Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Icon(Icons.location_on_outlined),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text("Pick Point: ",
-                                                  style:
-                                                      TextStyle(fontSize: 16)),
-                                              Container(
-                                                  height: 1,
-                                                  color: Colors.black,
-                                                  width: 80),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                      // Row(children: [
-                                      //   GestureDetector(
-                                      //       onTap: () async {
-                                      //         _makePhoneCall(
-                                      //             currentStoreAddress!
-                                      //                 .mobile
-                                      //                 .toString());
-                                      //       },
-                                      //       child: Image.asset(
-                                      //           AppAssets.call_iconfill,
-                                      //           height: 35,
-                                      //           width: 35)),
-                                      //   SizedBox(
-                                      //     width: 5,
-                                      //   ),
-                                      //   GestureDetector(
-                                      //       onTap: () async {
-                                      //         whatsapp(
-                                      //             currentStoreAddress!
-                                      //                 .mobile
-                                      //                 .toString());
-                                      //       },
-                                      //       child: Image.asset(
-                                      //           AppAssets.whatsapp_icon,
-                                      //           // color: Colors.green,
-                                      //           height: 35,
-                                      //           width: 35)),
-                                      // ])
-                                    ]),
-                                SizedBox(height: 10),
-                                // Text(
-                                //   "${currentStoreAddress!.name ?? 'Unknown'}, ${currentStoreAddress.address ?? 'N/A'}, ${currentStoreAddress.city ?? 'N/A'}",
-                                //   style: TextStyle(fontSize: 14),
-                                // ),
-                                SizedBox(height: 10),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(children: [
-                                      Icon(Icons.location_on_outlined),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text("Delivery Point:",
-                                              style: TextStyle(fontSize: 16)),
-                                          Container(
-                                              height: 1,
-                                              color: Colors.black,
-                                              width: 110),
-                                        ],
-                                      ),
-                                    ]),
-                                    Row(children: [
-                                      GestureDetector(
-                                          onTap: () async {
-                                            _makePhoneCall(
-                                                e.customerMobile.toString());
-                                          },
-                                          child: Image.asset(
-                                              AppAssets.call_iconfill,
-                                              height: 35,
-                                              width: 35)),
-                                      SizedBox(
-                                        width: 5,
-                                      ),
-                                      GestureDetector(
-                                          onTap: () async {
-                                            whatsapp(
-                                                e.customerMobile.toString());
-                                          },
-                                          child: Image.asset(
-                                              AppAssets.whatsapp_icon,
-                                              //  color: Colors.green,
-                                              height: 35,
-                                              width: 35))
-                                    ]),
-                                  ],
-                                ),
-                                SizedBox(height: 10),
-                                Text(
-                                  "${currentCustomerAddress.address ?? ''}, ${currentCustomerAddress.city ?? ''}, ${currentCustomerAddress.state ?? ''}",
-                                  style: TextStyle(fontSize: 14),
-                                ),
-                                Divider(height: 20, color: Color(0xFFE8E8E8)),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text("Total Amount:",
-                                        style: TextStyle(fontSize: 14)),
-                                    Text("₹${e.totalPrice ?? '0.00'}",
-                                        style: TextStyle(fontSize: 14)),
-                                  ],
-                                ),
-                                Divider(height: 20, color: Color(0xFFE8E8E8)),
-                                if (e.orderStatus != "Cancelled")
-                                  e.deliveryPartnerId == '0'
-                                      ? GestureDetector(
-                                          onTap: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    Deliveryperson(
-                                                  orderId:
-                                                      currentCustomerAddress
-                                                          .orderId,
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                "Click to Assign Delivery Person",
-                                                style: TextStyle(
-                                                    fontSize: 16,
-                                                    color: AppColors.red),
-                                              ),
-                                              Image.asset(
-                                                  AppAssets.forward_icon,
-                                                  height: 25,
-                                                  width: 25),
-                                            ],
-                                          ),
-                                        )
-                                      : Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text("Delivery Person Details:",
-                                                style: TextStyle(fontSize: 14)),
-                                            SizedBox(height: 10),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
+                                          Row(children: [
+                                            Icon(Icons.location_on_outlined),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
                                               children: [
-                                                Row(
-                                                  children: [
-                                                    CircleAvatar(
-                                                      radius: 15,
-                                                      backgroundColor:
-                                                          Colors.grey[300],
-                                                      child: Image.asset(
-                                                          AppAssets.UserRounded,
-                                                          height: 20),
+                                                Text("Delivery Point:",
+                                                    style: TextStyle(
+                                                        fontSize: 16)),
+                                                Container(
+                                                    height: 1,
+                                                    color: Colors.black,
+                                                    width: 110),
+                                              ],
+                                            ),
+                                          ]),
+                                          Row(children: [
+                                            GestureDetector(
+                                                onTap: () async {
+                                                  _makePhoneCall(e
+                                                      .customerMobile
+                                                      .toString());
+                                                },
+                                                child: Image.asset(
+                                                    AppAssets.call_iconfill,
+                                                    height: 35,
+                                                    width: 35)),
+                                            SizedBox(
+                                              width: 5,
+                                            ),
+                                            GestureDetector(
+                                                onTap: () async {
+                                                  whatsapp(e.customerMobile
+                                                      .toString());
+                                                },
+                                                child: Image.asset(
+                                                    AppAssets.whatsapp_icon,
+                                                    //  color: Colors.green,
+                                                    height: 35,
+                                                    width: 35))
+                                          ]),
+                                        ],
+                                      ),
+                                      SizedBox(height: 10),
+                                      Text(
+                                        "${currentCustomerAddress.address ?? ''}, ${currentCustomerAddress.city ?? ''}, ${currentCustomerAddress.state ?? ''}",
+                                        style: TextStyle(fontSize: 14),
+                                      ),
+                                      Divider(
+                                          height: 20, color: Color(0xFFE8E8E8)),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text("Total Amount:",
+                                              style: TextStyle(fontSize: 14)),
+                                          Text("₹${e.totalPrice ?? '0.00'}",
+                                              style: TextStyle(fontSize: 14)),
+                                        ],
+                                      ),
+                                      Divider(
+                                          height: 20, color: Color(0xFFE8E8E8)),
+                                      if (e.orderStatus != "Cancelled")
+                                        e.deliveryPartnerId == '0'
+                                            ? GestureDetector(
+                                                onTap: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          Deliveryperson(
+                                                        orderId:
+                                                            currentCustomerAddress
+                                                                .orderId,
+                                                      ),
                                                     ),
-                                                    SizedBox(width: 10),
+                                                  );
+                                                },
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
                                                     Text(
-                                                        e.deliveryBoyName ?? '',
-                                                        style: TextStyle(
-                                                            fontSize: 16)),
+                                                      "Click to Assign Delivery Person",
+                                                      style: TextStyle(
+                                                          fontSize: 16,
+                                                          color: AppColors.red),
+                                                    ),
+                                                    Image.asset(
+                                                        AppAssets.forward_icon,
+                                                        height: 25,
+                                                        width: 25),
                                                   ],
                                                 ),
-                                                CircleAvatar(
-                                                  radius: 15,
-                                                  backgroundColor:
-                                                      AppColors.red,
-                                                  child: Image.asset(
-                                                      AppAssets.call_icon,
-                                                      height: 25,
-                                                      color: Colors.white),
+                                              )
+                                            : Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                      "Delivery Person Details:",
+                                                      style: TextStyle(
+                                                          fontSize: 14)),
+                                                  SizedBox(height: 10),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Row(
+                                                        children: [
+                                                          CircleAvatar(
+                                                            radius: 15,
+                                                            backgroundColor:
+                                                                Colors
+                                                                    .grey[300],
+                                                            child: Image.asset(
+                                                                AppAssets
+                                                                    .UserRounded,
+                                                                height: 20),
+                                                          ),
+                                                          SizedBox(width: 10),
+                                                          Text(
+                                                              e.deliveryBoyName ??
+                                                                  '',
+                                                              style: TextStyle(
+                                                                  fontSize:
+                                                                      16)),
+                                                        ],
+                                                      ),
+                                                      CircleAvatar(
+                                                        radius: 15,
+                                                        backgroundColor:
+                                                            AppColors.red,
+                                                        child: Image.asset(
+                                                            AppAssets.call_icon,
+                                                            height: 25,
+                                                            color:
+                                                                Colors.white),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                    ],
+                                  ),
+                                ),
+                              )
+                            : null,
+                      );
+                    },
+                  )),
+
+                // Order Delivered
+
+                if (selectedIndex == 2 && orderdelivered.isNotEmpty)
+                  Expanded(
+                      child: ListView.builder(
+                    itemCount: orderdelivered.length,
+                    shrinkWrap: true,
+                    physics: AlwaysScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      final e = orderdelivered[index];
+
+                      final currentCustomerAddress = e.customerAddress;
+                      final currentStoreAddress = e.storeAddress;
+                      String formattedDate = e.createdDate != null
+                          ? DateFormat('dd-MM-yyyy').format(e.createdDate!)
+                          : '';
+
+                      return Padding(
+                        padding:
+                            const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
+                        child: e.orderStatus != "Cancelled"
+                            ? Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                  border:
+                                      Border.all(color: Colors.grey.shade300),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            "Order ID #${currentCustomerAddress.orderId ?? ''}",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16),
+                                          ),
+                                          Text(
+                                            "Date : ${formattedDate ?? ''}",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: 5),
+                                      Row(
+                                        children: [
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              color: e.orderStatus ==
+                                                          "Order Confirmed" ||
+                                                      e.orderStatus ==
+                                                          "On Delivery" ||
+                                                      e.orderStatus ==
+                                                          "Order Placed"
+                                                  ? Colors.green
+                                                  : AppColors.red,
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                            ),
+                                            padding: const EdgeInsets.all(5.0),
+                                            child: Text(
+                                              e.orderStatus ?? 'Unknown Status',
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Divider(color: Colors.grey),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: 10),
+                                      Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Icon(
+                                                    Icons.location_on_outlined),
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text("Pick Point: ",
+                                                        style: TextStyle(
+                                                            fontSize: 16)),
+                                                    Container(
+                                                        height: 1,
+                                                        color: Colors.black,
+                                                        width: 80),
+                                                  ],
                                                 ),
                                               ],
                                             ),
-                                          ],
-                                        ),
-                              ],
-                            ),
-                          ),
-                        )
-                      : null,
-                );
-              },
-            )),
-
-          if (selectedIndex == 3 && canceledorder.isNotEmpty)
-            Expanded(
-                child: ListView.builder(
-              itemCount: canceledorder.length,
-              shrinkWrap: true,
-              physics: AlwaysScrollableScrollPhysics(),
-              itemBuilder: (context, index) {
-                final e = canceledorder[index];
-
-                final currentCustomerAddress = e.customerAddress;
-                // final currentStoreAddress = e.storeAddress;
-                String formattedDate = e.createdDate != null
-                    ? DateFormat('dd-MM-yyyy').format(e.createdDate!)
-                    : '';
-
-                return Padding(
-                  padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
-                  child: e.orderStatus == "Cancelled"
-                      ? Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: Colors.grey.shade300),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "Order ID #${currentCustomerAddress.orderId ?? ''}",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16),
-                                    ),
-                                    Text(
-                                      "Date : ${formattedDate ?? ''}",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: 5),
-                                Row(
-                                  children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: e.orderStatus ==
-                                                    "Order Confirmed" ||
-                                                e.orderStatus ==
-                                                    "On Delivery" ||
-                                                e.orderStatus == "Order Placed"
-                                            ? Colors.green
-                                            : AppColors.red,
-                                        borderRadius: BorderRadius.circular(20),
+                                            Row(children: [
+                                              GestureDetector(
+                                                  onTap: () async {
+                                                    _makePhoneCall(
+                                                        currentStoreAddress!
+                                                            .mobile
+                                                            .toString());
+                                                  },
+                                                  child: Image.asset(
+                                                      AppAssets.call_iconfill,
+                                                      height: 35,
+                                                      width: 35)),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              GestureDetector(
+                                                  onTap: () async {
+                                                    whatsapp(
+                                                        currentStoreAddress!
+                                                            .mobile
+                                                            .toString());
+                                                  },
+                                                  child: Image.asset(
+                                                      AppAssets.whatsapp_icon,
+                                                      // color: Colors.green,
+                                                      height: 35,
+                                                      width: 35)),
+                                            ])
+                                          ]),
+                                      SizedBox(height: 10),
+                                      Text(
+                                        "${currentStoreAddress!.name ?? 'Unknown'}, ${currentStoreAddress.address ?? 'N/A'}, ${currentStoreAddress.city ?? 'N/A'}",
+                                        style: TextStyle(fontSize: 14),
                                       ),
-                                      padding: const EdgeInsets.all(5.0),
-                                      child: Text(
-                                        e.orderStatus ?? 'Unknown Status',
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Divider(color: Colors.grey),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: 10),
-                                Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
+                                      SizedBox(height: 10),
                                       Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Icon(Icons.location_on_outlined),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text("Pick Point: ",
-                                                  style:
-                                                      TextStyle(fontSize: 16)),
-                                              Container(
-                                                  height: 1,
-                                                  color: Colors.black,
-                                                  width: 80),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                      // Row(children: [
-                                      //   GestureDetector(
-                                      //       onTap: () async {
-                                      //         _makePhoneCall(
-                                      //             currentStoreAddress!
-                                      //                 .mobile
-                                      //                 .toString());
-                                      //       },
-                                      //       child: Image.asset(
-                                      //           AppAssets.call_iconfill,
-                                      //           height: 35,
-                                      //           width: 35)),
-                                      //   SizedBox(
-                                      //     width: 5,
-                                      //   ),
-                                      //   GestureDetector(
-                                      //       onTap: () async {
-                                      //         whatsapp(
-                                      //             currentStoreAddress!
-                                      //                 .mobile
-                                      //                 .toString());
-                                      //       },
-                                      //       child: Image.asset(
-                                      //           AppAssets.whatsapp_icon,
-                                      //           // color: Colors.green,
-                                      //           height: 35,
-                                      //           width: 35)),
-                                      // ])
-                                    ]),
-                                SizedBox(height: 10),
-                                // Text(
-                                //   "${currentStoreAddress!.name ?? 'Unknown'}, ${currentStoreAddress.address ?? 'N/A'}, ${currentStoreAddress.city ?? 'N/A'}",
-                                //   style: TextStyle(fontSize: 14),
-                                // ),
-                                SizedBox(height: 10),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(children: [
-                                      Icon(Icons.location_on_outlined),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text("Delivery Point:",
-                                              style: TextStyle(fontSize: 16)),
-                                          Container(
-                                              height: 1,
-                                              color: Colors.black,
-                                              width: 110),
-                                        ],
-                                      ),
-                                    ]),
-                                    Row(children: [
-                                      GestureDetector(
-                                          onTap: () async {
-                                            _makePhoneCall(
-                                                e.customerMobile.toString());
-                                          },
-                                          child: Image.asset(
-                                              AppAssets.call_iconfill,
-                                              height: 35,
-                                              width: 35)),
-                                      SizedBox(
-                                        width: 5,
-                                      ),
-                                      GestureDetector(
-                                          onTap: () async {
-                                            whatsapp(
-                                                e.customerMobile.toString());
-                                          },
-                                          child: Image.asset(
-                                              AppAssets.whatsapp_icon,
-                                              //  color: Colors.green,
-                                              height: 35,
-                                              width: 35))
-                                    ]),
-                                  ],
-                                ),
-                                SizedBox(height: 10),
-                                Text(
-                                  "${currentCustomerAddress.address ?? ''}, ${currentCustomerAddress.city ?? ''}, ${currentCustomerAddress.state ?? ''}",
-                                  style: TextStyle(fontSize: 14),
-                                ),
-                                Divider(height: 20, color: Color(0xFFE8E8E8)),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text("Total Amount:",
-                                        style: TextStyle(fontSize: 14)),
-                                    Text("₹${e.totalPrice ?? '0.00'}",
-                                        style: TextStyle(fontSize: 14)),
-                                  ],
-                                ),
-                                Divider(height: 20, color: Color(0xFFE8E8E8)),
-                                if (e.orderStatus != "Cancelled")
-                                  e.deliveryPartnerId == '0'
-                                      ? GestureDetector(
-                                          onTap: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    Deliveryperson(
-                                                  orderId:
-                                                      currentCustomerAddress
-                                                          .orderId,
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                "Click to Assign Delivery Person",
-                                                style: TextStyle(
-                                                    fontSize: 16,
-                                                    color: AppColors.red),
-                                              ),
-                                              Image.asset(
-                                                  AppAssets.forward_icon,
-                                                  height: 25,
-                                                  width: 25),
-                                            ],
-                                          ),
-                                        )
-                                      : Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text("Delivery Person Details:",
-                                                style: TextStyle(fontSize: 14)),
-                                            SizedBox(height: 10),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
+                                          Row(children: [
+                                            Icon(Icons.location_on_outlined),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
                                               children: [
-                                                Row(
-                                                  children: [
-                                                    CircleAvatar(
-                                                      radius: 15,
-                                                      backgroundColor:
-                                                          Colors.grey[300],
-                                                      child: Image.asset(
-                                                          AppAssets.UserRounded,
-                                                          height: 20),
+                                                Text("Delivery Point:",
+                                                    style: TextStyle(
+                                                        fontSize: 16)),
+                                                Container(
+                                                    height: 1,
+                                                    color: Colors.black,
+                                                    width: 110),
+                                              ],
+                                            ),
+                                          ]),
+                                          Row(children: [
+                                            GestureDetector(
+                                                onTap: () async {
+                                                  _makePhoneCall(e
+                                                      .customerMobile
+                                                      .toString());
+                                                },
+                                                child: Image.asset(
+                                                    AppAssets.call_iconfill,
+                                                    height: 35,
+                                                    width: 35)),
+                                            SizedBox(
+                                              width: 5,
+                                            ),
+                                            GestureDetector(
+                                                onTap: () async {
+                                                  whatsapp(e.customerMobile
+                                                      .toString());
+                                                },
+                                                child: Image.asset(
+                                                    AppAssets.whatsapp_icon,
+                                                    //  color: Colors.green,
+                                                    height: 35,
+                                                    width: 35))
+                                          ]),
+                                        ],
+                                      ),
+                                      SizedBox(height: 10),
+                                      Text(
+                                        "${currentCustomerAddress.address ?? ''}, ${currentCustomerAddress.city ?? ''}, ${currentCustomerAddress.state ?? ''}",
+                                        style: TextStyle(fontSize: 14),
+                                      ),
+                                      Divider(
+                                          height: 20, color: Color(0xFFE8E8E8)),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text("Total Amount:",
+                                              style: TextStyle(fontSize: 14)),
+                                          Text("₹${e.totalPrice ?? '0.00'}",
+                                              style: TextStyle(fontSize: 14)),
+                                        ],
+                                      ),
+                                      Divider(
+                                          height: 20, color: Color(0xFFE8E8E8)),
+                                      if (e.orderStatus != "Cancelled")
+                                        e.deliveryPartnerId == '0'
+                                            ? GestureDetector(
+                                                onTap: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          Deliveryperson(
+                                                        orderId:
+                                                            currentCustomerAddress
+                                                                .orderId,
+                                                      ),
                                                     ),
-                                                    SizedBox(width: 10),
+                                                  );
+                                                },
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
                                                     Text(
-                                                        e.deliveryBoyName ?? '',
-                                                        style: TextStyle(
-                                                            fontSize: 16)),
+                                                      "Click to Assign Delivery Person",
+                                                      style: TextStyle(
+                                                          fontSize: 16,
+                                                          color: AppColors.red),
+                                                    ),
+                                                    Image.asset(
+                                                        AppAssets.forward_icon,
+                                                        height: 25,
+                                                        width: 25),
                                                   ],
                                                 ),
-                                                CircleAvatar(
-                                                  radius: 15,
-                                                  backgroundColor:
-                                                      AppColors.red,
-                                                  child: Image.asset(
-                                                      AppAssets.call_icon,
-                                                      height: 25,
-                                                      color: Colors.white),
+                                              )
+                                            : Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                      "Delivery Person Details:",
+                                                      style: TextStyle(
+                                                          fontSize: 14)),
+                                                  SizedBox(height: 10),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Row(
+                                                        children: [
+                                                          CircleAvatar(
+                                                            radius: 15,
+                                                            backgroundColor:
+                                                                Colors
+                                                                    .grey[300],
+                                                            child: Image.asset(
+                                                                AppAssets
+                                                                    .UserRounded,
+                                                                height: 20),
+                                                          ),
+                                                          SizedBox(width: 10),
+                                                          Text(
+                                                              e.deliveryBoyName ??
+                                                                  '',
+                                                              style: TextStyle(
+                                                                  fontSize:
+                                                                      16)),
+                                                        ],
+                                                      ),
+                                                      CircleAvatar(
+                                                        radius: 15,
+                                                        backgroundColor:
+                                                            AppColors.red,
+                                                        child: Image.asset(
+                                                            AppAssets.call_icon,
+                                                            height: 25,
+                                                            color:
+                                                                Colors.white),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                    ],
+                                  ),
+                                ),
+                              )
+                            : null,
+                      );
+                    },
+                  )),
+
+                if (selectedIndex == 3 && canceledorder.isNotEmpty)
+                  Expanded(
+                      child: ListView.builder(
+                    itemCount: canceledorder.length,
+                    shrinkWrap: true,
+                    physics: AlwaysScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      final e = canceledorder[index];
+
+                      final currentCustomerAddress = e.customerAddress;
+                      final currentStoreAddress = e.storeAddress;
+                      String formattedDate = e.createdDate != null
+                          ? DateFormat('dd-MM-yyyy').format(e.createdDate!)
+                          : '';
+
+                      return Padding(
+                        padding:
+                            const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
+                        child: e.orderStatus == "Cancelled"
+                            ? Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                  border:
+                                      Border.all(color: Colors.grey.shade300),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            "Order ID #${currentCustomerAddress.orderId ?? ''}",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16),
+                                          ),
+                                          Text(
+                                            "Date : ${formattedDate ?? ''}",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: 5),
+                                      Row(
+                                        children: [
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              color: e.orderStatus ==
+                                                          "Order Confirmed" ||
+                                                      e.orderStatus ==
+                                                          "On Delivery" ||
+                                                      e.orderStatus ==
+                                                          "Order Placed"
+                                                  ? Colors.green
+                                                  : AppColors.red,
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                            ),
+                                            padding: const EdgeInsets.all(5.0),
+                                            child: Text(
+                                              e.orderStatus ?? 'Unknown Status',
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Divider(color: Colors.grey),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: 10),
+                                      Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Icon(
+                                                    Icons.location_on_outlined),
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text("Pick Point: ",
+                                                        style: TextStyle(
+                                                            fontSize: 16)),
+                                                    Container(
+                                                        height: 1,
+                                                        color: Colors.black,
+                                                        width: 80),
+                                                  ],
                                                 ),
                                               ],
                                             ),
-                                          ],
-                                        ),
-                              ],
-                            ),
-                          ),
-                        )
-                      : null,
-                );
-              },
-            )),
-        ]),
-      ),
+                                            Row(children: [
+                                              GestureDetector(
+                                                  onTap: () async {
+                                                    _makePhoneCall(
+                                                        currentStoreAddress!
+                                                            .mobile
+                                                            .toString());
+                                                  },
+                                                  child: Image.asset(
+                                                      AppAssets.call_iconfill,
+                                                      height: 35,
+                                                      width: 35)),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              GestureDetector(
+                                                  onTap: () async {
+                                                    whatsapp(
+                                                        currentStoreAddress!
+                                                            .mobile
+                                                            .toString());
+                                                  },
+                                                  child: Image.asset(
+                                                      AppAssets.whatsapp_icon,
+                                                      // color: Colors.green,
+                                                      height: 35,
+                                                      width: 35)),
+                                            ])
+                                          ]),
+                                      SizedBox(height: 10),
+                                      Text(
+                                        "${currentStoreAddress!.name ?? 'Unknown'}, ${currentStoreAddress.address ?? 'N/A'}, ${currentStoreAddress.city ?? 'N/A'}",
+                                        style: TextStyle(fontSize: 14),
+                                      ),
+                                      SizedBox(height: 10),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Row(children: [
+                                            Icon(Icons.location_on_outlined),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text("Delivery Point:",
+                                                    style: TextStyle(
+                                                        fontSize: 16)),
+                                                Container(
+                                                    height: 1,
+                                                    color: Colors.black,
+                                                    width: 110),
+                                              ],
+                                            ),
+                                          ]),
+                                          Row(children: [
+                                            GestureDetector(
+                                                onTap: () async {
+                                                  _makePhoneCall(e
+                                                      .customerMobile
+                                                      .toString());
+                                                },
+                                                child: Image.asset(
+                                                    AppAssets.call_iconfill,
+                                                    height: 35,
+                                                    width: 35)),
+                                            SizedBox(
+                                              width: 5,
+                                            ),
+                                            GestureDetector(
+                                                onTap: () async {
+                                                  whatsapp(e.customerMobile
+                                                      .toString());
+                                                },
+                                                child: Image.asset(
+                                                    AppAssets.whatsapp_icon,
+                                                    //  color: Colors.green,
+                                                    height: 35,
+                                                    width: 35))
+                                          ]),
+                                        ],
+                                      ),
+                                      SizedBox(height: 10),
+                                      Text(
+                                        "${currentCustomerAddress.address ?? ''}, ${currentCustomerAddress.city ?? ''}, ${currentCustomerAddress.state ?? ''}",
+                                        style: TextStyle(fontSize: 14),
+                                      ),
+                                      Divider(
+                                          height: 20, color: Color(0xFFE8E8E8)),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text("Total Amount:",
+                                              style: TextStyle(fontSize: 14)),
+                                          Text("₹${e.totalPrice ?? '0.00'}",
+                                              style: TextStyle(fontSize: 14)),
+                                        ],
+                                      ),
+                                      Divider(
+                                          height: 20, color: Color(0xFFE8E8E8)),
+                                      if (e.orderStatus != "Cancelled")
+                                        e.deliveryPartnerId == '0'
+                                            ? GestureDetector(
+                                                onTap: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          Deliveryperson(
+                                                        orderId:
+                                                            currentCustomerAddress
+                                                                .orderId,
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Text(
+                                                      "Click to Assign Delivery Person",
+                                                      style: TextStyle(
+                                                          fontSize: 16,
+                                                          color: AppColors.red),
+                                                    ),
+                                                    Image.asset(
+                                                        AppAssets.forward_icon,
+                                                        height: 25,
+                                                        width: 25),
+                                                  ],
+                                                ),
+                                              )
+                                            : Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                      "Delivery Person Details:",
+                                                      style: TextStyle(
+                                                          fontSize: 14)),
+                                                  SizedBox(height: 10),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Row(
+                                                        children: [
+                                                          CircleAvatar(
+                                                            radius: 15,
+                                                            backgroundColor:
+                                                                Colors
+                                                                    .grey[300],
+                                                            child: Image.asset(
+                                                                AppAssets
+                                                                    .UserRounded,
+                                                                height: 20),
+                                                          ),
+                                                          SizedBox(width: 10),
+                                                          Text(
+                                                              e.deliveryBoyName ??
+                                                                  '',
+                                                              style: TextStyle(
+                                                                  fontSize:
+                                                                      16)),
+                                                        ],
+                                                      ),
+                                                      CircleAvatar(
+                                                        radius: 15,
+                                                        backgroundColor:
+                                                            AppColors.red,
+                                                        child: Image.asset(
+                                                            AppAssets.call_icon,
+                                                            height: 25,
+                                                            color:
+                                                                Colors.white),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                    ],
+                                  ),
+                                ),
+                              )
+                            : null,
+                      );
+                    },
+                  )),
+              ]),
+            ),
     );
   }
 

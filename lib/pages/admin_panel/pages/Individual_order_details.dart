@@ -383,18 +383,18 @@ class _IndividualorderdetailsState extends State<Individualorderdetails> {
                                           children: [
                                             Wrap(
                                               children: [
-                                                // HeadingWidget(
-                                                //   title: e.storeAddress!.name
-                                                //       .toString(),
-                                                //   fontSize: 18.0,
-                                                // ),
-                                                // SizedBox(
-                                                //   height: 30,
-                                                // ),
-                                                // SubHeadingWidget(
-                                                //   title: e.storeAddress!.address
-                                                //       .toString(),
-                                                // ),
+                                                HeadingWidget(
+                                                  title: widget.storename
+                                                      .toString(),
+                                                  fontSize: 18.0,
+                                                ),
+                                                SizedBox(
+                                                  height: 30,
+                                                ),
+                                                SubHeadingWidget(
+                                                  title: widget.storeaddress
+                                                      .toString(),
+                                                ),
                                               ],
                                             ),
                                             SizedBox(

@@ -2563,6 +2563,120 @@ class NamFoodApiService {
     }
   }
 
+  //Admin  get All Cart List by order for edit the order
+
+  Future admingetCartList() async {
+    try {
+      final url = Uri.parse('${liveApiPath}v1/getcart');
+      final response = await client.get(
+        url,
+        headers: headerData,
+      );
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        return response;
+      }
+    } catch (e) {
+      return e;
+    }
+  }
+
+  //Admin add quantity for products edit order
+  Future adminaddQuantity(postData) async {
+    try {
+      final url = Uri.parse('${liveApiPath}v1/addquantity');
+      final response = await client.post(url,
+          headers: headerData, body: jsonEncode(postData));
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        print('error response $response');
+        throw Exception(response.toString());
+      }
+    } catch (e) {
+      print('error $e');
+      handleError();
+    }
+  }
+
+  //Admin remove quantity for products edit order
+  Future adminremoveQuantity(postData) async {
+    try {
+      final url = Uri.parse('${liveApiPath}v1/removequantity');
+      final response = await client.post(url,
+          headers: headerData, body: jsonEncode(postData));
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        print('error response $response');
+        throw Exception(response.toString());
+      }
+    } catch (e) {
+      print('error $e');
+      handleError();
+    }
+  }
+
+  //Admin User update Order
+
+  Future adminupdateorder(postData) async {
+    try {
+      final url = Uri.parse('${liveApiPath}v1/createorder');
+      print("test1 ");
+      final response = await client.post(
+        url,
+        headers: headerData,
+        body: jsonEncode(postData),
+      );
+      print("test2 ");
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        return response;
+      }
+    } catch (e) {
+      return e;
+    }
+  }
+
+  //Admin Delete Cart
+  Future admindeleteCart(postData) async {
+    try {
+      final url = Uri.parse('${liveApiPath}v1/deleteitem');
+      final response = await client.post(url,
+          headers: headerData, body: jsonEncode(postData));
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        print('error response $response');
+        throw Exception(response.toString());
+      }
+    } catch (e) {
+      print('error $e');
+      handleError();
+    }
+  }
+
+  //Admin Get All Address For User
+
+  Future admingetalladdressListuser() async {
+    try {
+      final url = Uri.parse('${liveApiPath}v1/getalladdress');
+      final response = await client.get(
+        url,
+        headers: headerData,
+      );
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        return response;
+      }
+    } catch (e) {
+      return e;
+    }
+  }
+
   // Admin delete Menu Id
   Future admindeleteMenuById(postData) async {
     print('store delete test $postData');

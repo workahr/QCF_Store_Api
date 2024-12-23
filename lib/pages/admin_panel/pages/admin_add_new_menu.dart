@@ -79,6 +79,7 @@ class _AdminAddNewMenuState extends State<AdminAddNewMenu> {
         "item_price_type": 1,
       };
       print(postData);
+      print(imageFile);
 
       showSnackBar(context: context);
       // update-Car_management
@@ -102,7 +103,7 @@ class _AdminAddNewMenuState extends State<AdminAddNewMenu> {
         url = 'v1/updateitem_admin?store_id=$Id';
       }
 
-      print(imageFile);
+      print("image :$imageFile");
       var result = await apiService.AdminsaveMenu(url, postData, imageFile);
       closeSnackBar(context: context);
       setState(() {
@@ -673,9 +674,9 @@ class _AdminAddNewMenuState extends State<AdminAddNewMenu> {
                     ),
                   ),
                   SizedBox(height: 8),
-                  Text(
-                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod",
-                      style: TextStyle(color: Colors.grey)),
+                  // Text(
+                  //     "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod",
+                  //     style: TextStyle(color: Colors.grey)),
                   SizedBox(height: 20),
                   Center(
                       child: SizedBox(
