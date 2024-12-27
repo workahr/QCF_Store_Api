@@ -8,11 +8,21 @@
 //         classpath 'com.google.gms:google-services:4.3.15' // Ensure this version matches the rest of your project
 //     }
 // }
-
-plugins {
-    // No version should be specified here for the google-services plugin
-    id 'com.google.gms.google-services' version '4.4.2' apply false
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.0.0' // Ensure your Gradle version is compatible
+        classpath 'com.google.gms:google-services:4.3.15' // Match this version
+    }
 }
+
+// plugins {
+//     // No version should be specified here for the google-services plugin
+//     id 'com.google.gms.google-services' version '4.4.2' apply false
+// }
 
 allprojects {
     repositories {
