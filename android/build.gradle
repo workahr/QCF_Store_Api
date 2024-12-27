@@ -1,17 +1,17 @@
-buildscript {
-    repositories {
-        google()
-        mavenCentral()
-    }
-    dependencies {
-        // Specify the version here in the dependencies block
-        classpath 'com.google.gms:google-services:4.3.15' // Ensure this version matches the rest of your project
-    }
-}
+// buildscript {
+//     repositories {
+//         google()
+//         mavenCentral()
+//     }
+//     dependencies {
+//         // Specify the version here in the dependencies block
+//         classpath 'com.google.gms:google-services:4.3.15' // Ensure this version matches the rest of your project
+//     }
+// }
 
 plugins {
     // No version should be specified here for the google-services plugin
-    id 'com.google.gms.google-services' apply false
+    id 'com.google.gms.google-services' version '4.4.2' apply false
 }
 
 allprojects {
