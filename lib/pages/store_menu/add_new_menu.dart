@@ -10,11 +10,13 @@ import '../../services/nam_food_api_service.dart';
 import '../../widgets/custom_autocomplete_widget.dart';
 import '../../widgets/custom_text_field.dart';
 import '../../widgets/outline_btn_widget.dart';
+import '../maincontainer.dart';
 import 'add_category_model.dart';
 import 'add_menu_model.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'category_list_model.dart';
+import 'menu_categorie.dart';
 import 'menu_details_screen.dart';
 import 'menu_edit_model.dart';
 
@@ -68,13 +70,15 @@ class _AddNewMenuState extends State<AddNewMenu> {
         "item_name": dishNameController.text,
         "item_type": selectedId,
         "item_desc": descriptionController.text,
-        // "item_price": actualpriceController.text,
-        // "item_offer_price": actualpriceController.text,
+        "item_price": actualpriceController.text,
+        "item_offer_price": actualpriceController.text,
         "item_category_id": selectedcategoryId,
         "tax_id": 0,
         "item_stock": 1,
         "item_tags": "",
         "store_price": actualpriceController.text,
+        "from_time": startTimeController.text,
+        "to_time": endTimeController.text,
         "item_price_type": 1,
       };
       print(postData);
@@ -89,13 +93,15 @@ class _AddNewMenuState extends State<AddNewMenu> {
           "item_name": dishNameController.text,
           "item_type": selectedId,
           "item_desc": descriptionController.text,
-          // "item_price": offerpriceController.text,
-          // "item_offer_price": strickoutpriceController.text,
+          "item_price": strickoutpriceController.text,
+          "item_offer_price": offerpriceController.text,
           "item_category_id": selectedcategoryId,
           "tax_id": 0,
           "item_stock": menuDetails!.itemStock,
           "item_tags": "",
           "store_price": actualpriceController.text,
+          "from_time": startTimeController.text,
+          "to_time": endTimeController.text,
           "item_price_type": 1,
         };
         url = 'v1/updateitem';
@@ -109,14 +115,16 @@ class _AddNewMenuState extends State<AddNewMenu> {
 
       if (response.status.toString() == 'SUCCESS') {
         showInSnackBar(context, response.message.toString());
-        Navigator.pushNamedAndRemoveUntil(
-            context, '/home', ModalRoute.withName('/home'));
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(
-        //     builder: (context) => MenuDetailsScreen(),
-        //   ),
-        // );
+        // Navigator.pushNamedAndRemoveUntil(
+        //     context, '/home', ModalRoute.withName('/home'));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MainContainer(
+              initialPage: 1,
+            ),
+          ),
+        );
       } else {
         print(response.message.toString());
         showInSnackBar(context, response.message.toString());
@@ -139,12 +147,13 @@ class _AddNewMenuState extends State<AddNewMenu> {
         dishNameController.text = menuDetails!.itemName ?? '';
         descriptionController.text = menuDetails!.itemDesc ?? '';
         actualpriceController.text = menuDetails!.storePrice ?? '';
-        // strickoutpriceController.text =
-        //     (menuDetails!.itemOfferPrice ?? '').toString();
-        // offerpriceController.text = menuDetails!.storePrice ?? '';
+        strickoutpriceController.text =
+            (menuDetails!.itemPrice ?? '').toString();
+        offerpriceController.text = menuDetails!.itemOfferPrice ?? '';
         liveimgSrc = menuDetails!.itemImageUrl ?? '';
         selectedId = menuDetails!.itemType;
-
+        startTimeController.text = menuDetails!.from_time ?? '';
+        endTimeController.text = menuDetails!.to_time ?? '';
         // selectedyes = carDetails!.rental ?? '';
         selectedcategoryId = menuDetails!.itemCategoryId;
 
@@ -434,6 +443,13 @@ class _AddNewMenuState extends State<AddNewMenu> {
   TimeOfDay? selectedStartTime;
   TimeOfDay? selectedEndTime;
 
+  String formatTimeWithSeconds(TimeOfDay time) {
+    // Converts TimeOfDay to 24-hour format with default seconds as 00
+    final int hours = time.hour;
+    final int minutes = time.minute;
+    return '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:00';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -509,7 +525,14 @@ class _AddNewMenuState extends State<AddNewMenu> {
                         valArr: CategoryListdata,
                       ),
                     TextButton(
-                      onPressed: _showAddCategoryDialog,
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MenuCategorie(),
+                          ),
+                        );
+                      }, //_showAddCategoryDialog,
                       child: Text(
                         'Add New Categories',
                         style: TextStyle(color: Colors.red),
@@ -632,67 +655,67 @@ class _AddNewMenuState extends State<AddNewMenu> {
                     width: MediaQuery.of(context).size.width,
                   ),
                   SizedBox(height: 16),
-                  // Text("Available Start Time",
-                  //     style:
-                  //         TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-                  // SizedBox(height: 8),
-                  // TextFormField(
-                  //   controller: startTimeController,
-                  //   readOnly: true, // Prevent manual editing
-                  //   decoration: InputDecoration(
-                  //     hintText: "Select start time",
-                  //     border: OutlineInputBorder(
-                  //       borderRadius: BorderRadius.circular(8),
-                  //     ),
-                  //     suffixIcon: Icon(Icons.access_time),
-                  //   ),
-                  //   onTap: () async {
-                  //     TimeOfDay? picked = await showTimePicker(
-                  //       context: context,
-                  //       initialTime: TimeOfDay.now(),
-                  //     );
+                  Text("Available Start Time",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                  SizedBox(height: 8),
+                  TextFormField(
+                    controller: startTimeController,
+                    readOnly: true,
+                    decoration: InputDecoration(
+                      hintText: "Select start time",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      suffixIcon: Icon(Icons.access_time),
+                    ),
+                    onTap: () async {
+                      TimeOfDay? picked = await showTimePicker(
+                        context: context,
+                        initialTime: TimeOfDay.now(),
+                      );
 
-                  //     if (picked != null) {
-                  //       setState(() {
-                  //         selectedStartTime = picked;
-                  //         startTimeController.text = picked.format(context);
-                  //       });
-                  //     }
-                  //   },
-                  // ),
+                      if (picked != null) {
+                        setState(() {
+                          selectedStartTime = picked;
+                          startTimeController.text =
+                              formatTimeWithSeconds(picked);
+                        });
+                      }
+                    },
+                  ),
+                  SizedBox(height: 16),
 
-                  // SizedBox(height: 16),
+                  // End Time Picker
+                  Text("Available End Time",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                  SizedBox(height: 8),
+                  TextFormField(
+                    controller: endTimeController,
+                    readOnly: true,
+                    decoration: InputDecoration(
+                      hintText: "Select end time",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      suffixIcon: Icon(Icons.access_time),
+                    ),
+                    onTap: () async {
+                      TimeOfDay? picked = await showTimePicker(
+                        context: context,
+                        initialTime: TimeOfDay.now(),
+                      );
 
-                  // // End Time Picker
-                  // Text("Available End Time",
-                  //     style:
-                  //         TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-                  // SizedBox(height: 8),
-                  // TextFormField(
-                  //   controller: endTimeController,
-                  //   readOnly: true,
-                  //   decoration: InputDecoration(
-                  //     hintText: "Select end time",
-                  //     border: OutlineInputBorder(
-                  //       borderRadius: BorderRadius.circular(8),
-                  //     ),
-                  //     suffixIcon: Icon(Icons.access_time),
-                  //   ),
-                  //   onTap: () async {
-                  //     TimeOfDay? picked = await showTimePicker(
-                  //       context: context,
-                  //       initialTime: TimeOfDay.now(),
-                  //     );
-
-                  //     if (picked != null) {
-                  //       setState(() {
-                  //         selectedEndTime = picked;
-                  //         endTimeController.text = picked.format(context);
-                  //       });
-                  //     }
-                  //     print(selectedEndTime);
-                  //   },
-                  // ),
+                      if (picked != null) {
+                        setState(() {
+                          selectedEndTime = picked;
+                          endTimeController.text =
+                              formatTimeWithSeconds(picked);
+                        });
+                      }
+                    },
+                  ),
                   SizedBox(height: 16),
                   OutlineBtnWidget(
                       title: 'Upload Image of Dish',
@@ -762,9 +785,9 @@ class _AddNewMenuState extends State<AddNewMenu> {
                     ),
                   ),
                   SizedBox(height: 8),
-                  Text(
-                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod",
-                      style: TextStyle(color: Colors.grey)),
+                  // Text(
+                  //     "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod",
+                  //     style: TextStyle(color: Colors.grey)),
                   SizedBox(height: 20),
                   Center(
                       child: SizedBox(
@@ -781,7 +804,7 @@ class _AddNewMenuState extends State<AddNewMenu> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                      child: Text("Save",
+                      child: Text(widget.menuId == null ? 'Save' : 'Update',
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold)),
                     ),

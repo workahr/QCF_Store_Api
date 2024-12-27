@@ -50,6 +50,7 @@ class ListStore {
   int userId;
   String? name;
   String? mobile;
+  String? alternative_mobile;
   String? email;
   String? address;
   String? city;
@@ -76,6 +77,7 @@ class ListStore {
     required this.userId,
     this.name,
     this.mobile,
+    this.alternative_mobile,
     this.email,
     this.address,
     this.city,
@@ -103,6 +105,7 @@ class ListStore {
         userId: json["user_id"] ?? 0,
         name: json["name"],
         mobile: json["mobile"],
+        alternative_mobile: json["alternative_mobile"],
         email: json["email"],
         address: json["address"],
         city: json["city"],
@@ -130,6 +133,7 @@ class ListStore {
         "user_id": userId,
         "name": name,
         "mobile": mobile,
+        "alternative_mobile": alternative_mobile,
         "email": email,
         "address": address,
         "city": city,

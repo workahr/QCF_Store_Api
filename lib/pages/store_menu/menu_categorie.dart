@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:namstore/widgets/button_widget.dart';
 import 'package:namstore/widgets/heading_widget.dart';
 import 'package:namstore/widgets/svgiconButtonWidget.dart';
@@ -253,6 +254,11 @@ class _MenuCategorieState extends State<MenuCategorie> {
                   borderRadius: BorderRadius.circular(8),
                   width: MediaQuery.of(context).size.width,
                   borderColor: const Color.fromARGB(255, 225, 225, 225),
+                  type: const TextInputType.numberWithOptions(),
+                  inputFormaters: [
+                    FilteringTextInputFormatter.allow(
+                        RegExp(r'^-?(\d+)?\.?\d{0,11}'))
+                  ],
                 ),
                 const SizedBox(height: 5),
                 const Text("Description",
@@ -340,6 +346,11 @@ class _MenuCategorieState extends State<MenuCategorie> {
                   borderRadius: BorderRadius.circular(8),
                   width: MediaQuery.of(context).size.width,
                   borderColor: const Color.fromARGB(255, 225, 225, 225),
+                  type: const TextInputType.numberWithOptions(),
+                  inputFormaters: [
+                    FilteringTextInputFormatter.allow(
+                        RegExp(r'^-?(\d+)?\.?\d{0,11}'))
+                  ],
                 ),
                 const SizedBox(height: 5),
                 const Text("Description",
@@ -402,7 +413,7 @@ class _MenuCategorieState extends State<MenuCategorie> {
               borderRadius: BorderRadius.circular(13), // Add border radius
               child: Container(
                 width: double.infinity,
-                height: 150,
+                height: 50,
                 color: Colors.white,
               ),
             ),
@@ -424,7 +435,7 @@ class _MenuCategorieState extends State<MenuCategorie> {
               borderRadius: BorderRadius.circular(13), // Add border radius
               child: Container(
                 width: double.infinity,
-                height: 150,
+                height: 50,
                 color: Colors.white,
               ),
             ),
@@ -435,7 +446,7 @@ class _MenuCategorieState extends State<MenuCategorie> {
               borderRadius: BorderRadius.circular(13), // Add border radius
               child: Container(
                 width: double.infinity,
-                height: 150,
+                height: 50,
                 color: Colors.white,
               ),
             ),
@@ -446,7 +457,7 @@ class _MenuCategorieState extends State<MenuCategorie> {
               borderRadius: BorderRadius.circular(13), // Add border radius
               child: Container(
                 width: double.infinity,
-                height: 150,
+                height: 50,
                 color: Colors.white,
               ),
             ),
@@ -457,7 +468,7 @@ class _MenuCategorieState extends State<MenuCategorie> {
               borderRadius: BorderRadius.circular(13), // Add border radius
               child: Container(
                 width: double.infinity,
-                height: 150,
+                height: 50,
                 color: Colors.white,
               ),
             ),
@@ -468,7 +479,7 @@ class _MenuCategorieState extends State<MenuCategorie> {
               borderRadius: BorderRadius.circular(13), // Add border radius
               child: Container(
                 width: double.infinity,
-                height: 150,
+                height: 50,
                 color: Colors.white,
               ),
             ),
@@ -495,139 +506,149 @@ class _MenuCategorieState extends State<MenuCategorie> {
           ),
         ),
       ),
-      body: Column(
-        children: [
-          SizedBox(height: 12),
-          Padding(
-              padding:
-                  EdgeInsets.only(top: 0.0, left: 16.0, right: 16.0, bottom: 5),
-              child: TextField(
-                decoration: InputDecoration(
-                  prefixIcon: Image.asset(AppAssets.search_icon),
-                  hintText: 'Search..',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide.none,
-                  ),
-                  filled: true,
-                  fillColor: Colors.grey[200],
-                ),
-              )),
-          SizedBox(
-            height: 5,
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: CategoryListdata!.length,
+      body: isLoading
+          ? ListView.builder(
+              itemCount: 5,
               itemBuilder: (context, index) {
-                final e = CategoryListdata![index];
-                return Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                  child: Container(
-                    decoration: BoxDecoration(
-                        border: Border.all(color: AppColors.grey1),
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Padding(
-                      padding: EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  HeadingWidget(
-                                    title: 'Categories Name:',
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  HeadingWidget(
-                                    title: e.categoryName.toString(),
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 18.00,
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      getCategoryById(
-                                        e.categoryId.toString(),
-                                      );
-                                    },
-                                    child: Container(
-                                      height: 45,
-                                      width: 45,
-                                      decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          border:
-                                              Border.all(color: AppColors.red)),
-                                      child: Icon(
-                                        Icons.edit_outlined,
-                                        size: 24,
-                                        color: AppColors.red,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 10), // Spacing between
-                                  GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        deletecategorybyid(
-                                          e.categoryId.toString(),
-                                        );
-                                      });
-                                    },
-                                    child: Container(
-                                      height: 45,
-                                      width: 45,
-                                      decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          border:
-                                              Border.all(color: AppColors.red)),
-                                      child: Icon(
-                                        Icons.delete_outline,
-                                        size: 24,
-                                        color: AppColors.red,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 12,
-                          ),
-                          HeadingWidget(
-                            title: 'Description:',
-                          ),
-                          SizedBox(
-                            height: 6,
-                          ),
-                          HeadingWidget(
-                            title: e.description.toString() == "null"
-                                ? ' '
-                                : e.description.toString(),
-                            fontWeight: FontWeight.w500,
-                            fontSize: 18.00,
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                );
+                return _buildShimmerPlaceholder();
               },
+            )
+          : Column(
+              children: [
+                SizedBox(height: 12),
+                Padding(
+                    padding: EdgeInsets.only(
+                        top: 0.0, left: 16.0, right: 16.0, bottom: 5),
+                    child: TextField(
+                      decoration: InputDecoration(
+                        prefixIcon: Image.asset(AppAssets.search_icon),
+                        hintText: 'Search..',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none,
+                        ),
+                        filled: true,
+                        fillColor: Colors.grey[200],
+                      ),
+                    )),
+                SizedBox(
+                  height: 5,
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: CategoryListdata!.length,
+                    itemBuilder: (context, index) {
+                      final e = CategoryListdata![index];
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 5),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              border: Border.all(color: AppColors.grey1),
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Padding(
+                            padding: EdgeInsets.all(16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        HeadingWidget(
+                                          title: 'Categories Name:',
+                                        ),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        HeadingWidget(
+                                          title: e.categoryName.toString(),
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 18.00,
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () {
+                                            getCategoryById(
+                                              e.categoryId.toString(),
+                                            );
+                                          },
+                                          child: Container(
+                                            height: 45,
+                                            width: 45,
+                                            decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                border: Border.all(
+                                                    color: AppColors.red)),
+                                            child: Icon(
+                                              Icons.edit_outlined,
+                                              size: 24,
+                                              color: AppColors.red,
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                            width: 10), // Spacing between
+                                        GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              deletecategorybyid(
+                                                e.categoryId.toString(),
+                                              );
+                                            });
+                                          },
+                                          child: Container(
+                                            height: 45,
+                                            width: 45,
+                                            decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                border: Border.all(
+                                                    color: AppColors.red)),
+                                            child: Icon(
+                                              Icons.delete_outline,
+                                              size: 24,
+                                              color: AppColors.red,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 12,
+                                ),
+                                HeadingWidget(
+                                  title: 'Description:',
+                                ),
+                                SizedBox(
+                                  height: 6,
+                                ),
+                                HeadingWidget(
+                                  title: e.description.toString() == "null"
+                                      ? ' '
+                                      : e.description.toString(),
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 18.00,
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
       bottomNavigationBar: BottomAppBar(
           child: SvgIconButtonWidget(
         title: 'Add New Categories',

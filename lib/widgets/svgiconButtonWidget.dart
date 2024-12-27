@@ -7,7 +7,7 @@ class SvgIconButtonWidget extends StatelessWidget {
     Key? key,
     this.color,
     required this.title,
-     this.width,
+    this.width,
     this.height,
     this.onTap,
     this.titleColor,
@@ -45,11 +45,10 @@ class SvgIconButtonWidget extends StatelessWidget {
                   .primary, // Change this color to your desired outline color
           width: 1.0, // Change the width of the outline
         ),
-        minimumSize: width != null ? Size(width!, height ?? 50.0): null,
-        maximumSize:  width != null ? Size(width!, height ?? 50.0): null,
-       shape: RoundedRectangleBorder(
+        minimumSize: width != null ? Size(width!, height ?? 50.0) : null,
+        maximumSize: width != null ? Size(width!, height ?? 50.0) : null,
+        shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(borderRadius ?? 10.0)),
-
       ),
       onPressed: onTap,
       child: Row(

@@ -17,6 +17,7 @@ import '../api_model/admin_add_menu_model.dart';
 import '../api_model/adminadd_category_model.dart';
 import '../api_model/admincategory_list_model.dart';
 import '../api_model/adminmenu_edit_model.dart';
+import 'admin_add_menucategory.dart';
 
 class AdminAddNewMenu extends StatefulWidget {
   int? menuId;
@@ -41,6 +42,12 @@ class _AdminAddNewMenuState extends State<AdminAddNewMenu> {
   TextEditingController descriptionController = TextEditingController();
   TextEditingController formattedCategoryNameController =
       TextEditingController();
+
+  TextEditingController startTimeController = TextEditingController();
+  TextEditingController endTimeController = TextEditingController();
+  TimeOfDay? selectedStartTime;
+  TimeOfDay? selectedEndTime;
+
   bool isVeg = true;
   int? selectedId;
   int type = 0;
@@ -59,10 +66,10 @@ class _AdminAddNewMenuState extends State<AdminAddNewMenu> {
 
   Future addmenu(Id) async {
     await apiService.getBearerToken();
-    if (imageFile == null && widget.menuId == null) {
-      showInSnackBar(context, 'Menu image is required');
-      return;
-    }
+    // if (imageFile == null) {
+    //   showInSnackBar(context, 'Menu image is required');
+    //   return;
+    // }
 
     if (menuForm.currentState!.validate()) {
       Map<String, dynamic> postData = {
@@ -77,13 +84,16 @@ class _AdminAddNewMenuState extends State<AdminAddNewMenu> {
         "item_tags": "",
         "store_price": actualpriceController.text,
         "item_price_type": 1,
+        "from_time": startTimeController.text,
+        "to_time": endTimeController.text,
+        "store_id": Id,
       };
       print(postData);
       print(imageFile);
 
       showSnackBar(context: context);
       // update-Car_management
-      String url = 'v1/createitem_admin?store_id=$Id';
+      String url = 'v1/createitem_admin';
       if (widget.menuId != null) {
         // postData['id'] = widget.carId;
         postData = {
@@ -99,8 +109,11 @@ class _AdminAddNewMenuState extends State<AdminAddNewMenu> {
           "item_tags": "",
           "store_price": actualpriceController.text,
           "item_price_type": 1,
+          "from_time": startTimeController.text,
+          "to_time": endTimeController.text,
+          "store_id": Id
         };
-        url = 'v1/updateitem_admin?store_id=$Id';
+        url = 'v1/updateitem_admin';
       }
 
       print("image :$imageFile");
@@ -123,7 +136,7 @@ class _AdminAddNewMenuState extends State<AdminAddNewMenu> {
         // );
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
-              builder: (context) => AdminMainContainer(admininitialPage: 2)),
+              builder: (context) => AdminMainContainer(admininitialPage: 3)),
           (Route<dynamic> route) => false,
         );
       } else {
@@ -152,6 +165,8 @@ class _AdminAddNewMenuState extends State<AdminAddNewMenu> {
         strickoutpriceController.text =
             (menuDetails!.itemPrice ?? '').toString();
         offerpriceController.text = menuDetails!.itemOfferPrice ?? '';
+        startTimeController.text = menuDetails!.from_time ?? '';
+        endTimeController.text = menuDetails!.to_time ?? '';
         liveimgSrc = menuDetails!.itemImageUrl ?? '';
         selectedId = menuDetails!.itemType;
 
@@ -219,33 +234,33 @@ class _AdminAddNewMenuState extends State<AdminAddNewMenu> {
     }
   }
 
-// Add Category
+// // Add Category
 
-  Future addcategory() async {
-    Map<String, dynamic> postData = {
-      "category_name": categoryNameController.text,
-      "description": categoryDescriptionController.text,
-      "slug": formattedCategoryNameController.text,
-      "serial": ordernoController.text
-    };
-    print('postData $postData');
+//   Future addcategory() async {
+//     Map<String, dynamic> postData = {
+//       "category_name": categoryNameController.text,
+//       "description": categoryDescriptionController.text,
+//       "slug": formattedCategoryNameController.text,
+//       "serial": ordernoController.text
+//     };
+//     print('postData $postData');
 
-    var result = await apiService.addcategory(postData);
-    print('result $result');
-    AdminAddCategorymodel response = adminaddCategorymodelFromJson(result);
+//     var result = await apiService.addcategory(postData);
+//     print('result $result');
+//     AdminAddCategorymodel response = adminaddCategorymodelFromJson(result);
 
-    if (response.status.toString() == 'SUCCESS') {
-      showInSnackBar(context, response.message.toString());
-      Navigator.pop(context);
-      categoryNameController.text = '';
-      categoryDescriptionController.text = '';
-      formattedCategoryNameController.text = '';
-      ordernoController.text = '';
-    } else {
-      print(response.message.toString());
-      showInSnackBar(context, response.message.toString());
-    }
-  }
+//     if (response.status.toString() == 'SUCCESS') {
+//       showInSnackBar(context, response.message.toString());
+//       Navigator.pop(context);
+//       categoryNameController.text = '';
+//       categoryDescriptionController.text = '';
+//       formattedCategoryNameController.text = '';
+//       ordernoController.text = '';
+//     } else {
+//       print(response.message.toString());
+//       showInSnackBar(context, response.message.toString());
+//     }
+//   }
 
   showActionSheet(BuildContext context) {
     showModalBottomSheet(
@@ -343,8 +358,7 @@ class _AdminAddNewMenuState extends State<AdminAddNewMenu> {
                     width: MediaQuery.of(context).size.width / 2.5,
                     child: ElevatedButton(
                       onPressed: () {
-                        categoryNameController.removeListener(() {});
-                        addcategory();
+                        //  addcategory();
                         print(
                             'Formatted Category Name: ${formattedCategoryNameController.text}');
                       },
@@ -439,6 +453,32 @@ class _AdminAddNewMenuState extends State<AdminAddNewMenu> {
     setState(() {});
   }
 
+  String formatTimeWithSeconds(TimeOfDay time) {
+    // Converts TimeOfDay to 24-hour format with default seconds as 00
+    final int hours = time.hour;
+    final int minutes = time.minute;
+    return '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:00';
+  }
+
+  Future pickSeconds(BuildContext context, int initialSeconds) async {
+    int? selectedSeconds = await showDialog<int>(
+      context: context,
+      builder: (BuildContext context) {
+        return SimpleDialog(
+          title: Text('Select Seconds'),
+          children: List.generate(60, (index) {
+            return SimpleDialogOption(
+              onPressed: () => Navigator.pop(context, index),
+              child: Text(index.toString().padLeft(2, '0')),
+            );
+          }),
+        );
+      },
+    );
+
+    return selectedSeconds ?? initialSeconds;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -483,7 +523,16 @@ class _AdminAddNewMenuState extends State<AdminAddNewMenu> {
                         valArr: CategoryListdata,
                       ),
                     TextButton(
-                      onPressed: _showAddCategoryDialog,
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AdminAddMenuCategory(
+                              storeId: widget.storeId,
+                            ),
+                          ),
+                        );
+                      }, // _showAddCategoryDialog,
                       child: Text(
                         'Add New Categories',
                         style: TextStyle(color: Colors.red),
@@ -544,6 +593,68 @@ class _AdminAddNewMenuState extends State<AdminAddNewMenu> {
                     type: const TextInputType.numberWithOptions(),
                     borderColor: Color.fromARGB(255, 225, 225, 225),
                     // boxRadius: BorderRadius.all(Radius.circular(1)),
+                  ),
+
+                  Text("Available Start Time",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                  SizedBox(height: 8),
+                  TextFormField(
+                    controller: startTimeController,
+                    readOnly: true,
+                    decoration: InputDecoration(
+                      hintText: "Select start time",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      suffixIcon: Icon(Icons.access_time),
+                    ),
+                    onTap: () async {
+                      TimeOfDay? picked = await showTimePicker(
+                        context: context,
+                        initialTime: TimeOfDay.now(),
+                      );
+
+                      if (picked != null) {
+                        setState(() {
+                          selectedStartTime = picked;
+                          startTimeController.text =
+                              formatTimeWithSeconds(picked);
+                        });
+                      }
+                    },
+                  ),
+                  SizedBox(height: 16),
+
+                  // End Time Picker
+                  Text("Available End Time",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                  SizedBox(height: 8),
+                  TextFormField(
+                    controller: endTimeController,
+                    readOnly: true,
+                    decoration: InputDecoration(
+                      hintText: "Select end time",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      suffixIcon: Icon(Icons.access_time),
+                    ),
+                    onTap: () async {
+                      TimeOfDay? picked = await showTimePicker(
+                        context: context,
+                        initialTime: TimeOfDay.now(),
+                      );
+
+                      if (picked != null) {
+                        setState(() {
+                          selectedEndTime = picked;
+                          endTimeController.text =
+                              formatTimeWithSeconds(picked);
+                        });
+                      }
+                    },
                   ),
                   SizedBox(height: 16),
                   Text("Select Dish Type",
@@ -684,7 +795,13 @@ class _AdminAddNewMenuState extends State<AdminAddNewMenu> {
                     //height: 45,
                     child: ElevatedButton(
                       onPressed: () {
-                        addmenu(widget.storeId);
+                        if (imageFile == null && widget.menuId == null) {
+                          showInSnackBar(context, 'Menu image is required');
+                        } else if (selectedcategoryId == null) {
+                          showInSnackBar(context, 'Category is required');
+                        } else {
+                          addmenu(widget.storeId);
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.red,

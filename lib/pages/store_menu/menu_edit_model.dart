@@ -52,6 +52,8 @@ class MenuEdit {
   String? itemImageUrl;
   int? itemStock;
   String? itemTags;
+  String? from_time;
+  String? to_time;
   int? status;
   int? createdBy;
   DateTime? createdDate;
@@ -73,6 +75,8 @@ class MenuEdit {
     this.itemImageUrl,
     this.itemStock,
     this.itemTags,
+    this.from_time,
+    this.to_time,
     this.status,
     this.createdBy,
     this.createdDate,
@@ -95,6 +99,8 @@ class MenuEdit {
         itemImageUrl: json["item_image_url"],
         itemStock: json["item_stock"],
         itemTags: json["item_tags"],
+        from_time: json["from_time"],
+        to_time: json["to_time"],
         status: json["status"],
         createdDate: json["created_date"] == null
             ? null
@@ -120,6 +126,8 @@ class MenuEdit {
         "item_image_url": itemImageUrl,
         "item_stock": itemStock,
         "item_tags": itemTags,
+        "from_time": from_time,
+        "to_time": to_time,
         "status": status,
         "created_by": createdBy,
         "created_date": createdDate?.toIso8601String(),

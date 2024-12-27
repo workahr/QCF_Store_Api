@@ -101,7 +101,7 @@ class _MenuDetailsScreenAdminState extends State<MenuDetailsScreenAdmin> {
         });
       } else {
         print("API Error Message: ${response.message}");
-        showInSnackBar(context, response.message);
+        //showInSnackBar(context, response.message);
         setState(() {
           MenuListData = [];
           MenuListAll = [];
@@ -116,7 +116,7 @@ class _MenuDetailsScreenAdminState extends State<MenuDetailsScreenAdmin> {
         MenuListAll = [];
         isLoading1 = false; // Stop loading on exception
       });
-      showInSnackBar(context, "An error occurred: $e");
+      // showInSnackBar(context, "An error occurred: $e");
     }
   }
 
@@ -407,11 +407,16 @@ class _MenuDetailsScreenAdminState extends State<MenuDetailsScreenAdmin> {
                                           fontWeight: FontWeight.bold,
                                           fontSize: 20)),
                                   SizedBox(height: 8),
-                                  Text(
-                                      "${widget.address.toString()},${widget.city.toString()},",
-                                      //'South Indian Foods',
+                                  Container(
+                                    width: 200,
+                                    child: Text(
+                                      "${widget.address.toString()}, ${widget.city.toString()},",
                                       style: TextStyle(
-                                          color: Colors.black, fontSize: 14)),
+                                          color: Colors.black, fontSize: 14),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 2,
+                                    ),
+                                  ),
                                   SizedBox(height: 4),
                                   Text(
                                       "${widget.state.toString()}-${widget.zipcode.toString()},",
@@ -708,24 +713,24 @@ class _MenuDetailsScreenAdminState extends State<MenuDetailsScreenAdmin> {
                                                     Image.asset(AppAssets
                                                         .delete_round_icon),
                                                   ])),
-                                              GestureDetector(
-                                                  onTap: () {
-                                                    Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                AdminAddMenuvariant(
-                                                                  menuId: e
-                                                                      .itemCategoryId,
-                                                                  storeId:
-                                                                      e.storeId,
-                                                                ))).then(
-                                                        (value) {});
-                                                  },
-                                                  child: Row(children: [
-                                                    Image.asset(AppAssets
-                                                        .edit_rounded_icon),
-                                                  ])),
+                                              // GestureDetector(
+                                              //     onTap: () {
+                                              //       Navigator.push(
+                                              //           context,
+                                              //           MaterialPageRoute(
+                                              //               builder: (context) =>
+                                              //                   AdminAddMenuvariant(
+                                              //                     menuId: e
+                                              //                         .itemCategoryId,
+                                              //                     storeId:
+                                              //                         e.storeId,
+                                              //                   ))).then(
+                                              //           (value) {});
+                                              //     },
+                                              //     child: Row(children: [
+                                              //       Image.asset(AppAssets
+                                              //           .edit_rounded_icon),
+                                              //     ])),
                                               GestureDetector(
                                                 onTap: () {
                                                   Navigator.push(

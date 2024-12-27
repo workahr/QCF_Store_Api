@@ -50,7 +50,7 @@ class _ReportPageState extends State<ReportPage> {
           reportlistpageAll = [];
           isLoading = false;
         });
-        showInSnackBar(context, response.message.toString());
+        // showInSnackBar(context, response.message.toString());
       }
     } catch (e) {
       setState(() {
@@ -58,7 +58,7 @@ class _ReportPageState extends State<ReportPage> {
         reportlistpageAll = [];
         isLoading = false;
       });
-      showInSnackBar(context, 'Error occurred: $e');
+      //showInSnackBar(context, 'Error occurred: $e');
     }
 
     setState(() {});

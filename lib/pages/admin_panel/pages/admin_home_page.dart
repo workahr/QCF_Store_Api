@@ -638,8 +638,10 @@ class _AdminHomePageState extends State<AdminHomePage> {
                                                   MaterialPageRoute(
                                                     builder: (context) =>
                                                         Editorder(
-                                                            invoiceNumber: e
-                                                                .invoiceNumber),
+                                                      invoiceNumber:
+                                                          e.invoiceNumber,
+                                                      items: e.items,
+                                                    ),
                                                   ),
                                                 );
                                               },

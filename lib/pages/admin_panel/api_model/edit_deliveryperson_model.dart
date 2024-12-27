@@ -46,6 +46,7 @@ class DeliveryPersonList {
   String? fullname;
   String? email;
   String? mobile;
+  String? alternative_mobile;
   int? role;
   String? regOtp;
   int? status;
@@ -74,6 +75,7 @@ class DeliveryPersonList {
     this.fullname,
     this.email,
     this.mobile,
+    this.alternative_mobile,
     this.role,
     this.regOtp,
     this.status,
@@ -104,6 +106,7 @@ class DeliveryPersonList {
         fullname: json["fullname"],
         email: json["email"],
         mobile: json["mobile"],
+        alternative_mobile: json["alternative_mobile"],
         role: json["role"],
         regOtp: json["reg_otp"],
         status: json["status"],
@@ -133,6 +136,7 @@ class DeliveryPersonList {
         "fullname": fullname,
         "email": email,
         "mobile": mobile,
+        "alternative_mobile": alternative_mobile,
         "role": role,
         "reg_otp": regOtp,
         "status": status,

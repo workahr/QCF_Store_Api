@@ -54,6 +54,8 @@ class MenuEditAdmin {
   String? itemImageUrl;
   int? itemStock;
   String? itemTags;
+  String? from_time;
+  String? to_time;
   int? status;
   int? createdBy;
   DateTime? createdDate;
@@ -75,6 +77,8 @@ class MenuEditAdmin {
     this.itemImageUrl,
     this.itemStock,
     this.itemTags,
+    this.from_time,
+    this.to_time,
     this.status,
     this.createdBy,
     this.createdDate,
@@ -97,6 +101,8 @@ class MenuEditAdmin {
         itemImageUrl: json["item_image_url"],
         itemStock: json["item_stock"],
         itemTags: json["item_tags"],
+        from_time: json["from_time"],
+        to_time: json["to_time"],
         status: json["status"],
         createdDate: json["created_date"] == null
             ? null
@@ -118,6 +124,8 @@ class MenuEditAdmin {
         "item_offer_price": itemOfferPrice,
         "item_price_type": itemPriceType,
         "item_category_id": itemCategoryId,
+        "from_time": from_time,
+        "to_time": to_time,
         "tax_id": taxId,
         "item_image_url": itemImageUrl,
         "item_stock": itemStock,

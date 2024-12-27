@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:namstore/widgets/button_widget.dart';
 import 'package:namstore/widgets/heading_widget.dart';
 import 'package:namstore/widgets/svgiconButtonWidget.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../../constants/app_assets.dart';
 import '../../../constants/app_colors.dart';
@@ -51,7 +52,7 @@ class _AdminAddMenuCategoryState extends State<AdminAddMenuCategory> {
     // }
   }
 
-  Future<void> getCategoryList() async {
+  Future getCategoryList() async {
     setState(() {
       isLoading = true;
     });
@@ -70,7 +71,7 @@ class _AdminAddMenuCategoryState extends State<AdminAddMenuCategory> {
         categoryListDataAll = [];
         isLoading = false;
       });
-      showInSnackBar(context, response.message.toString());
+      //showInSnackBar(context, response.message.toString());
     }
   }
 
@@ -80,8 +81,9 @@ class _AdminAddMenuCategoryState extends State<AdminAddMenuCategory> {
       "description": categoryDescriptionController.text,
       "slug": formattedCategoryNameController.text,
       "serial": ordernoController.text,
+      "store_id": widget.storeId
     };
-    var result = await apiService.Adminaddcategory(postData, widget.storeId);
+    var result = await apiService.Adminaddcategory(postData);
     AdminMenuAddCategorymodel response =
         adminmenuaddCategorymodelFromJson(result);
     if (response.status.toString() == 'SUCCESS') {
@@ -168,10 +170,10 @@ class _AdminAddMenuCategoryState extends State<AdminAddMenuCategory> {
       "description": editcategoryDescriptionController.text,
       "slug": editformattedCategoryNameController.text,
       "serial": editordernoController.text,
+      "store_id": widget.storeId
     };
     print("updateItemCategory $postData");
-    var result =
-        await apiService.AdminupdateItemCategory(postData, widget.storeId);
+    var result = await apiService.AdminupdateItemCategory(postData);
 
     AdminMenuUpdateItemCategoryModel response =
         adminmenuupdateItemCategoryModelFromJson(result);
@@ -364,6 +366,40 @@ class _AdminAddMenuCategoryState extends State<AdminAddMenuCategory> {
     });
   }
 
+  Widget _buildShimmerPlaceholder() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      child: Shimmer.fromColors(
+        baseColor: Colors.grey.shade300,
+        highlightColor: Colors.grey.shade100,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(13), // Add border radius
+              child: Container(
+                width: double.infinity,
+                height: 63,
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(13), // Add border radius
+              child: Container(
+                width: double.infinity,
+                height: 63,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -384,153 +420,174 @@ class _AdminAddMenuCategoryState extends State<AdminAddMenuCategory> {
         ),
         automaticallyImplyLeading: false,
       ),
-      body: Column(
-        children: [
-          SizedBox(height: 12),
-          Padding(
-              padding:
-                  EdgeInsets.only(top: 0.0, left: 16.0, right: 16.0, bottom: 5),
-              child: TextField(
-                decoration: InputDecoration(
-                  prefixIcon: Image.asset(AppAssets.search_icon),
-                  hintText: 'Search..',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide.none,
-                  ),
-                  filled: true,
-                  fillColor: Colors.grey[200],
-                ),
-              )),
-          SizedBox(
-            height: 5,
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: CategoryListdata!.length,
+      body: isLoading
+          ? ListView.builder(
+              itemCount: 5,
               itemBuilder: (context, index) {
-                final e = CategoryListdata![index];
-                return Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                  child: Container(
-                    decoration: BoxDecoration(
-                        border: Border.all(color: AppColors.grey1),
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Padding(
-                      padding: EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  HeadingWidget(
-                                    title: "Category :",
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  HeadingWidget(
-                                    title: e.categoryName.toString(),
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 18.00,
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      AdmingetCategoryById(
-                                        e.categoryId.toString(),
-                                      );
-                                    },
-                                    child: Container(
-                                      height: 45,
-                                      width: 45,
-                                      decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          border:
-                                              Border.all(color: AppColors.red)),
-                                      child: Icon(
-                                        Icons.edit_outlined,
-                                        size: 24,
-                                        color: AppColors.red,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 10), // Spacing between
-                                  GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        Admindeletecategorybyid(
-                                          e.categoryId.toString(),
-                                        );
-                                      });
-                                    },
-                                    child: Container(
-                                      height: 45,
-                                      width: 45,
-                                      decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          border:
-                                              Border.all(color: AppColors.red)),
-                                      child: Icon(
-                                        Icons.delete_outline,
-                                        size: 24,
-                                        color: AppColors.red,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 12,
-                          ),
-                          HeadingWidget(
-                            title: 'Description :',
-                          ),
-                          SizedBox(
-                            height: 6,
-                          ),
-                          HeadingWidget(
-                            title: e.description.toString() == "null"
-                                ? ' '
-                                : e.description.toString(),
-                            fontWeight: FontWeight.w500,
-                            fontSize: 18.00,
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                );
+                return _buildShimmerPlaceholder();
               },
+            )
+          : Column(
+              children: [
+                SizedBox(height: 12),
+                Padding(
+                    padding: EdgeInsets.only(
+                        top: 0.0, left: 16.0, right: 16.0, bottom: 5),
+                    child: TextField(
+                      decoration: InputDecoration(
+                        prefixIcon: Image.asset(AppAssets.search_icon),
+                        hintText: 'Search..',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none,
+                        ),
+                        filled: true,
+                        fillColor: Colors.grey[200],
+                      ),
+                    )),
+                SizedBox(
+                  height: 5,
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: CategoryListdata!.length,
+                    itemBuilder: (context, index) {
+                      final e = CategoryListdata![index];
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 5),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              border: Border.all(color: AppColors.grey1),
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Padding(
+                            padding: EdgeInsets.all(16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        HeadingWidget(
+                                          title: "Category :",
+                                        ),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        HeadingWidget(
+                                          title: e.categoryName.toString(),
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 18.00,
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () {
+                                            AdmingetCategoryById(
+                                              e.categoryId.toString(),
+                                            );
+                                          },
+                                          child: Container(
+                                            height: 45,
+                                            width: 45,
+                                            decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                border: Border.all(
+                                                    color: AppColors.red)),
+                                            child: Icon(
+                                              Icons.edit_outlined,
+                                              size: 24,
+                                              color: AppColors.red,
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                            width: 10), // Spacing between
+                                        GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              Admindeletecategorybyid(
+                                                e.categoryId.toString(),
+                                              );
+                                            });
+                                          },
+                                          child: Container(
+                                            height: 45,
+                                            width: 45,
+                                            decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                border: Border.all(
+                                                    color: AppColors.red)),
+                                            child: Icon(
+                                              Icons.delete_outline,
+                                              size: 24,
+                                              color: AppColors.red,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 12,
+                                ),
+                                HeadingWidget(
+                                  title: 'Description :',
+                                ),
+                                SizedBox(
+                                  height: 6,
+                                ),
+                                HeadingWidget(
+                                  title: e.description.toString() == "null"
+                                      ? ' '
+                                      : e.description.toString(),
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 18.00,
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+      bottomNavigationBar: BottomAppBar(
+        child: SafeArea(
+          child: SizedBox(
+            height: 60,
+            child: ElevatedButton(
+              onPressed: () {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  _showAddCategoryDialog();
+                });
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.red,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: const Text(
+                "Add New Categories",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
             ),
           ),
-        ],
-      ),
-      bottomNavigationBar: BottomAppBar(
-          child: SvgIconButtonWidget(
-        title: 'Add New Categories',
-        fontSize: 20.00,
-        leadingIcon: Icon(
-          Icons.add,
-          size: 24,
         ),
-        borderColor: (Colors.transparent),
-        color: AppColors.red,
-        onTap: () {
-          _showAddCategoryDialog();
-        },
-      )),
+      ),
     );
   }
 }

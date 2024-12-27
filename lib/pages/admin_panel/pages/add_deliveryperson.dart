@@ -35,7 +35,8 @@ class _AddDeliverypersonState extends State<AddDeliveryperson> {
   final TextEditingController fullNameController = TextEditingController();
   final TextEditingController mailController = TextEditingController();
   final TextEditingController mobileNumberController = TextEditingController();
-  final TextEditingController anothermobileNumberController = TextEditingController();
+  final TextEditingController anothermobileNumberController =
+      TextEditingController();
   final TextEditingController licenseNoController = TextEditingController();
   final TextEditingController vehicleNoController = TextEditingController();
   final TextEditingController vehicleNameController = TextEditingController();
@@ -74,7 +75,8 @@ class _AddDeliverypersonState extends State<AddDeliveryperson> {
           passwordNameController.text = DeliveryPersonListpage?.password ?? '';
           fullNameController.text = DeliveryPersonListpage?.fullname ?? '';
           mobileNumberController.text = DeliveryPersonListpage?.mobile ?? '';
-         // anothermobileNumberController.text = DeliveryPersonListpage?.mobile ?? '';
+          anothermobileNumberController.text =
+              DeliveryPersonListpage?.alternative_mobile ?? '';
           mailController.text = DeliveryPersonListpage?.email ?? '';
           licenseNoController.text = DeliveryPersonListpage?.licenseNo ?? '';
           vehicleNoController.text = DeliveryPersonListpage?.vehicleNo ?? '';
@@ -127,7 +129,7 @@ class _AddDeliverypersonState extends State<AddDeliveryperson> {
         "password": passwordNameController.text,
         "fullname": fullNameController.text,
         "mobile": mobileNumberController.text,
-        // "anothermobile": anothermobileNumberController.text,
+        "alternative_mobile": anothermobileNumberController.text,
         "email": mailController.text,
         "license_no": licenseNoController.text,
         "vehicle_no": vehicleNoController.text,
@@ -150,7 +152,7 @@ class _AddDeliverypersonState extends State<AddDeliveryperson> {
           "password": passwordNameController.text,
           "fullname": fullNameController.text,
           "mobile": mobileNumberController.text,
-          // "anothermobile": anothermobileNumberController.text,
+          "alternative_mobile": anothermobileNumberController.text,
           "email": mailController.text,
           "license_no": licenseNoController.text,
           "vehicle_no": vehicleNoController.text,
@@ -181,7 +183,7 @@ class _AddDeliverypersonState extends State<AddDeliveryperson> {
         // );
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
-              builder: (context) => AdminMainContainer(admininitialPage: 2)),
+              builder: (context) => AdminMainContainer(admininitialPage: 3)),
           (Route<dynamic> route) => false,
         );
       } else {
@@ -589,7 +591,7 @@ class _AddDeliverypersonState extends State<AddDeliveryperson> {
                           RegExp(r'^-?(\d+)?\.?\d{0,11}'))
                     ],
                   ),
-                   CustomeTextField(
+                  CustomeTextField(
                     control: anothermobileNumberController,
                     borderColor: AppColors.grey1,
                     labelText: 'Another Mobile number',

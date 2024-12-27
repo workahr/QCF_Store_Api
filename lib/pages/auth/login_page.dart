@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:namstore/pages/maincontainer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../constants/app_assets.dart';
 import '../../constants/app_colors.dart';
+import '../../controllers/base_controller.dart';
 import '../../services/comFuncService.dart';
 import '../../services/nam_food_api_service.dart';
 import '../../widgets/custom_text_field.dart';
@@ -27,11 +29,13 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController passwordCtrl = TextEditingController();
 
   AuthValidation authValidation = AuthValidation();
+  BaseController baseCtrl = Get.put(BaseController());
   final NamFoodApiService apiService = NamFoodApiService();
 
   var obscureText = true;
 
   Future login() async {
+    print("baseCtrl.fbUserId${baseCtrl.fbUserId}");
     try {
       showInSnackBar(context, 'Processing...');
 
@@ -39,7 +43,8 @@ class _LoginPageState extends State<LoginPage> {
         Map<String, dynamic> postData = {
           "username": usernameCtrl.text,
           "password": passwordCtrl.text,
-          "mobile_push_id": ""
+          'mobile_push_id': ""
+          // 'mobile_push_id': baseCtrl.fbUserId
         };
         var result = await apiService.storeLogin(postData);
         LoginModel response = loginModelFromJson(result);

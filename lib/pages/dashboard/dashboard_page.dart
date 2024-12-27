@@ -554,7 +554,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                         paymentMethod:
                                             item.paymentMethod.toString(),
                                         mobilenumber:
-                                            item.customerMobile.toString(),
+                                            item.deliveryBoyMobile.toString(),
                                       ),
                                     ),
                                   );
@@ -704,9 +704,9 @@ class _DashboardPageState extends State<DashboardPage> {
                                         children: [
                                           InkWell(
                                             onTap: () {
-                                              // Handle order notification tap
-                                              makePhoneCall(item.customerMobile
-                                                  .toString());
+                                              // makePhoneCall(item.customerMobile
+                                              //     .toString());
+                                              makePhoneCall("9360159625");
                                             },
                                             child: Container(
                                               padding: EdgeInsets.all(8.0),
@@ -730,7 +730,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                                     width: 5.0,
                                                   ),
                                                   Text(
-                                                    'Call Customer',
+                                                    'Call NAM Food',
                                                     style: TextStyle(
                                                         color: AppColors.red),
                                                   ),
@@ -1005,8 +1005,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                                               .toString() !=
                                                           "null")
                                                         Text(
-                                                          item.deliveryBoyName
-                                                              .toString(),
+                                                          item.code.toString(),
                                                           style: TextStyle(
                                                             fontSize: 16,
                                                             fontWeight:
@@ -1063,10 +1062,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                           //  if (item.deliveryBoyMobile != null)
                                           InkWell(
                                             onTap: () {
-                                              // Handle order notification tap
-                                              makePhoneCall(item
-                                                  .deliveryBoyMobile
-                                                  .toString());
+                                              makePhoneCall("9360159625");
                                             },
                                             child: Container(
                                               // height: 40,
@@ -1092,7 +1088,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                                     width: 5.0,
                                                   ),
                                                   Text(
-                                                    'Call DeliveryBoy',
+                                                    'Call Nam Food',
                                                     style: TextStyle(
                                                         color: AppColors.red),
                                                   ),

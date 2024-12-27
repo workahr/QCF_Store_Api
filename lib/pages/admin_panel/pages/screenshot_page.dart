@@ -350,7 +350,7 @@ class _ScreenshotPageState extends State<ScreenshotPage> {
       showInSnackBar(context, "Payment Entry Added Successfully");
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(
-            builder: (context) => AdminMainContainer(admininitialPage: 1)),
+            builder: (context) => AdminMainContainer(admininitialPage: 2)),
         (Route<dynamic> route) => false,
       );
     } else {

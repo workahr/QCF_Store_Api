@@ -85,14 +85,13 @@ class _MenuDetailsScreenState extends State<MenuDetailsScreen> {
   Future<void> getmenuList() async {
     await apiService.getBearerToken();
     setState(() {
-      isLoading1 = true; // Start loading
+      isLoading1 = true;
     });
 
     try {
       var result = await apiService.getmenuList();
-      print("Raw API Response: $result"); // Log raw response for debugging
+      print("Raw API Response: $result");
 
-      // Check if the response is valid JSON
       var jsonResponse;
       try {
         jsonResponse = json.decode(result);
@@ -110,9 +109,8 @@ class _MenuDetailsScreenState extends State<MenuDetailsScreen> {
       if (response.status.toUpperCase() == 'SUCCESS') {
         setState(() {
           MenuListData = response.list;
-          MenuListAll =
-              List.from(response.list); // Deep copy for further filtering
-          isLoading1 = false; // Stop loading after successful fetch
+          MenuListAll = List.from(response.list);
+          isLoading1 = false;
         });
       } else {
         print("API Error Message: ${response.message}");
@@ -120,7 +118,7 @@ class _MenuDetailsScreenState extends State<MenuDetailsScreen> {
         setState(() {
           MenuListData = [];
           MenuListAll = [];
-          isLoading1 = false; // Stop loading on error
+          isLoading1 = false;
         });
       }
     } catch (e, stackTrace) {
@@ -129,7 +127,7 @@ class _MenuDetailsScreenState extends State<MenuDetailsScreen> {
       setState(() {
         MenuListData = [];
         MenuListAll = [];
-        isLoading1 = false; // Stop loading on exception
+        isLoading1 = false;
       });
       // showInSnackBar(context, "An error occurred: $e");
     }
@@ -214,11 +212,10 @@ class _MenuDetailsScreenState extends State<MenuDetailsScreen> {
 
     if (response.status.toString() == 'SUCCESS') {
       showInSnackBar(context, response.message.toString());
-    
+
       setState(() {
-        getMyStoreDetails(); 
+        getMyStoreDetails();
       });
-     
     } else {
       print(response.message.toString());
       showInSnackBar(context, response.message.toString());

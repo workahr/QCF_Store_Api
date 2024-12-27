@@ -36,7 +36,8 @@ class _AddStorePageState extends State<AddStorePage> {
   final TextEditingController preparatorNameController =
       TextEditingController();
   final TextEditingController mobileNumberController = TextEditingController();
-  final TextEditingController anothermobileNumberController = TextEditingController();
+  final TextEditingController anothermobileNumberController =
+      TextEditingController();
   final TextEditingController cityController = TextEditingController();
   final TextEditingController stateController = TextEditingController();
   final TextEditingController gstController = TextEditingController();
@@ -71,7 +72,8 @@ class _AddStorePageState extends State<AddStorePage> {
           passwordNameController.text = storeDetails?.password ?? '';
           ownerNameController.text = storeDetails?.fullname ?? '';
           mobileNumberController.text = storeDetails?.mobile ?? '';
-          // anothermobileNumberController.text = storeDetails?.mobile ?? '';
+          anothermobileNumberController.text =
+              storeList?.alternative_mobile ?? '';
           mailController.text = storeDetails?.email ?? '';
           storeNameController.text = storeList?.name ?? '';
           addressController.text = storeList?.address ?? '';
@@ -130,11 +132,11 @@ class _AddStorePageState extends State<AddStorePage> {
   Future addstoredetails() async {
     await apiService.getBearerToken();
     if (imageFile == null && widget.storeId == null) {
-      showInSnackBar(context, 'Store image is required');
+      showInSnackBar(context, 'Image  is required');
       return;
     }
     if (imageFile1 == null && widget.storeId == null) {
-      showInSnackBar(context, 'Store image is required');
+      showInSnackBar(context, 'Image  is required');
       return;
     }
 
@@ -144,7 +146,7 @@ class _AddStorePageState extends State<AddStorePage> {
         "password": passwordNameController.text,
         "fullname": ownerNameController.text,
         "mobile": mobileNumberController.text,
-       //  "anothermobile": anothermobileNumberController.text,
+        "alternative_mobile": anothermobileNumberController.text,
         "email": mailController.text,
         "name": storeNameController.text,
         "address": addressController.text,
@@ -163,7 +165,6 @@ class _AddStorePageState extends State<AddStorePage> {
       // update-Car_management
       String url = 'v1/createstore';
       if (widget.storeId != null) {
-        // postData['id'] = widget.carId;
         postData = {
           "store_id": widget.storeId,
           "user_id": storeDetails?.id ?? '',
@@ -171,7 +172,7 @@ class _AddStorePageState extends State<AddStorePage> {
           "password": passwordNameController.text,
           "fullname": ownerNameController.text,
           "mobile": mobileNumberController.text,
-          // "anothermobile": anothermobileNumberController.text,
+          "alternative_mobile": anothermobileNumberController.text,
           "email": mailController.text,
           "name": storeNameController.text,
           "address": addressController.text,
@@ -210,7 +211,7 @@ class _AddStorePageState extends State<AddStorePage> {
 
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
-              builder: (context) => AdminMainContainer(admininitialPage: 2)),
+              builder: (context) => AdminMainContainer(admininitialPage: 3)),
           (Route<dynamic> route) => false,
         );
       } else {
@@ -631,7 +632,7 @@ class _AddStorePageState extends State<AddStorePage> {
                     labelText: "Mobile Number",
                     borderColor: Color(0xFFEEEEEE),
                   ),
-                   CustomeTextField(
+                  CustomeTextField(
                     width: double.infinity,
                     control: anothermobileNumberController,
                     type: TextInputType.phone,
@@ -1010,7 +1011,6 @@ class _AddStorePageState extends State<AddStorePage> {
 
 
 
-
 // import 'package:flutter/material.dart';
 // import 'package:namstore/constants/app_colors.dart';
 // import 'package:namstore/pages/maincontainer.dart';
@@ -1049,6 +1049,7 @@ class _AddStorePageState extends State<AddStorePage> {
 //   final TextEditingController preparatorNameController =
 //       TextEditingController();
 //   final TextEditingController mobileNumberController = TextEditingController();
+//   final TextEditingController anothermobileNumberController = TextEditingController();
 //   final TextEditingController cityController = TextEditingController();
 //   final TextEditingController stateController = TextEditingController();
 //   final TextEditingController gstController = TextEditingController();
@@ -1083,6 +1084,7 @@ class _AddStorePageState extends State<AddStorePage> {
 //           passwordNameController.text = storeDetails?.password ?? '';
 //           ownerNameController.text = storeDetails?.fullname ?? '';
 //           mobileNumberController.text = storeDetails?.mobile ?? '';
+//           // anothermobileNumberController.text = storeDetails?.mobile ?? '';
 //           mailController.text = storeDetails?.email ?? '';
 //           storeNameController.text = storeList?.name ?? '';
 //           addressController.text = storeList?.address ?? '';
@@ -1155,6 +1157,7 @@ class _AddStorePageState extends State<AddStorePage> {
 //         "password": passwordNameController.text,
 //         "fullname": ownerNameController.text,
 //         "mobile": mobileNumberController.text,
+//        //  "anothermobile": anothermobileNumberController.text,
 //         "email": mailController.text,
 //         "name": storeNameController.text,
 //         "address": addressController.text,
@@ -1181,6 +1184,7 @@ class _AddStorePageState extends State<AddStorePage> {
 //           "password": passwordNameController.text,
 //           "fullname": ownerNameController.text,
 //           "mobile": mobileNumberController.text,
+//           // "anothermobile": anothermobileNumberController.text,
 //           "email": mailController.text,
 //           "name": storeNameController.text,
 //           "address": addressController.text,
@@ -1418,226 +1422,233 @@ class _AddStorePageState extends State<AddStorePage> {
 //               child: Column(
 //                 crossAxisAlignment: CrossAxisAlignment.start,
 //                 children: [
-//                   RichText(
-//                     text: TextSpan(
-//                       text: 'User Name',
-//                       style: TextStyle(color: Colors.black),
-//                       children: [
-//                         TextSpan(
-//                           text: '  *',
-//                           style: TextStyle(
-//                               color: Colors
-//                                   .red), // You can style the asterisk differently
-//                         ),
-//                       ],
-//                     ),
-//                   ),
+//                   // RichText(
+//                   //   text: TextSpan(
+//                   //     text: 'User Name',
+//                   //     style: TextStyle(color: Colors.black),
+//                   //     children: [
+//                   //       TextSpan(
+//                   //         text: '  *',
+//                   //         style: TextStyle(
+//                   //             color: Colors
+//                   //                 .red), // You can style the asterisk differently
+//                   //       ),
+//                   //     ],
+//                   //   ),
+//                   // ),
 //                   CustomeTextField(
 //                     width: double.infinity,
 //                     control: userNameController,
-//                     // labelText: "Location",
+//                     labelText: "User Name",
 //                     borderColor: Color(0xFFEEEEEE),
 //                   ),
-//                   RichText(
-//                     text: TextSpan(
-//                       text: 'Password',
-//                       style: TextStyle(color: Colors.black),
-//                       children: [
-//                         TextSpan(
-//                           text: '  *',
-//                           style: TextStyle(
-//                               color: Colors
-//                                   .red), // You can style the asterisk differently
-//                         ),
-//                       ],
-//                     ),
-//                   ),
+//                   // RichText(
+//                   //   text: TextSpan(
+//                   //     text: 'Password',
+//                   //     style: TextStyle(color: Colors.black),
+//                   //     children: [
+//                   //       TextSpan(
+//                   //         text: '  *',
+//                   //         style: TextStyle(
+//                   //             color: Colors
+//                   //                 .red), // You can style the asterisk differently
+//                   //       ),
+//                   //     ],
+//                   //   ),
+//                   // ),
 //                   CustomeTextField(
 //                     width: double.infinity,
 //                     control: passwordNameController,
-//                     // labelText: "Location",
+//                     labelText: "Password",
 //                     borderColor: Color(0xFFEEEEEE),
 //                   ),
-//                   RichText(
-//                     text: TextSpan(
-//                       text: 'Store Name',
-//                       style: TextStyle(color: Colors.black),
-//                       children: [
-//                         TextSpan(
-//                           text: '  *',
-//                           style: TextStyle(
-//                               color: Colors
-//                                   .red), // You can style the asterisk differently
-//                         ),
-//                       ],
-//                     ),
-//                   ),
+//                   // RichText(
+//                   //   text: TextSpan(
+//                   //     text: 'password',
+//                   //     style: TextStyle(color: Colors.black),
+//                   //     children: [
+//                   //       TextSpan(
+//                   //         text: '  *',
+//                   //         style: TextStyle(
+//                   //             color: Colors
+//                   //                 .red), // You can style the asterisk differently
+//                   //       ),
+//                   //     ],
+//                   //   ),
+//                   // ),
 //                   CustomeTextField(
 //                     control: storeNameController,
-//                     // labelText: "Store Name",
+//                     labelText: "Store Name",
 //                     width: double.infinity,
 //                     borderColor: Color(0xFFEEEEEE),
 //                   ),
 
-//                   Text(
-//                     "E mail",
-//                     style: TextStyle(color: Colors.black),
-//                   ),
+//                   // Text(
+//                   //   "E mail",
+//                   //   style: TextStyle(color: Colors.black),
+//                   // ),
 //                   CustomeTextField(
 //                     width: double.infinity,
 //                     control: mailController,
-//                     // labelText: "Location",
+//                     labelText: "E mail",
 //                     borderColor: Color(0xFFEEEEEE),
 //                   ),
 
-//                   RichText(
-//                     text: TextSpan(
-//                       text: 'Address',
-//                       style: TextStyle(color: Colors.black),
-//                       children: [
-//                         TextSpan(
-//                           text: '  *',
-//                           style: TextStyle(
-//                               color: Colors
-//                                   .red), // You can style the asterisk differently
-//                         ),
-//                       ],
-//                     ),
-//                   ),
+//                   // RichText(
+//                   //   text: TextSpan(
+//                   //     text: 'Address',
+//                   //     style: TextStyle(color: Colors.black),
+//                   //     children: [
+//                   //       TextSpan(
+//                   //         text: '  *',
+//                   //         style: TextStyle(
+//                   //             color: Colors
+//                   //                 .red), // You can style the asterisk differently
+//                   //       ),
+//                   //     ],
+//                   //   ),
+//                   // ),
 //                   CustomeTextField(
 //                     width: double.infinity,
 //                     control: addressController,
 //                     //lines: 3,
-//                     // labelText: "Address",
+//                     labelText: "Address",
 //                     borderColor: Color(0xFFEEEEEE),
 //                   ),
-//                   RichText(
-//                     text: TextSpan(
-//                       text: 'City',
-//                       style: TextStyle(color: Colors.black),
-//                       children: [
-//                         TextSpan(
-//                           text: '  *',
-//                           style: TextStyle(
-//                               color: Colors
-//                                   .red), // You can style the asterisk differently
-//                         ),
-//                       ],
-//                     ),
-//                   ),
+//                   // RichText(
+//                   //   text: TextSpan(
+//                   //     text: 'City',
+//                   //     style: TextStyle(color: Colors.black),
+//                   //     children: [
+//                   //       TextSpan(
+//                   //         text: '  *',
+//                   //         style: TextStyle(
+//                   //             color: Colors
+//                   //                 .red), // You can style the asterisk differently
+//                   //       ),
+//                   //     ],
+//                   //   ),
+//                   // ),
 //                   CustomeTextField(
 //                     width: double.infinity,
 //                     control: cityController,
 //                     // lines: 3,
-//                     // labelText: "Address",
+//                     labelText: "City",
 //                     borderColor: Color(0xFFEEEEEE),
 //                   ),
-//                   RichText(
-//                     text: TextSpan(
-//                       text: 'State',
-//                       style: TextStyle(color: Colors.black),
-//                       children: [
-//                         TextSpan(
-//                           text: '  *',
-//                           style: TextStyle(
-//                               color: Colors
-//                                   .red), // You can style the asterisk differently
-//                         ),
-//                       ],
-//                     ),
-//                   ),
+//                   // RichText(
+//                   //   text: TextSpan(
+//                   //     text: 'State',
+//                   //     style: TextStyle(color: Colors.black),
+//                   //     children: [
+//                   //       TextSpan(
+//                   //         text: '  *',
+//                   //         style: TextStyle(
+//                   //             color: Colors
+//                   //                 .red), // You can style the asterisk differently
+//                   //       ),
+//                   //     ],
+//                   //   ),
+//                   // ),
 //                   CustomeTextField(
 //                     width: double.infinity,
 //                     control: stateController,
 //                     // lines: 3,
-//                     // labelText: "Address",
+//                     labelText: "State",
 //                     borderColor: Color(0xFFEEEEEE),
 //                   ),
 
-//                   RichText(
-//                     text: TextSpan(
-//                       text: 'Pincode',
-//                       style: TextStyle(color: Colors.black),
-//                       children: [
-//                         TextSpan(
-//                           text: '  *',
-//                           style: TextStyle(
-//                               color: Colors
-//                                   .red), // You can style the asterisk differently
-//                         ),
-//                       ],
-//                     ),
-//                   ),
+//                   // RichText(
+//                   //   text: TextSpan(
+//                   //     text: 'Pincode',
+//                   //     style: TextStyle(color: Colors.black),
+//                   //     children: [
+//                   //       TextSpan(
+//                   //         text: '  *',
+//                   //         style: TextStyle(
+//                   //             color: Colors
+//                   //                 .red), // You can style the asterisk differently
+//                   //       ),
+//                   //     ],
+//                   //   ),
+//                   // ),
 //                   CustomeTextField(
 //                     width: double.infinity,
 //                     control: zipcodeController,
 //                     // lines: 3,
-//                     // labelText: "Address",
+//                     labelText: "Pincode",
 //                     borderColor: Color(0xFFEEEEEE),
 //                   ),
-//                   Text(
-//                     "Gst No.",
-//                     style: TextStyle(color: Colors.black),
-//                   ),
+//                   // Text(
+//                   //   "Gst No.",
+//                   //   style: TextStyle(color: Colors.black),
+//                   // ),
 //                   CustomeTextField(
 //                     width: double.infinity,
 //                     control: gstController,
 //                     // lines: 3,
-//                     // labelText: "Address",
+//                     labelText: "Gst Number (Optional)",
 //                     borderColor: Color(0xFFEEEEEE),
 //                   ),
-//                   Text(
-//                     "Pan No.",
-//                     style: TextStyle(color: Colors.black),
-//                   ),
+//                   // Text(
+//                   //   "Pan No.",
+//                   //   style: TextStyle(color: Colors.black),
+//                   // ),
 //                   CustomeTextField(
 //                     width: double.infinity,
 //                     control: pannoController,
 //                     // lines: 3,
-//                     // labelText: "Address",
+//                     labelText: "Pan Number (Optional)",
 //                     borderColor: Color(0xFFEEEEEE),
 //                   ),
 
-//                   RichText(
-//                     text: TextSpan(
-//                       text: 'Owner Name',
-//                       style: TextStyle(color: Colors.black),
-//                       children: [
-//                         TextSpan(
-//                           text: '  *',
-//                           style: TextStyle(
-//                               color: Colors
-//                                   .red), // You can style the asterisk differently
-//                         ),
-//                       ],
-//                     ),
-//                   ),
+//                   // RichText(
+//                   //   text: TextSpan(
+//                   //     text: 'Owner Name',
+//                   //     style: TextStyle(color: Colors.black),
+//                   //     children: [
+//                   //       TextSpan(
+//                   //         text: '  *',
+//                   //         style: TextStyle(
+//                   //             color: Colors
+//                   //                 .red), // You can style the asterisk differently
+//                   //       ),
+//                   //     ],
+//                   //   ),
+//                   // ),
 //                   CustomeTextField(
 //                     width: double.infinity,
 //                     control: ownerNameController,
-//                     // labelText: "Preparator Name",
+//                     labelText: "Owner Name",
 //                     borderColor: Color(0xFFEEEEEE),
 //                   ),
 
-//                   RichText(
-//                     text: TextSpan(
-//                       text: 'Mobile Number',
-//                       style: TextStyle(color: Colors.black),
-//                       children: [
-//                         TextSpan(
-//                           text: '  *',
-//                           style: TextStyle(
-//                               color: Colors
-//                                   .red), // You can style the asterisk differently
-//                         ),
-//                       ],
-//                     ),
-//                   ),
+//                   // RichText(
+//                   //   text: TextSpan(
+//                   //     text: 'Mobile Number',
+//                   //     style: TextStyle(color: Colors.black),
+//                   //     children: [
+//                   //       TextSpan(
+//                   //         text: '  *',
+//                   //         style: TextStyle(
+//                   //             color: Colors
+//                   //                 .red), // You can style the asterisk differently
+//                   //       ),
+//                   //     ],
+//                   //   ),
+//                   // ),
 //                   CustomeTextField(
 //                     width: double.infinity,
 //                     control: mobileNumberController,
 //                     type: TextInputType.phone,
-//                     //labelText: "Mobile Number",
+//                     labelText: "Mobile Number",
+//                     borderColor: Color(0xFFEEEEEE),
+//                   ),
+//                    CustomeTextField(
+//                     width: double.infinity,
+//                     control: anothermobileNumberController,
+//                     type: TextInputType.phone,
+//                     labelText: "Contact Number",
 //                     borderColor: Color(0xFFEEEEEE),
 //                   ),
 
@@ -1676,7 +1687,7 @@ class _AddStorePageState extends State<AddStorePage> {
 //                             ? ClipRRect(
 //                                 borderRadius: BorderRadius.circular(16),
 //                                 child: Container(
-//                                   width: 160,
+//                                   width: 360,
 //                                   height: 160,
 //                                   decoration: BoxDecoration(
 //                                     image: DecorationImage(
@@ -1700,7 +1711,7 @@ class _AddStorePageState extends State<AddStorePage> {
 //                                     borderRadius: BorderRadius.circular(
 //                                         16), // Adjust the radius as needed
 //                                     child: Container(
-//                                       width: 160,
+//                                       width: 360,
 //                                       height: 160,
 //                                       decoration: BoxDecoration(
 //                                         image: DecorationImage(

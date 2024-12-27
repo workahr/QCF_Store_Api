@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "475338320920",
+    "project_id": "namdelivery-admin-store",
+    "storage_bucket": "namdelivery-admin-store.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:475338320920:android:0c0b0c37c169eb8210a76d",
+        "android_client_info": {
+          "package_name": "com.workahr.namstore"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAmcgGwAtn9-VA8i99GGdUfE_i6moxdEUc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -15,8 +15,11 @@ import 'pages/landing_page.dart';
 import 'pages/loginmanagement.dart';
 import 'pages/maincontainer.dart';
 
-// import 'package:flutter/services.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 
+// import 'package:flutter/services.dart';
+final navigatorKey = GlobalKey<NavigatorState>();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -97,6 +100,23 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       // checkuserlog("-pause");
     }
   }
+
+  // Future<void> main() async {
+  //   WidgetsFlutterBinding.ensureInitialized();
+
+  //   if (!kIsWeb) {
+  //     await Firebase.initializeApp();
+  //     await FirebaseAPIServices().initNotifications();
+  //   }
+
+  //   BaseController baseCtrl = Get.put(BaseController());
+
+  //   String? token = baseCtrl.fbUserId;
+
+  //   print("token $token");
+
+  //   runApp(MyApp());
+  // }
 
   @override
   Widget build(BuildContext context) {

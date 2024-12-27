@@ -1815,10 +1815,30 @@ class NamFoodApiService {
 
   //Admin  Add Category
 
-  Future Adminaddcategory(postData, id) async {
+  // Future Adminaddcategory(postData, id) async {
+  //   try {
+  //     final url =
+  //         Uri.parse('${liveApiPath}v1/createitemcategory_admin?store_id=$id');
+  //     print("test1 ");
+  //     final response = await client.post(
+  //       url,
+  //       headers: headerData,
+  //       body: jsonEncode(postData),
+  //     );
+  //     print("test2 ");
+  //     if (response.statusCode == 200) {
+  //       return response.body;
+  //     } else {
+  //       return response;
+  //     }
+  //   } catch (e) {
+  //     return e;
+  //   }
+  // }
+
+  Future Adminaddcategory(postData) async {
     try {
-      final url =
-          Uri.parse('${liveApiPath}v1/createitemcategory_admin?store_id=$id');
+      final url = Uri.parse('${liveApiPath}v1/createitemcategory_admin');
       print("test1 ");
       final response = await client.post(
         url,
@@ -2820,10 +2840,30 @@ class NamFoodApiService {
 
   //Admin update itemcategory
 
-  Future AdminupdateItemCategory(postData, id) async {
+  // Future AdminupdateItemCategory(postData, id) async {
+  //   try {
+  //     final url =
+  //         Uri.parse('${liveApiPath}v1/updateitemcategory_admin?store_id=$id');
+  //     final response = await client.post(url,
+  //         headers: headerData, body: jsonEncode(postData));
+
+  //     if (response.statusCode == 200) {
+  //       final json = response.body;
+  //       return json;
+  //     } else {
+  //       print('error');
+  //       throw Exception(
+  //           'Failed. Status code: ${response.statusCode} ${response.toString()}');
+  //     }
+  //   } catch (e) {
+  //     print('catcherror ${e}');
+  //     return e;
+  //   }
+  // }
+
+  Future AdminupdateItemCategory(postData) async {
     try {
-      final url =
-          Uri.parse('${liveApiPath}v1/updateitemcategory_admin?store_id=$id');
+      final url = Uri.parse('${liveApiPath}v1/updateitemcategory_admin');
       final response = await client.post(url,
           headers: headerData, body: jsonEncode(postData));
 
@@ -2939,6 +2979,46 @@ class NamFoodApiService {
     } catch (e) {
       print('catcherror ${e}');
       return e;
+    }
+  }
+
+  // Admin edit the order
+
+  Future admineditorder(postData) async {
+    try {
+      final url = Uri.parse('${liveApiPath}v1/alterorderitem');
+      final response = await client.post(url,
+          headers: headerData, body: jsonEncode(postData));
+
+      if (response.statusCode == 200) {
+        final json = response.body;
+        return json;
+      } else {
+        print('error');
+        throw Exception(
+            'Failed. Status code: ${response.statusCode} ${response.toString()}');
+      }
+    } catch (e) {
+      print('catcherror ${e}');
+      return e;
+    }
+  }
+
+  //Admin Delete order item
+  Future admindeleteitem(postData) async {
+    try {
+      final url = Uri.parse('${liveApiPath}v1/deleteorderitem');
+      final response = await client.post(url,
+          headers: headerData, body: jsonEncode(postData));
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        print('error response $response');
+        throw Exception(response.toString());
+      }
+    } catch (e) {
+      print('error $e');
+      handleError();
     }
   }
 }

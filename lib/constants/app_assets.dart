@@ -161,6 +161,5 @@ class AppAssets {
   static const String user_fill = 'assets/images/User_fill.png';
   static const String dashboard_fill = 'assets/images/dashboard.png';
   static const String dashboard_outline = 'assets/images/dashboard_outline.png';
-
   static const String cart_home_icon = 'assets/images/cart_home_icon.png';
 }
