@@ -40,18 +40,31 @@ class _EditorderState extends State<Editorder> {
   }
 
   Future admindeleteCart(id) async {
-    Map<String, dynamic> postData = {
-      "order_item_id": id,
-    };
+    final dialogBoxResult = await showAlertDialogInfo(
+        context: context,
+        title: 'Are you sure?',
+        msg: 'You want to delete this data',
+        status: 'danger',
+        okBtn: false);
+    if (dialogBoxResult == 'OK') {
+      Map<String, dynamic> postData = {
+        "order_item_id": id,
+      };
 
-    var result = await apiService.admindeleteitem(postData);
-    var response = addQuantityModelFromJson(result);
-    if (response.status.toString() == 'SUCCESS') {
-      showInSnackBar(context, response.message.toString());
-    } else {
-      showInSnackBar(context, response.message.toString());
+      var result = await apiService.admindeleteitem(postData);
+      var response = addQuantityModelFromJson(result);
+      if (response.status.toString() == 'SUCCESS') {
+        showInSnackBar(context, response.message.toString());
+        setState(() {
+          setState(() {
+            widget.items.removeWhere((item) => item.orderItemId == id);
+          });
+        });
+      } else {
+        showInSnackBar(context, response.message.toString());
+      }
+      setState(() {});
     }
-    setState(() {});
   }
 
   Widget _buildShimmerPlaceholder() {
@@ -110,12 +123,12 @@ class _EditorderState extends State<Editorder> {
     );
   }
 
-  Future AdmineditOrderbyid(id) async {
+  Future AdmineditOrderbyid(id, newValue) async {
     await apiService.getBearerToken();
 
     Map<String, dynamic> postData = {
       "order_item_id": id,
-      "quantity": quantitycontroller.text,
+      "quantity": newValue,
     };
     print("edit order $postData");
     var result = await apiService.admineditorder(postData);
@@ -123,13 +136,16 @@ class _EditorderState extends State<Editorder> {
     AdmineditorderModel response = admineditorderModelFromJson(result);
 
     if (response.status.toString() == 'SUCCESS') {
-      showInSnackBar(context, response.message.toString());
-      Navigator.pop(context, {'update': true});
+      // showInSnackBar(context, response.message.toString());
+      showInSnackBar(context, "Order Updated Successfully");
+      setState(() {});
     } else {
       print(response.message.toString());
       showInSnackBar(context, response.message.toString());
     }
   }
+
+  late String newqty;
 
   @override
   Widget build(BuildContext context) {
@@ -171,234 +187,7 @@ class _EditorderState extends State<Editorder> {
                           ),
                         ],
                       ),
-                      child:
-                          // ListView.builder(
-                          //   shrinkWrap: true, // Prevents infinite height error
-                          //   physics:
-                          //       NeverScrollableScrollPhysics(), // Disable ListView scroll
-                          //   itemCount: widget.items.length,
-                          //   itemBuilder: (context, index) {
-                          //     // Initialize a controller dynamically for each item based on the initial quantity value
-                          //     TextEditingController quantityController =
-                          //         TextEditingController(
-                          //       text: widget.items[index].quantity?.toString() ??
-                          //           '0', // Convert the int to a String
-                          //     );
-
-                          //     void updateQuantity(String newValue) {
-                          //       int? newQty = int.tryParse(newValue);
-                          //       if (newQty != null && newQty >= 0) {
-                          //         setState(() {
-                          //           widget.items[index].quantity = newQty;
-
-                          //           widget.items[index].totalPrice = widget
-                          //                   .items[index].quantity
-                          //                   .toString() *
-                          //               int.parse(widget.items[index].price ?? "0");
-                          //         });
-                          //       }
-                          //     }
-
-                          //     return Padding(
-                          //       padding: const EdgeInsets.all(15.0),
-                          //       child: Column(
-                          //         crossAxisAlignment: CrossAxisAlignment.start,
-                          //         children: [
-                          //           Row(
-                          //             mainAxisAlignment:
-                          //                 MainAxisAlignment.spaceBetween,
-                          //             children: [
-                          //               widget.items[index].imageUrl == null
-                          //                   ? ClipRRect(
-                          //                       borderRadius:
-                          //                           BorderRadius.circular(12),
-                          //                       child: Image.asset(
-                          //                         AppAssets.cartBiriyani,
-                          //                         height: 60,
-                          //                         width: 60,
-                          //                         fit: BoxFit.fill,
-                          //                       ),
-                          //                     )
-                          //                   : ClipRRect(
-                          //                       borderRadius:
-                          //                           BorderRadius.circular(12),
-                          //                       child: Image.network(
-                          //                         AppConstants.imgBaseUrl +
-                          //                             widget.items[index].imageUrl
-                          //                                 .toString(),
-                          //                         height: 80,
-                          //                         width: 70,
-                          //                         fit: BoxFit.cover,
-                          //                       ),
-                          //                     ),
-                          //               SizedBox(width: 5),
-                          //               Expanded(
-                          //                 child: Column(
-                          //                   crossAxisAlignment:
-                          //                       CrossAxisAlignment.start,
-                          //                   children: [
-                          //                     Row(
-                          //                       children: [
-                          //                         // Item name text with max width constraint
-                          //                         Expanded(
-                          //                           child: Text(
-                          //                             widget
-                          //                                 .items[index].productName
-                          //                                 .toString(),
-                          //                             maxLines: 2,
-                          //                             overflow:
-                          //                                 TextOverflow.ellipsis,
-                          //                             style: TextStyle(
-                          //                               fontSize: 15.0,
-                          //                               fontWeight: FontWeight.bold,
-                          //                             ),
-                          //                           ),
-                          //                         ),
-                          //                         Column(
-                          //                           children: [
-                          //                             Row(
-                          //                               children: [
-                          //                                 Icon(
-                          //                                   Icons.delete_outlined,
-                          //                                   color: AppColors.red,
-                          //                                 ),
-                          //                                 SizedBox(height: 3),
-                          //                                 HeadingWidget(
-                          //                                   title: 'Remove',
-                          //                                   color: AppColors.red,
-                          //                                   fontSize: 13.0,
-                          //                                 ),
-                          //                               ],
-                          //                             ),
-                          //                             SizedBox(height: 2),
-                          //                             Container(
-                          //                               height: 1,
-                          //                               width: 70,
-                          //                               color: AppColors.red,
-                          //                             ),
-                          //                           ],
-                          //                         ),
-                          //                       ],
-                          //                     ),
-                          //                     SizedBox(height: 8.0),
-                          //                     HeadingWidget(
-                          //                       title: curFormatWithDecimal(
-                          //                               value: emptyToZero(widget
-                          //                                   .items[index].price))
-                          //                           .toString(),
-                          //                       color: AppColors.black,
-                          //                     ),
-                          //                     SizedBox(height: 8.0),
-                          //                     Row(
-                          //                       mainAxisAlignment:
-                          //                           MainAxisAlignment.spaceBetween,
-                          //                       children: [
-                          //                         // Quantity section
-                          //                         Row(
-                          //                           children: [
-                          //                             HeadingWidget(title: 'Qty'),
-                          //                             SizedBox(width: 10),
-                          //                             Container(
-                          //                               width: 50,
-                          //                               height: 30,
-                          //                               alignment: Alignment.center,
-                          //                               child: TextFormField(
-                          //                                 controller:
-                          //                                     quantityController,
-                          //                                 keyboardType:
-                          //                                     TextInputType.number,
-                          //                                 cursorColor:
-                          //                                     AppColors.red,
-                          //                                 textAlign:
-                          //                                     TextAlign.center,
-                          //                                 onChanged: (newValue) {
-                          //                                   updateQuantity(
-                          //                                       newValue); // Update quantity when changed
-                          //                                 },
-                          //                                 inputFormatters: [
-                          //                                   // Restrict the input to only numeric values and limit the number of digits
-                          //                                   FilteringTextInputFormatter
-                          //                                       .digitsOnly,
-                          //                                   LengthLimitingTextInputFormatter(
-                          //                                       2), // Allow only 2 digits
-                          //                                 ],
-                          //                                 decoration:
-                          //                                     InputDecoration(
-                          //                                   border:
-                          //                                       const OutlineInputBorder(
-                          //                                     borderRadius:
-                          //                                         BorderRadius.all(
-                          //                                             Radius
-                          //                                                 .circular(
-                          //                                                     10)),
-                          //                                   ),
-                          //                                   enabledBorder:
-                          //                                       OutlineInputBorder(
-                          //                                     borderRadius:
-                          //                                         BorderRadius.all(
-                          //                                             Radius
-                          //                                                 .circular(
-                          //                                                     10)),
-                          //                                     borderSide: BorderSide(
-                          //                                         color: AppColors
-                          //                                             .lightGrey5),
-                          //                                   ),
-                          //                                   focusedBorder:
-                          //                                       OutlineInputBorder(
-                          //                                     borderRadius:
-                          //                                         BorderRadius.all(
-                          //                                             Radius
-                          //                                                 .circular(
-                          //                                                     10)),
-                          //                                     borderSide:
-                          //                                         BorderSide(
-                          //                                             color:
-                          //                                                 AppColors
-                          //                                                     .red),
-                          //                                   ),
-                          //                                   floatingLabelStyle:
-                          //                                       TextStyle(
-                          //                                           color: AppColors
-                          //                                               .red),
-                          //                                   errorStyle: TextStyle(
-                          //                                       color: Colors.red),
-                          //                                   contentPadding:
-                          //                                       EdgeInsets
-                          //                                           .symmetric(
-                          //                                               vertical:
-                          //                                                   8),
-                          //                                 ),
-                          //                                 cursorHeight: 20,
-                          //                               ),
-                          //                             ),
-                          //                           ],
-                          //                         ),
-                          //                         SizedBox(width: 6),
-
-                          //                         // Price section (updated to show total price based on qty)
-                          //                         HeadingWidget(
-                          //                           title: curFormatWithDecimal(
-                          //                                   value: emptyToZero(
-                          //                                       widget.items[index]
-                          //                                           .totalPrice))
-                          //                               .toString(),
-                          //                           fontSize: 16.0,
-                          //                           fontWeight: FontWeight.bold,
-                          //                         ),
-                          //                       ],
-                          //                     ),
-                          //                   ],
-                          //                 ),
-                          //               ),
-                          //             ],
-                          //           ),
-                          //         ],
-                          //       ),
-                          //     );
-                          //   },
-                          // )
-
-                          ListView.builder(
+                      child: ListView.builder(
                         shrinkWrap: true,
                         itemCount: widget.items.length,
                         itemBuilder: (context, index) {
@@ -445,14 +234,17 @@ class _EditorderState extends State<Editorder> {
                                             color: Colors.grey,
                                             child: Icon(Icons.image),
                                           )
-                                        : Image.network(
-                                            AppConstants.imgBaseUrl +
-                                                widget.items[index].imageUrl
-                                                    .toString(),
-                                            height: 60,
-                                            width: 60,
-                                            fit: BoxFit.cover,
-                                          ),
+                                        : ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            child: Image.network(
+                                              AppConstants.imgBaseUrl +
+                                                  widget.items[index].imageUrl
+                                                      .toString(),
+                                              height: 60,
+                                              width: 60,
+                                              fit: BoxFit.cover,
+                                            )),
                                     SizedBox(width: 10),
                                     Expanded(
                                       child: Column(
@@ -473,30 +265,6 @@ class _EditorderState extends State<Editorder> {
                                                 maxLines: 2,
                                                 overflow: TextOverflow.ellipsis,
                                               ),
-                                              // Column(
-                                              //   children: [
-                                              //     Row(
-                                              //       children: [
-                                              //         Icon(
-                                              //           Icons.delete_outlined,
-                                              //           color: AppColors.red,
-                                              //         ),
-                                              //         SizedBox(height: 3),
-                                              //         HeadingWidget(
-                                              //           title: 'Remove',
-                                              //           color: AppColors.red,
-                                              //           fontSize: 13.0,
-                                              //         ),
-                                              //       ],
-                                              //     ),
-                                              //     SizedBox(height: 2),
-                                              //     Container(
-                                              //       height: 1,
-                                              //       width: 70,
-                                              //       color: AppColors.red,
-                                              //     ),
-                                              //   ],
-                                              // ),
                                             ],
                                           ),
                                           SizedBox(height: 8.0),
@@ -534,6 +302,9 @@ class _EditorderState extends State<Editorder> {
                                                       onChanged: (newValue) {
                                                         updateQuantity(
                                                             newValue);
+                                                        newqty = newValue;
+                                                        print(
+                                                            "newqty  $newqty");
                                                       },
                                                       inputFormatters: [
                                                         FilteringTextInputFormatter
@@ -610,9 +381,10 @@ class _EditorderState extends State<Editorder> {
                                                   )),
                                               GestureDetector(
                                                   onTap: () {
-                                                    AdmineditOrderbyid(widget
-                                                        .items[index]
-                                                        .orderItemId);
+                                                    AdmineditOrderbyid(
+                                                        widget.items[index]
+                                                            .orderItemId,
+                                                        newqty);
                                                   },
                                                   child: Column(
                                                     children: [

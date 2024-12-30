@@ -43,7 +43,7 @@ class _LoginPageState extends State<LoginPage> {
         Map<String, dynamic> postData = {
           "username": usernameCtrl.text,
           "password": passwordCtrl.text,
-          'mobile_push_id': ""
+          'mobile_push_id': baseCtrl.fbUserId
           // 'mobile_push_id': baseCtrl.fbUserId
         };
         var result = await apiService.storeLogin(postData);

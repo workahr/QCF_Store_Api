@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -17,13 +18,26 @@ import 'pages/maincontainer.dart';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+
+import 'services/firebase_services/firebase_api_services.dart';
 
 // import 'package:flutter/services.dart';
 final navigatorKey = GlobalKey<NavigatorState>();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  BaseController baseCtrl = Get.put(BaseController());
+  // Initialize Firebase Notifications (if applicable)
+  if (!kIsWeb) {
+    await FirebaseAPIServices().initNotifications();
+    BaseController baseCtrl = Get.put(BaseController());
+
+    // Ensure the token is retrieved after initialization
+    String? token = await FirebaseMessaging.instance.getToken();
+    print("token $token");
+    // Initialize Firebase
+    await Firebase.initializeApp();
+  }
 
   runApp(MyApp());
 }

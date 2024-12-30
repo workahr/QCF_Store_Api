@@ -3021,4 +3021,220 @@ class NamFoodApiService {
       handleError();
     }
   }
+
+  //  Add PrimeLocation
+
+  Future addprimelocation(postData) async {
+    try {
+      final url = Uri.parse('${liveApiPath}v1/createmainlocation');
+      print("test1 ");
+      final response = await client.post(
+        url,
+        headers: headerData,
+        body: jsonEncode(postData),
+      );
+      print("test2 ");
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        return response;
+      }
+    } catch (e) {
+      return e;
+    }
+  }
+
+  // Prime Location List
+  Future getprimelocationList() async {
+    try {
+      final url = Uri.parse('${liveApiPath}v1/getallmainlocation');
+      final response = await client.get(
+        url,
+        headers: headerData,
+      );
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        return response;
+      }
+    } catch (e) {
+      return e;
+    }
+  }
+
+  // delete primelocation
+  Future deleteprimelocation(postData) async {
+    print('  delete test $postData');
+    try {
+      final url = Uri.parse('${liveApiPath}v1/deletemainlocation');
+      final response = await client.post(
+        url,
+        headers: headerData,
+        body: jsonEncode(postData),
+      );
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        return [];
+      }
+    } catch (e) {
+      return e;
+    }
+  }
+
+  // Sub Location List
+  Future getsublocationList() async {
+    try {
+      final url = Uri.parse('${liveApiPath}v1/getallsublocation');
+      final response = await client.get(
+        url,
+        headers: headerData,
+      );
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        return response;
+      }
+    } catch (e) {
+      return e;
+    }
+  }
+
+  //  Add SubLocation
+
+  Future addsublocation(postData) async {
+    try {
+      final url = Uri.parse('${liveApiPath}v1/createsublocation');
+      print("test1 ");
+      final response = await client.post(
+        url,
+        headers: headerData,
+        body: jsonEncode(postData),
+      );
+      print("test2 ");
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        return response;
+      }
+    } catch (e) {
+      return e;
+    }
+  }
+
+  // main location
+  Future getallmainlocationList() async {
+    try {
+      final url = Uri.parse('${liveApiPath}v1/getallmainlocation');
+      final response = await client.get(
+        url,
+        headers: headerData,
+      );
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        return response;
+      }
+    } catch (e) {
+      return e;
+    }
+  }
+
+// delete sublocation
+  Future deletesublocation(postData) async {
+    print('  delete test $postData');
+    try {
+      final url = Uri.parse('${liveApiPath}v1/deletesublocation');
+      final response = await client.post(
+        url,
+        headers: headerData,
+        body: jsonEncode(postData),
+      );
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        return [];
+      }
+    } catch (e) {
+      return e;
+    }
+  }
+
+// get PrimelocationByID
+  Future getprimelocationbyid(id) async {
+    try {
+      final url = Uri.parse('${liveApiPath}v1/getmainlocationby?id=$id');
+      final response = await client.get(
+        url,
+        headers: headerData,
+      );
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        return response;
+      }
+    } catch (e) {
+      return e;
+    }
+  }
+// Primelocation update
+
+  Future updateprimelocation(postData) async {
+    try {
+      final url = Uri.parse('${liveApiPath}v1/updatemainlocation');
+      final response = await client.post(url,
+          headers: headerData, body: jsonEncode(postData));
+
+      if (response.statusCode == 200) {
+        final json = response.body;
+        return json;
+      } else {
+        print('error');
+        throw Exception(
+            'Failed. Status code: ${response.statusCode} ${response.toString()}');
+      }
+    } catch (e) {
+      print('catcherror ${e}');
+      return e;
+    }
+  }
+
+// get sublocationByID
+  Future getsublocationbyid(id) async {
+    try {
+      final url = Uri.parse('${liveApiPath}v1/getsublocationby?id=$id');
+      final response = await client.get(
+        url,
+        headers: headerData,
+      );
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        return response;
+      }
+    } catch (e) {
+      return e;
+    }
+  }
+// sublocation update
+
+  Future updatesublocation(postData) async {
+    try {
+      final url = Uri.parse('${liveApiPath}v1/updatesublocation');
+      final response = await client.post(url,
+          headers: headerData, body: jsonEncode(postData));
+
+      if (response.statusCode == 200) {
+        final json = response.body;
+        return json;
+      } else {
+        print('error');
+        throw Exception(
+            'Failed. Status code: ${response.statusCode} ${response.toString()}');
+      }
+    } catch (e) {
+      print('catcherror ${e}');
+      return e;
+    }
+  }
 }
