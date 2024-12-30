@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:namstore/pages/admin_panel/pages/orders_payment.dart';
 import 'package:namstore/pages/order-list/orderlist_page.dart';
+import 'package:namstore/services/comFuncService.dart';
 import 'controllers/base_controller.dart';
 import 'package:flutter/material.dart';
 import 'constants/constants.dart';
@@ -19,27 +20,75 @@ import 'pages/maincontainer.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-
+import 'dart:io' show Platform;
 import 'services/firebase_services/firebase_api_services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:permission_handler/permission_handler.dart';
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 
 // import 'package:flutter/services.dart';
 final navigatorKey = GlobalKey<NavigatorState>();
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Firebase Notifications (if applicable)
-  if (!kIsWeb) {
-    await FirebaseAPIServices().initNotifications();
-    BaseController baseCtrl = Get.put(BaseController());
+  if (Platform.isAndroid) {
+    // Request notification permission on Android 13+
+    if (await Permission.notification.isDenied) {
+      await Permission.notification.request();
+    }
+  }
+  // Initialize Firebase
+  await Firebase.initializeApp();
 
-    // Ensure the token is retrieved after initialization
-    String? token = await FirebaseMessaging.instance.getToken();
-    print("token $token");
-    // Initialize Firebase
-    await Firebase.initializeApp();
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    showNotification(message);
+  });
+
+  if (!kIsWeb) {
+    // await FirebaseAPIServices().initNotifications();
   }
 
+  BaseController baseCtrl = Get.put(BaseController());
+
+  // Ensure the token is retrieved after initialization
+  String? token = await FirebaseMessaging.instance.getToken();
+  print("token $token");
+
   runApp(MyApp());
+}
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  showNotification(message);
+}
+
+Future<void> showNotification(RemoteMessage message) async {
+  print("notify");
+  // Define notification details for Android
+  const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
+    'channel_id_5',
+    'test',
+    sound: RawResourceAndroidNotificationSound('sound'), // Set custom sound
+    importance: Importance.high,
+    priority: Priority.high,
+  );
+  const NotificationDetails platformDetails =
+      NotificationDetails(android: androidDetails);
+  print(platformDetails);
+
+  // Show the notification
+  await flutterLocalNotificationsPlugin.show(
+    0,
+    message.notification?.title,
+    message.notification?.body,
+    platformDetails,
+    payload: 'Custom_Sound_Notification',
+  );
+  // showInSnackBar(context, 'Processing...');
 }
 
 class MyApp extends StatefulWidget with WidgetsBindingObserver {
