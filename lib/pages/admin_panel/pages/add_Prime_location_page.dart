@@ -107,25 +107,33 @@ class _PrimeLocationPageState extends State<PrimeLocationPage> {
 
 //delete
   Future deleteprimelocation(String id) async {
-    await apiService.getBearerToken();
+    final dialogBoxResult = await showAlertDialogInfo(
+        context: context,
+        title: 'Are you sure?',
+        msg: 'You want to delete this data',
+        status: 'danger',
+        okBtn: false);
+    if (dialogBoxResult == 'OK') {
+      await apiService.getBearerToken();
 
-    Map<String, dynamic> postData = {
-      "id": id,
-    };
-    print("delete $postData");
+      Map<String, dynamic> postData = {
+        "id": id,
+      };
+      print("delete $postData");
 
-    var result = await apiService.deleteprimelocation(postData);
-    DeletePrimeLocationModel response =
-        deletePrimeLocationModelFromJson(result);
+      var result = await apiService.deleteprimelocation(postData);
+      DeletePrimeLocationModel response =
+          deletePrimeLocationModelFromJson(result);
 
-    if (response.status.toString() == 'SUCCESS') {
-      showInSnackBar(context, response.message.toString());
-      setState(() {
-        getprimelocationList();
-      });
-    } else {
-      print(response.message.toString());
-      showInSnackBar(context, response.message.toString());
+      if (response.status.toString() == 'SUCCESS') {
+        showInSnackBar(context, response.message.toString());
+        setState(() {
+          getprimelocationList();
+        });
+      } else {
+        print(response.message.toString());
+        showInSnackBar(context, response.message.toString());
+      }
     }
   }
 
@@ -241,252 +249,243 @@ class _PrimeLocationPageState extends State<PrimeLocationPage> {
           ]))),
           Padding(
             padding: EdgeInsets.all(15),
-            child: SizedBox(
-              height: MediaQuery.of(context).size.height * 0.5,
-              child: PrimeListData != null && PrimeListData!.isNotEmpty
-                  ? SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: DataTable(
-                        border: TableBorder.all(
-                          color: Colors.black,
-                          width: 2,
-                        ),
-                        columnSpacing: 14,
-                        horizontalMargin: 6,
-                        columns: [
-                          DataColumn(label: Text('S.No')),
-                          DataColumn(label: Text('Prime Location')),
-                          DataColumn(label: Text('Edit')),
-                          DataColumn(label: Text('Delete')),
-                        ],
-                        rows: List<DataRow>.generate(
-                          PrimeListData!.length,
-                          (index) {
-                            final element = PrimeListData![index];
-                            final PrimeId = element.id?.toString() ?? '';
-                            final primelocation = element.name ?? ' ';
+            child: PrimeListData != null && PrimeListData!.isNotEmpty
+                ? SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: DataTable(
+                      border: TableBorder.all(
+                        color: Colors.black,
+                        width: 2,
+                      ),
+                      columnSpacing: 14,
+                      horizontalMargin: 6,
+                      columns: [
+                        DataColumn(label: Text('S.No')),
+                        DataColumn(label: Text('Prime Location')),
+                        DataColumn(label: Text('Edit')),
+                        DataColumn(label: Text('Delete')),
+                      ],
+                      rows: List<DataRow>.generate(
+                        PrimeListData!.length,
+                        (index) {
+                          final element = PrimeListData![index];
+                          final PrimeId = element.id?.toString() ?? '';
+                          final primelocation = element.name ?? ' ';
 
-                            return DataRow(
-                              cells: [
-                                DataCell(Text((index + 1).toString())),
-                                DataCell(Text(primelocation)),
-                                DataCell(
-                                  TextButton.icon(
-                                    onPressed: () {
-                                      if (PrimeId.isNotEmpty) {
-                                        primelocationController.text =
-                                            primelocation;
+                          return DataRow(
+                            cells: [
+                              DataCell(Text((index + 1).toString())),
+                              DataCell(Text(primelocation)),
+                              DataCell(
+                                TextButton.icon(
+                                  onPressed: () {
+                                    if (PrimeId.isNotEmpty) {
+                                      primelocationController.text =
+                                          primelocation;
 
-                                        showDialog(
-                                          context: context,
-                                          builder: (context) {
-                                            return AlertDialog(
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.all(
-                                                  Radius.circular(30.0),
-                                                ),
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(30.0),
                                               ),
-                                              content: StatefulBuilder(
-                                                builder: (BuildContext context,
-                                                    StateSetter setState) {
-                                                  return SingleChildScrollView(
-                                                    child: ConstrainedBox(
-                                                      constraints:
-                                                          BoxConstraints(
-                                                        maxHeight: MediaQuery
-                                                                    .of(context)
-                                                                .size
-                                                                .height *
-                                                            0.8, // Limit height to 80% of the screen
-                                                      ),
-                                                      child: Form(
-                                                        child: Column(
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          children: [
-                                                            GestureDetector(
-                                                              onTap: () {
-                                                                Navigator.of(
-                                                                        context)
-                                                                    .pop();
-                                                                primelocationController
-                                                                    .clear();
-                                                              },
-                                                              child: Align(
-                                                                alignment:
-                                                                    Alignment
-                                                                        .topRight,
-                                                                child:
-                                                                    CircleAvatar(
-                                                                  radius: 17.0,
-                                                                  backgroundColor:
-                                                                      Colors
-                                                                          .black12,
-                                                                  child: Icon(
-                                                                    Icons.close,
-                                                                    color: Colors
-                                                                        .red,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            SizedBox(
-                                                                height: 20),
-                                                            TextFormField(
-                                                              controller:
-                                                                  primelocationController,
-                                                              decoration:
-                                                                  InputDecoration(
-                                                                hintText:
-                                                                    'Prime Location',
-                                                                border:
-                                                                    OutlineInputBorder(),
-                                                              ),
-                                                            ),
-                                                            SizedBox(
-                                                                height: 10),
-                                                            // TextFormField(
-                                                            //   controller:
-                                                            //       deliverychargeController,
-                                                            //   decoration:
-                                                            //       InputDecoration(
-                                                            //     hintText:
-                                                            //         'Store Price',
-                                                            //     border:
-                                                            //         OutlineInputBorder(),
-                                                            //   ),
-                                                            // ),
-                                                            SizedBox(
-                                                                height: 10),
-                                                            // TextFormField(
-                                                            //   controller:
-                                                            //       deliverychargeController,
-                                                            //   decoration:
-                                                            //       InputDecoration(
-                                                            //     hintText:
-                                                            //         'Selling Price',
-                                                            //     border:
-                                                            //         OutlineInputBorder(),
-                                                            //   ),
-                                                            // ),
-                                                            Container(
-                                                              margin: EdgeInsets
-                                                                  .all(25),
+                                            ),
+                                            content: StatefulBuilder(
+                                              builder: (BuildContext context,
+                                                  StateSetter setState) {
+                                                return SingleChildScrollView(
+                                                  child: ConstrainedBox(
+                                                    constraints: BoxConstraints(
+                                                      maxHeight: MediaQuery.of(
+                                                                  context)
+                                                              .size
+                                                              .height *
+                                                          0.8, // Limit height to 80% of the screen
+                                                    ),
+                                                    child: Form(
+                                                      child: Column(
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children: [
+                                                          GestureDetector(
+                                                            onTap: () {
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pop();
+                                                              primelocationController
+                                                                  .clear();
+                                                            },
+                                                            child: Align(
+                                                              alignment:
+                                                                  Alignment
+                                                                      .topRight,
                                                               child:
-                                                                  ElevatedButton(
-                                                                onPressed: () {
-                                                                  if (primelocationController
-                                                                          .text
-                                                                          .toString() ==
-                                                                      '') {
-                                                                    showInSnackBar(
-                                                                        context,
-                                                                        "Enter the Prime Location");
-                                                                  } else {
-                                                                    updateprimelocation(
-                                                                        PrimeId);
-                                                                  }
-                                                                },
-                                                                child: Text(
-                                                                    'Update'),
-                                                                style:
-                                                                    ButtonStyle(
-                                                                  backgroundColor:
-                                                                      MaterialStateProperty
-                                                                          .all(
-                                                                    AppColors
-                                                                        .red,
-                                                                  ),
-                                                                  padding:
-                                                                      MaterialStateProperty
-                                                                          .all(
-                                                                    EdgeInsets
+                                                                  CircleAvatar(
+                                                                radius: 17.0,
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .black12,
+                                                                child: Icon(
+                                                                  Icons.close,
+                                                                  color: Colors
+                                                                      .red,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          SizedBox(height: 20),
+                                                          TextFormField(
+                                                            controller:
+                                                                primelocationController,
+                                                            decoration:
+                                                                InputDecoration(
+                                                              hintText:
+                                                                  'Prime Location',
+                                                              border:
+                                                                  OutlineInputBorder(),
+                                                            ),
+                                                          ),
+                                                          SizedBox(height: 10),
+                                                          // TextFormField(
+                                                          //   controller:
+                                                          //       deliverychargeController,
+                                                          //   decoration:
+                                                          //       InputDecoration(
+                                                          //     hintText:
+                                                          //         'Store Price',
+                                                          //     border:
+                                                          //         OutlineInputBorder(),
+                                                          //   ),
+                                                          // ),
+                                                          SizedBox(height: 10),
+                                                          // TextFormField(
+                                                          //   controller:
+                                                          //       deliverychargeController,
+                                                          //   decoration:
+                                                          //       InputDecoration(
+                                                          //     hintText:
+                                                          //         'Selling Price',
+                                                          //     border:
+                                                          //         OutlineInputBorder(),
+                                                          //   ),
+                                                          // ),
+                                                          Container(
+                                                            margin:
+                                                                EdgeInsets.all(
+                                                                    25),
+                                                            child:
+                                                                ElevatedButton(
+                                                              onPressed: () {
+                                                                if (primelocationController
+                                                                        .text
+                                                                        .toString() ==
+                                                                    '') {
+                                                                  showInSnackBar(
+                                                                      context,
+                                                                      "Enter the Prime Location");
+                                                                } else {
+                                                                  updateprimelocation(
+                                                                      PrimeId);
+                                                                }
+                                                              },
+                                                              child: Text(
+                                                                  'Update'),
+                                                              style:
+                                                                  ButtonStyle(
+                                                                backgroundColor:
+                                                                    MaterialStateProperty
                                                                         .all(
-                                                                            15),
-                                                                  ),
-                                                                  textStyle:
-                                                                      MaterialStateProperty
-                                                                          .all(
-                                                                    TextStyle(
-                                                                      fontSize:
-                                                                          16,
-                                                                      color: Colors
-                                                                          .white,
-                                                                    ),
+                                                                  AppColors.red,
+                                                                ),
+                                                                padding:
+                                                                    MaterialStateProperty
+                                                                        .all(
+                                                                  EdgeInsets
+                                                                      .all(15),
+                                                                ),
+                                                                textStyle:
+                                                                    MaterialStateProperty
+                                                                        .all(
+                                                                  TextStyle(
+                                                                    fontSize:
+                                                                        16,
+                                                                    color: Colors
+                                                                        .white,
                                                                   ),
                                                                 ),
                                                               ),
                                                             ),
-                                                          ],
-                                                        ),
+                                                          ),
+                                                        ],
                                                       ),
                                                     ),
-                                                  );
-                                                },
-                                              ),
-                                            );
-                                          },
-                                        );
-                                      }
-                                    },
-                                    icon: Icon(Icons.edit, color: Colors.blue),
-                                    label: Text('Edit'),
-                                  ),
-                                ),
-                                DataCell(
-                                  TextButton.icon(
-                                    onPressed: () {
-                                      if (PrimeId.isNotEmpty) {
-                                        showDialog(
-                                          context: context,
-                                          builder: (context) => AlertDialog(
-                                            title: Text(
-                                              'Confirm Deletion',
-                                              style:
-                                                  TextStyle(color: Colors.red),
+                                                  ),
+                                                );
+                                              },
                                             ),
-                                            content: Text(
-                                                'Do you really want to delete this Prime Location?'),
-                                            actions: [
-                                              TextButton(
-                                                onPressed: () {
-                                                  Navigator.of(context).pop();
-                                                  deleteprimelocation(PrimeId);
-                                                },
-                                                child: Text('Confirm',
-                                                    style: TextStyle(
-                                                        color: Colors.red)),
-                                              ),
-                                              TextButton(
-                                                onPressed: () {
-                                                  Navigator.of(context).pop();
-                                                },
-                                                child: Text('Cancel',
-                                                    style: TextStyle(
-                                                        color: Colors.grey)),
-                                              ),
-                                            ],
-                                          ),
-                                        );
-                                      }
-                                    },
-                                    icon: Icon(Icons.delete, color: Colors.red),
-                                    label: Text('Delete'),
-                                  ),
+                                          );
+                                        },
+                                      );
+                                    }
+                                  },
+                                  icon: Icon(Icons.edit, color: Colors.blue),
+                                  label: Text('Edit'),
                                 ),
-                              ],
-                            );
-                          },
-                        ),
-                      ),
-                    )
-                  : Center(
-                      child: Text(
-                        'No categories found.',
-                        style: TextStyle(fontSize: 16, color: Colors.grey),
+                              ),
+                              DataCell(
+                                TextButton.icon(
+                                  onPressed: () {
+                                    if (PrimeId.isNotEmpty) {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                          title: Text(
+                                            'Confirm Deletion',
+                                            style: TextStyle(color: Colors.red),
+                                          ),
+                                          content: Text(
+                                              'Do you really want to delete this Prime Location?'),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                                deleteprimelocation(PrimeId);
+                                              },
+                                              child: Text('Confirm',
+                                                  style: TextStyle(
+                                                      color: Colors.red)),
+                                            ),
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: Text('Cancel',
+                                                  style: TextStyle(
+                                                      color: Colors.grey)),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    }
+                                  },
+                                  icon: Icon(Icons.delete, color: Colors.red),
+                                  label: Text('Delete'),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
                       ),
                     ),
-            ),
+                  )
+                : Center(
+                    child: Text(
+                      'No categories found.',
+                      style: TextStyle(fontSize: 16, color: Colors.grey),
+                    ),
+                  ),
           ),
         ])));
   }

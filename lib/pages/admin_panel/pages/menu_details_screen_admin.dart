@@ -11,6 +11,7 @@ import '../../../services/comFuncService.dart';
 import '../../../services/nam_food_api_service.dart';
 import '../../../widgets/heading_widget.dart';
 
+import '../../maincontainer.dart';
 import '../api_model/admin_delete_menu_model.dart';
 import '../api_model/menu_details_model.dart';
 import '../api_model/adminmenu_edit_model.dart';
@@ -48,9 +49,11 @@ class MenuDetailsScreenAdmin extends StatefulWidget {
 class _MenuDetailsScreenAdminState extends State<MenuDetailsScreenAdmin> {
   final NamFoodApiService apiService = NamFoodApiService();
 
-  bool? isOnDuty;
+  // bool? isOnDuty;
+  bool isOnDuty = false;
+
   bool inStock1 = true;
-  String toggleTitle = "On Duty";
+  String toggleTitle = "Off Duty";
   bool? inStock;
   @override
   void initState() {
@@ -59,6 +62,8 @@ class _MenuDetailsScreenAdminState extends State<MenuDetailsScreenAdmin> {
     // getMyStoreDetails();
     getMenuAdminList();
     print(widget.storestatus);
+    isOnDuty = widget.storestatus == "1";
+    toggleTitle = isOnDuty ? "On Duty" : "Off Duty";
   }
 
   bool isLoading = false;
@@ -232,8 +237,14 @@ class _MenuDetailsScreenAdminState extends State<MenuDetailsScreenAdmin> {
         storeStatusUpdatemodelFromJson(result);
 
     if (response.status.toString() == 'SUCCESS') {
-      showInSnackBar(context, response.message.toString());
+      // showInSnackBar(context, response.message.toString());
+      showInSnackBar(context, "Store Status updated");
       //    Navigator.pop(context);
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+            builder: (context) => AdminMainContainer(admininitialPage: 3)),
+        (Route<dynamic> route) => false,
+      );
       setState(() {
         //  getMyStoreDetails(); // Update the state variable
       });
@@ -287,52 +298,78 @@ class _MenuDetailsScreenAdminState extends State<MenuDetailsScreenAdmin> {
           Icons.menu,
           color: Colors.white,
         ),
-        // actions: [
-        //   Padding(
-        //     padding: const EdgeInsets.all(10.0),
-        //     child: Row(
-        //       mainAxisAlignment: MainAxisAlignment.end,
-        //       children: [
-        //         HeadingWidget(
-        //           title: toggleTitle.toString(),
-        //           color: Colors.white,
-        //           fontSize: 18.0,
-        //         ),
-        //         SizedBox(
-        //           width: 8.0,
-        //         ),
-        //       Padding(
-        //           padding: const EdgeInsets.symmetric(vertical: 0.0),
-        //           child: Transform.scale(
-        //               scale: 0.9,
-        //               child: Switch(
-        //                 value: widget.storestatus == 1, // isOnDuty,
-        //                 onChanged: (value1) {
-        //                   setState(() {
-        //                     isOnDuty = value1;
-        //                     if (widget.storestatus == 1) {
-        //                       toggleTitle = "On Duty";
-        //                     } else {
-        //                       toggleTitle = "Off Duty";
-        //                     }
-        //                     updateStoreStatus(value1 ? 1 : 0);
-        //                     print(value1 ? 1 : 0);
-        //                   });
-        //                 },
-        //                 activeColor: Colors.white,
-        //                 activeTrackColor: Colors.green,
-        //                 inactiveThumbColor: Colors.grey,
-        //                 inactiveTrackColor: Colors.grey.shade300,
-        //               ))),
-        //     ],
-        //   ),
-        // )
-        // ],
-        // shape: const RoundedRectangleBorder(
-        //   borderRadius: BorderRadius.vertical(
-        //     bottom: Radius.circular(30),
-        //   ),
-        // ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                HeadingWidget(
+                  title: toggleTitle.toString(),
+                  color: Colors.white,
+                  fontSize: 18.0,
+                ),
+                SizedBox(
+                  width: 8.0,
+                ),
+                // Padding(
+                //     padding: const EdgeInsets.symmetric(vertical: 0.0),
+                //     child: Transform.scale(
+                //         scale: 0.9,
+                //         child: Switch(
+                //           value: widget.storestatus == 1, // isOnDuty,
+                //           onChanged: (value1) {
+                //             setState(() {
+                //               print("status ${widget.storestatus}");
+                //               isOnDuty = value1;
+                //               if (widget.storestatus == 1) {
+                //                 toggleTitle = "On Duty";
+                //               } else {
+                //                 toggleTitle = "Off Duty";
+                //               }
+                //               updateStoreStatus(value1 ? 1 : 0);
+                //               print(value1 ? 1 : 0);
+                //             });
+                //           },
+                //           activeColor: Colors.white,
+                //           activeTrackColor: Colors.green,
+                //           inactiveThumbColor: Colors.grey,
+                //           inactiveTrackColor: Colors.grey.shade300,
+                //         ))),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 0.0),
+                  child: Transform.scale(
+                    scale: 0.9,
+                    child: Switch(
+                      value: isOnDuty, // Use the local boolean value
+                      onChanged: (value) {
+                        setState(() {
+                          isOnDuty = value;
+
+                          // Send updated status as "1" or "0"
+                          updateStoreStatus(value ? "1" : "0");
+
+                          // Optional: Debugging print statement
+                          print(
+                              "Switch toggled. New status: ${value ? "1" : "0"}");
+                        });
+                      },
+                      activeColor: Colors.white,
+                      activeTrackColor: Colors.green,
+                      inactiveThumbColor: Colors.grey,
+                      inactiveTrackColor: Colors.grey.shade300,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          )
+        ],
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(30),
+          ),
+        ),
         backgroundColor: Color(0xFFE23744),
         automaticallyImplyLeading: false,
       ),
