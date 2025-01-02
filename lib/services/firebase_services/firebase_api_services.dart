@@ -61,6 +61,7 @@ class FirebaseAPIServices {
               androidChannel.id,
               androidChannel.name,
               channelDescription: androidChannel.description,
+              sound: RawResourceAndroidNotificationSound('sound'),
               // TODO add a proper drawable resource to android, for now using
               //      one that already exists in example app.
               icon: '@mipmap/ic_launcher',

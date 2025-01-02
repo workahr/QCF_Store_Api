@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:namstore/constants/app_colors.dart';
 import 'package:namstore/widgets/heading_widget.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../constants/app_assets.dart';
 import '../../services/comFuncService.dart';
@@ -68,7 +69,15 @@ class _DashboardPageState extends State<DashboardPage> {
           isLoading = false;
           print(orderListAll);
 
-          pendingList = filterOrdersByStatus("Order Placed");
+          //  pendingList = filterOrdersByStatus("Order Placed" || "Order Picked");
+
+          pendingList = orderListAll.where((entry) {
+            return (entry.orderStatus == "Order Placed" ||
+                    entry.orderStatus == "Order Picked") &&
+                entry.deliveryPartnerId != '0';
+            //  &&
+            // DateFormat('yyyy-MM-dd').format(entry.createdDate!) == today;
+          }).toList();
           print(
               "Filtered Orders by 'Pending': ${filterOrdersByStatus("Order Placed")}");
           preparingList = filterOrdersByStatus("Order Confirmed");
@@ -431,6 +440,15 @@ class _DashboardPageState extends State<DashboardPage> {
     }
   }
 
+  void _makePhoneCall(String phoneNumber) async {
+    final Uri telUri = Uri(scheme: 'tel', path: phoneNumber);
+    if (await canLaunchUrl(telUri)) {
+      await launchUrl(telUri);
+    } else {
+      throw 'Could not launch $telUri';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -441,6 +459,17 @@ class _DashboardPageState extends State<DashboardPage> {
             Icons.menu,
             color: Colors.white,
           ),
+          // title: Container(
+          //     margin: EdgeInsets.symmetric(vertical: 1),
+          //     padding: EdgeInsets.all(5),
+          //     decoration: BoxDecoration(
+          //       color: Colors.white,
+          //       borderRadius: BorderRadius.circular(20),
+          //     ),
+          //     child: Text(
+          //       "Customer Care: 9360159625",
+          //       style: TextStyle(fontSize: 14),
+          //     )),
           actions: [
             Padding(
               padding: const EdgeInsets.all(10.0),
@@ -491,6 +520,69 @@ class _DashboardPageState extends State<DashboardPage> {
           ),
           backgroundColor: Color(0xFFE23744),
           automaticallyImplyLeading: false,
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            // Show number or initiate a call
+            showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: Text("Customer Care"),
+                content: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          "Call Us:",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Text(" +91 9360159625"),
+                      ],
+                    ),
+                    GestureDetector(
+                      onTap: () async {
+                        _makePhoneCall("9360159625");
+                      },
+                      child: Container(
+                        height: 35, // Set the size of the circle
+                        width: 35, // Set the size of the circle
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle, // Make it circular
+                          color: Colors.white, // Set the inside color to white
+                          border: Border.all(
+                            color: Colors.red, // Set the border color to red
+                            width: 2, // Set the border width
+                          ),
+                        ),
+                        child: Center(
+                          child: Image.asset(
+                            AppAssets.call_iconfill,
+                            height: 25, // Set the size of the icon
+                            width: 25, // Set the size of the icon
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text("Close"),
+                  ),
+                ],
+              ),
+            );
+          },
+          child: Icon(
+            Icons.phone,
+            color: Colors.white,
+          ),
+          tooltip: 'Customer Care',
+          backgroundColor: AppColors.red, // Set the background color to red
         ),
         body: isLoading
             ? ListView.builder(

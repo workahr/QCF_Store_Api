@@ -4,76 +4,81 @@
 
 import 'dart:convert';
 
-StoreOrderListModel storeOrderListModelFromJson(String str) => StoreOrderListModel.fromJson(json.decode(str));
+StoreOrderListModel storeOrderListModelFromJson(String str) =>
+    StoreOrderListModel.fromJson(json.decode(str));
 
-String storeOrderListModelToJson(StoreOrderListModel data) => json.encode(data.toJson());
+String storeOrderListModelToJson(StoreOrderListModel data) =>
+    json.encode(data.toJson());
 
 class StoreOrderListModel {
-    String status;
-    List<StoreOrderListData> list;
-    String code;
-    String message;
+  String status;
+  List<StoreOrderListData> list;
+  String code;
+  String message;
 
-    StoreOrderListModel({
-        required this.status,
-        required this.list,
-        required this.code,
-        required this.message,
-    });
+  StoreOrderListModel({
+    required this.status,
+    required this.list,
+    required this.code,
+    required this.message,
+  });
 
-    factory StoreOrderListModel.fromJson(Map<String, dynamic> json) => StoreOrderListModel(
+  factory StoreOrderListModel.fromJson(Map<String, dynamic> json) =>
+      StoreOrderListModel(
         status: json["status"],
-        list: List<StoreOrderListData>.from(json["list"].map((x) => StoreOrderListData.fromJson(x))),
+        list: List<StoreOrderListData>.from(
+            json["list"].map((x) => StoreOrderListData.fromJson(x))),
         code: json["code"],
         message: json["message"],
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "status": status,
         "list": List<dynamic>.from(list.map((x) => x.toJson())),
         "code": code,
         "message": message,
-    };
+      };
 }
 
 class StoreOrderListData {
-    String invoiceNumber;
-    int code;
-    int totalProduct;
-    String totalPrice;
-    String deliveryCharges;
-    String orderStatus;
-    String paymentMethod;
-    int prepareMin;
-    DateTime createdDate;
-    int userId;
-    String deliveryPartnerId;
-    String customerName;
-    String customerMobile;
-    String? deliveryBoyName;
-    String? deliveryBoyMobile;
-    List<OrderItems> items;
+  String invoiceNumber;
+  int? code;
+  int? totalProduct;
+  String? totalPrice;
+  String? deliveryCharges;
+  String? orderStatus;
+  String? paymentMethod;
+  int? prepareMin;
+  DateTime createdDate;
+  int? userId;
+  String? deliveryPartnerId;
+  String? customerName;
+  String? customerMobile;
+  String? deliveryBoyName;
+  String? deliveryBoyMobile;
+  List<OrderItems> items;
 
-    StoreOrderListData({
-        required this.invoiceNumber,
-        required this.code,
-        required this.totalProduct,
-        required this.totalPrice,
-        required this.deliveryCharges,
-        required this.orderStatus,
-        required this.paymentMethod,
-        required this.prepareMin,
-        required this.createdDate,
-        required this.userId,
-        required this.deliveryPartnerId,
-        required this.customerName,
-        required this.customerMobile,
-        required this.deliveryBoyName,
-        required this.deliveryBoyMobile,
-        required this.items,
-    });
+  StoreOrderListData({
+    required this.invoiceNumber,
+    this.code,
+    this.totalProduct,
+    this.totalPrice,
+    this.deliveryCharges,
+    this.orderStatus,
+    this.paymentMethod,
+    this.prepareMin,
+    required this.createdDate,
+    this.userId,
+    this.deliveryPartnerId,
+    this.customerName,
+    this.customerMobile,
+    this.deliveryBoyName,
+    this.deliveryBoyMobile,
+    required this.items,
+  });
 
-    factory StoreOrderListData.fromJson(Map<String, dynamic> json) => StoreOrderListData(
+  factory StoreOrderListData.fromJson(Map<String, dynamic> json) =>
+      StoreOrderListData(
         invoiceNumber: json["invoice_number"],
         code: json["code"],
         totalProduct: json["total_product"],
@@ -89,10 +94,11 @@ class StoreOrderListData {
         customerMobile: json["customer_mobile"],
         deliveryBoyName: json["delivery_boy_name"],
         deliveryBoyMobile: json["delivery_boy_mobile"],
-        items: List<OrderItems>.from(json["items"].map((x) => OrderItems.fromJson(x))),
-    );
+        items: List<OrderItems>.from(
+            json["items"].map((x) => OrderItems.fromJson(x))),
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "invoice_number": invoiceNumber,
         "code": code,
         "total_product": totalProduct,
@@ -109,49 +115,49 @@ class StoreOrderListData {
         "delivery_boy_name": deliveryBoyName,
         "delivery_boy_mobile": deliveryBoyMobile,
         "items": List<dynamic>.from(items.map((x) => x.toJson())),
-    };
+      };
 }
 
 class OrderItems {
-    int orderItemId;
-    int storeId;
-    int orderId;
-    int productId;
-    String productName;
-    int userId;
-    String price;
-    int quantity;
-    String totalPrice;
-    String storePrice;
-    String storeTotalPrice;
-    dynamic imageUrl;
-    int status;
-    int createdBy;
-    DateTime createdDate;
-    dynamic updatedBy;
-    dynamic updatedDate;
+  int orderItemId;
+  int storeId;
+  int orderId;
+  int productId;
+  String productName;
+  int userId;
+  String price;
+  int quantity;
+  String totalPrice;
+  String storePrice;
+  String storeTotalPrice;
+  dynamic imageUrl;
+  int status;
+  int createdBy;
+  DateTime createdDate;
+  dynamic updatedBy;
+  dynamic updatedDate;
 
-    OrderItems({
-        required this.orderItemId,
-        required this.storeId,
-        required this.orderId,
-        required this.productId,
-        required this.productName,
-        required this.userId,
-        required this.price,
-        required this.quantity,
-        required this.totalPrice,
-        required this.storePrice,
-        required this.storeTotalPrice,
-        required this.imageUrl,
-        required this.status,
-        required this.createdBy,
-        required this.createdDate,
-        required this.updatedBy,
-        required this.updatedDate,
-    });
+  OrderItems({
+    required this.orderItemId,
+    required this.storeId,
+    required this.orderId,
+    required this.productId,
+    required this.productName,
+    required this.userId,
+    required this.price,
+    required this.quantity,
+    required this.totalPrice,
+    required this.storePrice,
+    required this.storeTotalPrice,
+    required this.imageUrl,
+    required this.status,
+    required this.createdBy,
+    required this.createdDate,
+    required this.updatedBy,
+    required this.updatedDate,
+  });
 
-    factory OrderItems.fromJson(Map<String, dynamic> json) => OrderItems(
+  factory OrderItems.fromJson(Map<String, dynamic> json) => OrderItems(
         orderItemId: json["order_item_id"],
         storeId: json["store_id"],
         orderId: json["order_id"],
@@ -169,9 +175,9 @@ class OrderItems {
         createdDate: DateTime.parse(json["created_date"]),
         updatedBy: json["updated_by"],
         updatedDate: json["updated_date"],
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "order_item_id": orderItemId,
         "store_id": storeId,
         "order_id": orderId,
@@ -189,5 +195,5 @@ class OrderItems {
         "created_date": createdDate.toIso8601String(),
         "updated_by": updatedBy,
         "updated_date": updatedDate,
-    };
+      };
 }

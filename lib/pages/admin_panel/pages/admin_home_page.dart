@@ -432,7 +432,10 @@ class _AdminHomePageState extends State<AdminHomePage> {
                       String formattedDate = e.createdDate != null
                           ? DateFormat('dd-MM-yyyy').format(e.createdDate!)
                           : '';
-
+                      String formattedTime = e.createdDate != null
+                          ? DateFormat('hh:mm a').format(
+                              e.createdDate!) // Formats time in 12-hour format
+                          : '';
                       return Padding(
                         padding:
                             const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
@@ -450,24 +453,38 @@ class _AdminHomePageState extends State<AdminHomePage> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            "Order ID #${currentCustomerAddress.orderId ?? ''}",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16),
-                                          ),
-                                          Text(
-                                            "Date : ${formattedDate ?? ''}",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16),
-                                          ),
-                                        ],
-                                      ),
+                                      Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  "Order ID #${currentCustomerAddress.orderId ?? ''}",
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 16),
+                                                ),
+                                                Text(
+                                                  "Date : ${formattedDate ?? ''}",
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 16),
+                                                ),
+                                              ],
+                                            ),
+                                            Text(
+                                              "Time :    ${formattedTime ?? ''}",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16),
+                                            ),
+                                          ]),
                                       SizedBox(height: 5),
                                       Row(
                                         children: [
@@ -819,7 +836,13 @@ class _AdminHomePageState extends State<AdminHomePage> {
                       final currentCustomerAddress = e.customerAddress;
                       final currentStoreAddress = e.storeAddress;
                       String formattedDate = e.createdDate != null
-                          ? DateFormat('dd-MM-yyyy').format(e.createdDate!)
+                          ? DateFormat('dd-MM-yyyy')
+                              .format(e.createdDate!) // Formats date
+                          : '';
+
+                      String formattedTime = e.createdDate != null
+                          ? DateFormat('hh:mm a').format(
+                              e.createdDate!) // Formats time in 12-hour format
                           : '';
 
                       return Padding(
@@ -839,24 +862,38 @@ class _AdminHomePageState extends State<AdminHomePage> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            "Order ID #${currentCustomerAddress.orderId ?? ''}",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16),
-                                          ),
-                                          Text(
-                                            "Date : ${formattedDate ?? ''}",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16),
-                                          ),
-                                        ],
-                                      ),
+                                      Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  "Order ID #${currentCustomerAddress.orderId ?? ''}",
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 16),
+                                                ),
+                                                Text(
+                                                  "Date : ${formattedDate ?? ''}",
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 16),
+                                                ),
+                                              ],
+                                            ),
+                                            Text(
+                                              "Time :    ${formattedTime ?? ''}",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16),
+                                            ),
+                                          ]),
                                       SizedBox(height: 5),
                                       Row(
                                         children: [
@@ -1118,7 +1155,10 @@ class _AdminHomePageState extends State<AdminHomePage> {
                       String formattedDate = e.createdDate != null
                           ? DateFormat('dd-MM-yyyy').format(e.createdDate!)
                           : '';
-
+                      String formattedTime = e.createdDate != null
+                          ? DateFormat('hh:mm a').format(
+                              e.createdDate!) // Formats time in 12-hour format
+                          : '';
                       return Padding(
                         padding:
                             const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
@@ -1136,18 +1176,30 @@ class _AdminHomePageState extends State<AdminHomePage> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
                                         children: [
-                                          Text(
-                                            "Order ID #${currentCustomerAddress.orderId ?? ''}",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                "Order ID #${currentCustomerAddress.orderId ?? ''}",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 16),
+                                              ),
+                                              Text(
+                                                "Date : ${formattedDate ?? ''}",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 16),
+                                              ),
+                                            ],
                                           ),
                                           Text(
-                                            "Date : ${formattedDate ?? ''}",
+                                            "Time :    ${formattedTime ?? ''}",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 16),
@@ -1413,7 +1465,10 @@ class _AdminHomePageState extends State<AdminHomePage> {
                       String formattedDate = e.createdDate != null
                           ? DateFormat('dd-MM-yyyy').format(e.createdDate!)
                           : '';
-
+                      String formattedTime = e.createdDate != null
+                          ? DateFormat('hh:mm a').format(
+                              e.createdDate!) // Formats time in 12-hour format
+                          : '';
                       return Padding(
                         padding:
                             const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
@@ -1431,18 +1486,30 @@ class _AdminHomePageState extends State<AdminHomePage> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
                                         children: [
-                                          Text(
-                                            "Order ID #${currentCustomerAddress.orderId ?? ''}",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                "Order ID #${currentCustomerAddress.orderId ?? ''}",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 16),
+                                              ),
+                                              Text(
+                                                "Date : ${formattedDate ?? ''}",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 16),
+                                              ),
+                                            ],
                                           ),
                                           Text(
-                                            "Date : ${formattedDate ?? ''}",
+                                            "Time :    ${formattedTime ?? ''}",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 16),
