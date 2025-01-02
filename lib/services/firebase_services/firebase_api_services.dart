@@ -13,6 +13,7 @@ Future<void> handleBackgroundMessage(RemoteMessage message) async {
   print('Title ${message.notification?.title}');
   print('Body ${message.notification?.body}');
   print('Payload ${message.data}');
+  showNotification(message);
 }
 
 class FirebaseAPIServices {
@@ -47,27 +48,32 @@ class FirebaseAPIServices {
     FirebaseMessaging.onMessage.listen((message) {
       // final notification = event.notification;
       // if(notification == null) return;
+      print("initPushNotifications test");
 
       RemoteNotification? notification = message.notification;
       AndroidNotification? android = message.notification?.android;
       if (notification != null) {
+        showNotification(message);
         // if (notification != null && android != null && !kIsWeb) {
-        flutterLocalNotificationsPlugin.show(
-          notification.hashCode,
-          notification.title,
-          notification.body,
-          NotificationDetails(
-            android: AndroidNotificationDetails(
-              androidChannel.id,
-              androidChannel.name,
-              channelDescription: androidChannel.description,
-              sound: RawResourceAndroidNotificationSound('sound'),
-              // TODO add a proper drawable resource to android, for now using
-              //      one that already exists in example app.
-              icon: '@mipmap/ic_launcher',
-            ),
-          ),
-        );
+        // flutterLocalNotificationsPlugin.show(
+        //   notification.hashCode,
+        //   notification.title,
+        //   notification.body,
+        //   NotificationDetails(
+        //     android: AndroidNotificationDetails(
+        //       androidChannel.id,
+        //       androidChannel.name,
+        //       importance: Importance.high,
+        //       priority: Priority.high,
+        //       sound: const RawResourceAndroidNotificationSound('sound'),
+        //       channelDescription: androidChannel.description,
+
+        //       // TODO add a proper drawable resource to android, for now using
+        //       //      one that already exists in example app.
+        //       icon: '@mipmap/ic_launcher',
+        //     ),
+        //   ),
+        // );
       }
     });
   }
@@ -120,6 +126,36 @@ class FirebaseAPIServices {
     // d83y3TzSTqSdEEffciHCFP:APA91bHeqjrDutelfPoTpLNvfUArEvcmLy8I59KWQBal5PPVp35EozcvSq0vI1GUWC773FOyOnCYNf35NkeEYgW0W9E82U5lU3y_er_ZPOORccauV9GnivgBlSlhSO5rNKB9k4Tk4wx8
     initPushNotifications();
     initLocalNotifications();
+  }
+
+  Future<void> showNotification(RemoteMessage message) async {
+    print("notify");
+
+    // Define notification details for Android
+    const AndroidNotificationDetails androidDetails =
+        AndroidNotificationDetails(
+      'channel_id_5',
+      'test',
+      sound: RawResourceAndroidNotificationSound('sound'), // Set custom sound
+      importance: Importance.high,
+      priority: Priority.high,
+    );
+    const NotificationDetails platformDetails =
+        NotificationDetails(android: androidDetails);
+    print(platformDetails);
+
+    int? notificationId; // nullable
+    notificationId ??= 12;
+    // print(notification.title);
+    // Show the notification
+    await flutterLocalNotificationsPlugin.show(
+      notificationId,
+      message.notification?.title,
+      message.notification?.body,
+      platformDetails,
+      payload: 'Custom_Sound_Notification',
+    );
+    // showInSnackBar(context, 'Processing...');
   }
 
 // Future<void> sendNotification(String fcmToken, String title, String body) async {

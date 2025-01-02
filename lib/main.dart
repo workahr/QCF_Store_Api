@@ -68,11 +68,11 @@ Future<void> main() async {
   // Initialize Firebase
   await Firebase.initializeApp();
 
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
-  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    showNotification(message);
-  });
+  // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+  //   showNotification(message);
+  // });
 
   if (!kIsWeb) {
     await FirebaseAPIServices().initNotifications();
