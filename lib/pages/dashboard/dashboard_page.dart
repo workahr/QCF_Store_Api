@@ -72,8 +72,7 @@ class _DashboardPageState extends State<DashboardPage> {
           //  pendingList = filterOrdersByStatus("Order Placed" || "Order Picked");
 
           pendingList = orderListAll.where((entry) {
-            return (entry.orderStatus == "Order Placed" ||
-                    entry.orderStatus == "Order Picked") &&
+            return (entry.orderStatus == "Order Placed") &&
                 entry.deliveryPartnerId != '0';
             //  &&
             // DateFormat('yyyy-MM-dd').format(entry.createdDate!) == today;

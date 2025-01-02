@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:namstore/constants/constants.dart';
-import 'package:namstore/pages/admin_panel/pages/add_delivery_charge_page.dart';
-
 import 'package:namstore/pages/admin_panel/pages/store_list.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'add_Prime_location_page.dart';
+import 'add_delivery_charge_page.dart';
 import 'delivery_person_list.dart';
+import 'join_deliveryboy_list.dart';
+import 'join_store_list.dart';
 import 'report_page.dart';
 
 class ManagePage extends StatefulWidget {
@@ -97,7 +98,7 @@ class _ManagePageState extends State<ManagePage> {
             ),
             ListTile(
               leading: Image.asset(
-                AppAssets.report,
+                AppAssets.prime_location,
                 height: 18,
                 width: 18,
               ),
@@ -112,9 +113,10 @@ class _ManagePageState extends State<ManagePage> {
             ),
             ListTile(
               leading: Image.asset(
-                AppAssets.report,
+                AppAssets.delivery_charge,
                 height: 18,
                 width: 18,
+                color: AppColors.red,
               ),
               title: const Text('Add Delivery Charge'),
               trailing: const Icon(Icons.arrow_forward_ios, size: 16),
@@ -123,6 +125,36 @@ class _ManagePageState extends State<ManagePage> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => AddDeliveryChargePage()),
+                );
+              },
+            ),
+            ListTile(
+              leading: Image.asset(
+                AppAssets.join_deliveryboy,
+                height: 18,
+                width: 18,
+              ),
+              title: const Text('Join as Delivery Boy'),
+              trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => JoinDeliveryboy()),
+                );
+              },
+            ),
+            ListTile(
+              leading: Image.asset(
+                AppAssets.join_store,
+                height: 18,
+                width: 18,
+              ),
+              title: const Text('Join as Store'),
+              trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => JoinStore()),
                 );
               },
             ),
@@ -169,14 +201,16 @@ class _ManagePageState extends State<ManagePage> {
 
 
 
+
 // import 'package:flutter/material.dart';
 // import 'package:namstore/constants/constants.dart';
+// import 'package:namstore/pages/admin_panel/pages/add_delivery_charge_page.dart';
 
 // import 'package:namstore/pages/admin_panel/pages/store_list.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
 
+// import 'add_Prime_location_page.dart';
 // import 'delivery_person_list.dart';
-// import 'manage_password_page.dart';
 // import 'report_page.dart';
 
 // class ManagePage extends StatefulWidget {
@@ -262,9 +296,37 @@ class _ManagePageState extends State<ManagePage> {
 //               title: const Text('Manage Password'),
 //               trailing: const Icon(Icons.arrow_forward_ios, size: 16),
 //               onTap: () {
+//                 // Add navigation or functionality here
+//               },
+//             ),
+//             ListTile(
+//               leading: Image.asset(
+//                 AppAssets.report,
+//                 height: 18,
+//                 width: 18,
+//               ),
+//               title: const Text('Prime Location'),
+//               trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+//               onTap: () {
 //                 Navigator.push(
 //                   context,
-//                   MaterialPageRoute(builder: (context) => ManagePasswordPage()),
+//                   MaterialPageRoute(builder: (context) => PrimeLocationPage()),
+//                 );
+//               },
+//             ),
+//             ListTile(
+//               leading: Image.asset(
+//                 AppAssets.report,
+//                 height: 18,
+//                 width: 18,
+//               ),
+//               title: const Text('Add Delivery Charge'),
+//               trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+//               onTap: () {
+//                 Navigator.push(
+//                   context,
+//                   MaterialPageRoute(
+//                       builder: (context) => AddDeliveryChargePage()),
 //                 );
 //               },
 //             ),

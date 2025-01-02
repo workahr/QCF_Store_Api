@@ -162,4 +162,8 @@ class AppAssets {
   static const String dashboard_fill = 'assets/images/dashboard.png';
   static const String dashboard_outline = 'assets/images/dashboard_outline.png';
   static const String cart_home_icon = 'assets/images/cart_home_icon.png';
+  static const String join_store = 'assets/images/add_store.png';
+  static const String delivery_charge = 'assets/images/delivery_charge.png';
+  static const String join_deliveryboy = 'assets/images/join_deliveryboy.png';
+  static const String prime_location = 'assets/images/prime_location.png';
 }

@@ -58,31 +58,27 @@ class _AdminHomePageState extends State<AdminHomePage> {
                     entry.orderStatus == "Ready to Pickup" ||
                     entry.orderStatus == "Order Confirmed" ||
                     entry.orderStatus == "Order Picked") &&
-                entry.deliveryPartnerId == '0';
-            //  &&
-            // DateFormat('yyyy-MM-dd').format(entry.createdDate!) == today;
+                entry.deliveryPartnerId == '0' &&
+                DateFormat('yyyy-MM-dd').format(entry.createdDate!) == today;
           }).toList();
 
           inprogress = orderdetailslistpageAll.where((entry) {
             return entry.orderStatus != "Order Delivered" &&
-                entry.deliveryPartnerId != '0';
-            // &&
-            // DateFormat('yyyy-MM-dd').format(entry.createdDate!) == today;
+                entry.deliveryPartnerId != '0' &&
+                DateFormat('yyyy-MM-dd').format(entry.createdDate!) == today;
           }).toList();
 
           orderdelivered = orderdetailslistpageAll.where((entry) {
             return entry.orderStatus == "Order Delivered" &&
-                entry.deliveryPartnerId != '0';
-            //  &&
-            // DateFormat('yyyy-MM-dd').format(entry.createdDate!) == today;
+                entry.deliveryPartnerId != '0' &&
+                DateFormat('yyyy-MM-dd').format(entry.createdDate!) == today;
           }).toList();
 
           canceledorder = orderdetailslistpageAll.where((entry) {
             return entry.orderStatus == "Cancelled" &&
                 (entry.deliveryPartnerId != '0' ||
-                    entry.deliveryPartnerId == '0');
-            //  &&
-            // DateFormat('yyyy-MM-dd').format(entry.createdDate!) == today;
+                    entry.deliveryPartnerId == '0') &&
+                DateFormat('yyyy-MM-dd').format(entry.createdDate!) == today;
           }).toList();
 
           orderdetailslistpage = response.list;
@@ -335,6 +331,8 @@ class _AdminHomePageState extends State<AdminHomePage> {
                       hintColor: AppColors.grey,
                       borderColor: AppColors.grey,
                       onChanged: (value) {
+                        final today =
+                            DateFormat('yyyy-MM-dd').format(DateTime.now());
                         value = value.trim().toLowerCase();
                         setState(() {
                           if (selectedIndex == 0) {
@@ -352,7 +350,10 @@ class _AdminHomePageState extends State<AdminHomePage> {
                                 : orderdetailslistpageAll
                                     .where((order) =>
                                         order.orderStatus == "Order Placed" &&
-                                        order.deliveryPartnerId == '0')
+                                        order.deliveryPartnerId == '0' &&
+                                        DateFormat('yyyy-MM-dd')
+                                                .format(order.createdDate!) ==
+                                            today)
                                     .toList();
                           } else if (selectedIndex == 1) {
                             inprogress = value.isNotEmpty
@@ -361,6 +362,9 @@ class _AdminHomePageState extends State<AdminHomePage> {
                                         order.orderStatus !=
                                             "Order Delivered" &&
                                         order.deliveryPartnerId != '0' &&
+                                        DateFormat('yyyy-MM-dd')
+                                                .format(order.createdDate!) ==
+                                            today &&
                                         (order.customerAddress.orderId
                                                 ?.toString()
                                                 .toLowerCase()
@@ -371,7 +375,10 @@ class _AdminHomePageState extends State<AdminHomePage> {
                                     .where((order) =>
                                         order.orderStatus !=
                                             "Order Delivered" &&
-                                        order.deliveryPartnerId != '0')
+                                        order.deliveryPartnerId != '0' &&
+                                        DateFormat('yyyy-MM-dd')
+                                                .format(order.createdDate!) ==
+                                            today)
                                     .toList();
                           } else if (selectedIndex == 2) {
                             orderdelivered = value.isNotEmpty
@@ -390,7 +397,10 @@ class _AdminHomePageState extends State<AdminHomePage> {
                                     .where((order) =>
                                         order.orderStatus ==
                                             "Order Delivered" &&
-                                        order.deliveryPartnerId != '0')
+                                        order.deliveryPartnerId != '0' &&
+                                        DateFormat('yyyy-MM-dd')
+                                                .format(order.createdDate!) ==
+                                            today)
                                     .toList();
                           } else if (selectedIndex == 3) {
                             canceledorder = value.isNotEmpty
@@ -409,7 +419,10 @@ class _AdminHomePageState extends State<AdminHomePage> {
                                     .where((order) =>
                                         order.orderStatus == "Cancelled" &&
                                         (order.deliveryPartnerId != '0' ||
-                                            order.deliveryPartnerId == '0'))
+                                            order.deliveryPartnerId == '0' &&
+                                                DateFormat('yyyy-MM-dd').format(
+                                                        order.createdDate!) ==
+                                                    today))
                                     .toList();
                           }
                         });
