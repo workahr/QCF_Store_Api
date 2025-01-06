@@ -466,7 +466,7 @@ class _DashboardPageState extends State<DashboardPage> {
           //       borderRadius: BorderRadius.circular(20),
           //     ),
           //     child: Text(
-          //       "Customer Care: 9360159625",
+          //       "Customer Care: 9361616063",
           //       style: TextStyle(fontSize: 14),
           //     )),
           actions: [
@@ -536,12 +536,12 @@ class _DashboardPageState extends State<DashboardPage> {
                           "Call Us:",
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        Text(" +91 9360159625"),
+                        Text(" +91 9361616063"),
                       ],
                     ),
                     GestureDetector(
                       onTap: () async {
-                        _makePhoneCall("9360159625");
+                        _makePhoneCall("9361616063");
                       },
                       child: Container(
                         height: 35, // Set the size of the circle
@@ -797,7 +797,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                             onTap: () {
                                               // makePhoneCall(item.customerMobile
                                               //     .toString());
-                                              makePhoneCall("9360159625");
+                                              makePhoneCall("9361616063");
                                             },
                                             child: Container(
                                               padding: EdgeInsets.all(8.0),
@@ -1153,7 +1153,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                           //  if (item.deliveryBoyMobile != null)
                                           InkWell(
                                             onTap: () {
-                                              makePhoneCall("9360159625");
+                                              makePhoneCall("9361616063");
                                             },
                                             child: Container(
                                               // height: 40,
@@ -1203,7 +1203,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                               onTap: () {
                                                 orderStatusUpdate(
                                                     item.items[0].orderId,
-                                                    "Order Picked");
+                                                    "Ready to Pickup");
                                               }),
                                         ],
                                       )

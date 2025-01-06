@@ -17,6 +17,7 @@ import '../models/edit_menu_category_api_model.dart';
 import '../models/update_menu_category_api_model.dart';
 import 'add_category_model.dart';
 import 'category_list_model.dart';
+import 'category_status_update.dart';
 
 class MenuCategorie extends StatefulWidget {
   final int? category;
@@ -489,6 +490,30 @@ class _MenuCategorieState extends State<MenuCategorie> {
     );
   }
 
+  Future categoryStatusUpdate(id, value) async {
+    try {
+      Map<String, dynamic> postData = {
+        "category_status": value,
+        "category_id": id
+      };
+      var result = await apiService.categoryStatusUpdate(postData);
+      Categorystorestatusupdatemodel response =
+          categorystorestatusupdatemodelFromJson(result);
+
+      closeSnackBar(context: context);
+
+      if (response.status.toString() == 'SUCCESS') {
+        setState(() {
+          getCategoryList();
+        });
+      } else {
+        //   showInSnackBar(context, response.message.toString());
+      }
+    } catch (error) {
+      //   showInSnackBar(context, error.toString());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -573,6 +598,74 @@ class _MenuCategorieState extends State<MenuCategorie> {
                                       ],
                                     ),
                                     Row(
+                                        // mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 0.0),
+                                              child: Transform.scale(
+                                                  scale: 0.8,
+                                                  child: Switch(
+                                                    value:
+                                                        e.category_status == 1,
+                                                    onChanged: (value) {
+                                                      setState(() {
+                                                        e.category_status =
+                                                            value ? 1 : 0;
+
+                                                        categoryStatusUpdate(
+                                                            e.categoryId,
+                                                            value ? 1 : 0);
+                                                        //  print(e.itemStock);
+                                                      });
+                                                    },
+                                                    activeColor: Colors.white,
+                                                    activeTrackColor:
+                                                        Colors.green,
+                                                    inactiveThumbColor:
+                                                        Colors.white,
+                                                    inactiveTrackColor:
+                                                        Colors.grey[300],
+                                                  ))),
+                                          Text(
+                                              e.category_status == 1
+                                                  ? 'In Stock'
+                                                  : 'Out of Stock',
+                                              style: TextStyle(
+                                                  color: e.category_status == 1
+                                                      ? Colors.green
+                                                      : AppColors.red,
+                                                  fontSize: 18.0))
+                                        ]),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 12,
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Column(
+                                      children: [
+                                        HeadingWidget(
+                                          title: 'Description:',
+                                        ),
+                                        SizedBox(
+                                          height: 6,
+                                        ),
+                                        HeadingWidget(
+                                          title:
+                                              e.description.toString() == "null"
+                                                  ? ' '
+                                                  : e.description.toString(),
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 18.00,
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         GestureDetector(
@@ -622,22 +715,6 @@ class _MenuCategorieState extends State<MenuCategorie> {
                                       ],
                                     ),
                                   ],
-                                ),
-                                SizedBox(
-                                  height: 12,
-                                ),
-                                HeadingWidget(
-                                  title: 'Description:',
-                                ),
-                                SizedBox(
-                                  height: 6,
-                                ),
-                                HeadingWidget(
-                                  title: e.description.toString() == "null"
-                                      ? ' '
-                                      : e.description.toString(),
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 18.00,
                                 )
                               ],
                             ),

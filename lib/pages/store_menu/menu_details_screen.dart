@@ -211,7 +211,8 @@ class _MenuDetailsScreenState extends State<MenuDetailsScreen> {
     StoreStatusUpdatemodel response = storeStatusUpdatemodelFromJson(result);
 
     if (response.status.toString() == 'SUCCESS') {
-      showInSnackBar(context, response.message.toString());
+      //  showInSnackBar(context, response.message.toString());
+      showInSnackBar(context, "Store Status Updated Successfully");
 
       setState(() {
         getMyStoreDetails();
@@ -473,6 +474,21 @@ class _MenuDetailsScreenState extends State<MenuDetailsScreen> {
                           filled: true,
                           fillColor: Colors.grey[200],
                         ),
+                        onChanged: (value) {
+                          if (value != '') {
+                            print('value $value');
+                            value = value.toString().toLowerCase();
+                            MenuListData = MenuListAll!
+                                .where((MenuList e) => e.itemName
+                                    .toString()
+                                    .toLowerCase()
+                                    .contains(value))
+                                .toList();
+                          } else {
+                            MenuListData = MenuListAll;
+                          }
+                          setState(() {});
+                        },
                       )),
                   SizedBox(height: 16),
                   Padding(

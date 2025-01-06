@@ -3237,4 +3237,24 @@ class NamFoodApiService {
       return e;
     }
   }
+
+// category on off
+
+  Future categoryStatusUpdate(postData) async {
+    try {
+      final url = Uri.parse('${liveApiPath}v1/itemcateogrystatusupdate');
+      final response = await client.post(url,
+          headers: headerData, body: jsonEncode(postData));
+      if (response.statusCode == 200) {
+        final json = response.body;
+        return json;
+      } else {
+        throw Exception(
+            'Failed to login . Status code: ${response.statusCode} ${response.toString()}');
+      }
+    } catch (e) {
+      print('error $e');
+      handleError();
+    }
+  }
 }

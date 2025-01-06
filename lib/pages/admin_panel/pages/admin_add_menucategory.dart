@@ -14,6 +14,7 @@ import '../api_model/admin_menu_category_list_model.dart';
 import '../api_model/admin_menu_delete_category_model.dart';
 import '../api_model/admin_menu_edit_category_model.dart';
 import '../api_model/admin_menu_update_category_model.dart';
+import '../api_model/admincategory_status_update.dart';
 
 class AdminAddMenuCategory extends StatefulWidget {
   int? category;
@@ -195,37 +196,6 @@ class _AdminAddMenuCategoryState extends State<AdminAddMenuCategory> {
     //   // showInSnackBar(context, "Please fill all fields");
     // }
   }
-
-  //togglebuton
-// Future updatemenustock(id, value) async {
-//     await apiService.getBearerToken();
-
-//     Map<String, dynamic> postData = {
-//       "id": id,
-//       "item_stock": value,
-//     };
-//     print("item_stock $postData");
-//     var result = await apiService.updatemenustock(postData);
-
-//     MenuEditmodel response = menuEditmodelFromJson(result);
-
-//     if (response.status.toString() == 'SUCCESS') {
-//       showInSnackBar(context, response.message.toString());
-//       // Navigator.pop(context);
-//       setState(() {
-//         getmenuList();
-//       });
-//       // Navigator.push(
-//       //   context,
-//       //   MaterialPageRoute(
-//       //     builder: (context) => Third_party_List(),
-//       //   ),
-//       // );
-//     } else {
-//       print(response.message.toString());
-//       showInSnackBar(context, response.message.toString());
-//     }
-//   }
 
 //add
   void _showAddCategoryDialog() {
@@ -436,6 +406,30 @@ class _AdminAddMenuCategoryState extends State<AdminAddMenuCategory> {
     );
   }
 
+  Future categoryStatusUpdate(id, value) async {
+    try {
+      Map<String, dynamic> postData = {
+        "category_status": value,
+        "category_id": id
+      };
+      var result = await apiService.categoryStatusUpdate(postData);
+      Categorystatusupdatemodel response =
+          categorystatusupdatemodelFromJson(result);
+
+      closeSnackBar(context: context);
+
+      if (response.status.toString() == 'SUCCESS') {
+        setState(() {
+          getCategoryList();
+        });
+      } else {
+        //   showInSnackBar(context, response.message.toString());
+      }
+    } catch (error) {
+      //   showInSnackBar(context, error.toString());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -522,60 +516,47 @@ class _AdminAddMenuCategoryState extends State<AdminAddMenuCategory> {
                                         ),
                                       ],
                                     ),
-                                    // Row(
-                                    //                 // mainAxisAlignment: MainAxisAlignment.center,
-                                    //                 children: [
-                                    //                   Padding(
-                                    //                       padding:
-                                    //                           const EdgeInsets
-                                    //                               .symmetric(
-                                    //                               vertical: 0.0),
-                                    //                       child: Transform.scale(
-                                    //                           scale: 0.8,
-                                    //                           child: Switch(
-                                    //                             value:
-                                    //                                 e.itemStock ==
-                                    //                                     1
-                                    //                                     ,
-                                    //                             onChanged:
-                                    //                                 (value) {
-                                    //                               setState(() {
-                                    //                                 e.itemStock =
-                                    //                                     value
-                                    //                                         ? 1
-                                    //                                         : 0;
+                                    Row(
+                                        // mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 0.0),
+                                              child: Transform.scale(
+                                                  scale: 0.8,
+                                                  child: Switch(
+                                                    value:
+                                                        e.category_status == 1,
+                                                    onChanged: (value) {
+                                                      setState(() {
+                                                        e.category_status =
+                                                            value ? 1 : 0;
 
-                                    //                                 updatemenustock(
-                                    //                                     e.itemId,
-                                    //                                     value
-                                    //                                         ? 1
-                                    //                                         : 0);
-                                    //                                 //  print(e.itemStock);
-                                    //                               });
-                                    //                             },
-                                    //                             activeColor:
-                                    //                                 Colors.white,
-                                    //                             activeTrackColor:
-                                    //                                 Colors.green,
-                                    //                             inactiveThumbColor:
-                                    //                                 Colors.white,
-                                    //                             inactiveTrackColor:
-                                    //                                 Colors.grey[
-                                    //                                     300],
-                                    //                           ))),
-                                    //                   Text(
-                                    //                       e.itemStock == 1
-                                    //                           ? 'In Stock'
-                                    //                           : 'Out of Stock',
-                                    //                       style: TextStyle(
-                                    //                           color:
-                                    //                               e.itemStock == 1
-                                    //                                   ? Colors
-                                    //                                       .green
-                                    //                                   : AppColors
-                                    //                                       .red,
-                                    //                           fontSize: 18.0))
-                                    //                 ]),
+                                                        categoryStatusUpdate(
+                                                            e.categoryId,
+                                                            value ? 1 : 0);
+                                                        //  print(e.itemStock);
+                                                      });
+                                                    },
+                                                    activeColor: Colors.white,
+                                                    activeTrackColor:
+                                                        Colors.green,
+                                                    inactiveThumbColor:
+                                                        Colors.white,
+                                                    inactiveTrackColor:
+                                                        Colors.grey[300],
+                                                  ))),
+                                          Text(
+                                              e.category_status == 1
+                                                  ? 'In Stock'
+                                                  : 'Out of Stock',
+                                              style: TextStyle(
+                                                  color: e.category_status == 1
+                                                      ? Colors.green
+                                                      : AppColors.red,
+                                                  fontSize: 18.0))
+                                        ]),
                                   ],
                                 ),
                                 SizedBox(

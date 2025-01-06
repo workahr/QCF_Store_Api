@@ -49,6 +49,7 @@ class AdminCategoryList {
   int? serial;
   String? imageUrl;
   int? status;
+  int? category_status;
   int? createdBy;
   DateTime? createdDate;
   dynamic updatedBy;
@@ -63,6 +64,7 @@ class AdminCategoryList {
     this.serial,
     this.imageUrl,
     this.status,
+    this.category_status,
     this.createdBy,
     this.createdDate,
     required this.updatedBy,
@@ -79,6 +81,7 @@ class AdminCategoryList {
         serial: json["serial"],
         imageUrl: json["image_url"],
         status: json["status"],
+        category_status: json["category_status"],
         createdBy: json["created_by"],
         createdDate: json["created_date"] == null
             ? null
@@ -96,6 +99,7 @@ class AdminCategoryList {
         "serial": serial,
         "image_url": imageUrl,
         "status": status,
+        "category_status": category_status,
         "created_by": createdBy,
         "created_date": createdDate?.toIso8601String(),
         "updated_by": updatedBy,
