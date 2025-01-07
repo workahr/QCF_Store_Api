@@ -9,6 +9,7 @@ import '../../../services/comFuncService.dart';
 import '../../../services/nam_food_api_service.dart';
 import '../../../widgets/custom_text_field.dart';
 import '../api_model/dashboard_orderlist_model.dart';
+import 'cancel_order_page.dart';
 import 'deliveryperson.dart';
 import 'edit_order.dart';
 
@@ -475,27 +476,67 @@ class _AdminHomePageState extends State<AdminHomePage> {
                                                   MainAxisAlignment
                                                       .spaceBetween,
                                               children: [
-                                                Text(
-                                                  "Order ID #${currentCustomerAddress.orderId ?? ''}",
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 16),
-                                                ),
-                                                Text(
-                                                  "Date : ${formattedDate ?? ''}",
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 16),
-                                                ),
+                                                Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        "Order ID #${currentCustomerAddress.orderId ?? ''}",
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: 16),
+                                                      ),
+                                                      SizedBox(
+                                                        height: 10,
+                                                      ),
+                                                      Text(
+                                                        "${formattedDate ?? ''}|${formattedTime ?? ''}",
+                                                        style: TextStyle(
+                                                            // color: Colors.grey,
+                                                            // fontWeight:
+                                                            //     FontWeight.bold,
+                                                            fontSize: 14),
+                                                      ),
+                                                    ]),
+
+                                                // Text(
+                                                //   "Time :    ${formattedTime ?? ''}",
+                                                //   style: TextStyle(
+                                                //       fontWeight: FontWeight.bold,
+                                                //       fontSize: 16),
+                                                // ),
+
+                                                GestureDetector(
+                                                  onTap: () async {
+                                                    _showpickupconfirmDialog(
+                                                        e.items);
+                                                  },
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Text(
+                                                        'View Menu',
+                                                        style: TextStyle(
+                                                            fontSize: 16,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color:
+                                                                AppColors.red),
+                                                      ),
+                                                      // Image.asset(
+                                                      //   AppAssets.forward_icon,
+                                                      //   height: 25,
+                                                      //   width: 25,
+                                                      //   color: Colors.white,
+                                                      // ),
+                                                    ],
+                                                  ),
+                                                )
                                               ],
-                                            ),
-                                            Text(
-                                              "Time :    ${formattedTime ?? ''}",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 16),
                                             ),
                                           ]),
                                       SizedBox(height: 5),
@@ -697,8 +738,8 @@ class _AdminHomePageState extends State<AdminHomePage> {
                                                     ),
                                                     Image.asset(
                                                       AppAssets.forward_icon,
-                                                      height: 25,
-                                                      width: 25,
+                                                      height: 20,
+                                                      width: 20,
                                                       color: Colors.white,
                                                     ),
                                                   ],
@@ -707,8 +748,16 @@ class _AdminHomePageState extends State<AdminHomePage> {
                                             ),
                                             InkWell(
                                               onTap: () {
-                                                _showpickupconfirmDialog(
-                                                    e.items);
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            CancelBookingPage(
+                                                              cancelId:
+                                                                  currentCustomerAddress
+                                                                      .orderId,
+                                                            ))).then(
+                                                    (value) {});
                                               },
                                               child: Container(
                                                 padding: EdgeInsets.all(8.0),
@@ -725,7 +774,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                                                       MainAxisAlignment.center,
                                                   children: [
                                                     Text(
-                                                      'View Menu',
+                                                      'Cancel Order',
                                                       style: TextStyle(
                                                           color:
                                                               AppColors.white),
@@ -739,7 +788,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                                                   ],
                                                 ),
                                               ),
-                                            )
+                                            ),
                                           ]),
                                       Divider(
                                           height: 20, color: Color(0xFFE8E8E8)),
@@ -884,28 +933,41 @@ class _AdminHomePageState extends State<AdminHomePage> {
                                                   MainAxisAlignment
                                                       .spaceBetween,
                                               children: [
-                                                Text(
-                                                  "Order ID #${currentCustomerAddress.orderId ?? ''}",
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 16),
-                                                ),
-                                                Text(
-                                                  "Date : ${formattedDate ?? ''}",
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 16),
-                                                ),
+                                                Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        "Order ID #${currentCustomerAddress.orderId ?? ''}",
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: 16),
+                                                      ),
+                                                      SizedBox(
+                                                        height: 10,
+                                                      ),
+                                                      SizedBox(
+                                                        height: 10,
+                                                      ),
+                                                      Text(
+                                                        "${formattedDate ?? ''}|${formattedTime ?? ''}",
+                                                        style: TextStyle(
+                                                            // color: Colors.grey,
+                                                            // fontWeight:
+                                                            //     FontWeight.bold,
+                                                            fontSize: 14),
+                                                      ),
+                                                    ])
                                               ],
                                             ),
-                                            Text(
-                                              "Time :    ${formattedTime ?? ''}",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 16),
-                                            ),
+                                            // Text(
+                                            //   "Time :    ${formattedTime ?? ''}",
+                                            //   style: TextStyle(
+                                            //       fontWeight: FontWeight.bold,
+                                            //       fontSize: 16),
+                                            // ),
                                           ]),
                                       SizedBox(height: 5),
                                       Row(
@@ -1197,26 +1259,37 @@ class _AdminHomePageState extends State<AdminHomePage> {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Text(
-                                                "Order ID #${currentCustomerAddress.orderId ?? ''}",
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 16),
-                                              ),
-                                              Text(
-                                                "Date : ${formattedDate ?? ''}",
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 16),
-                                              ),
+                                              Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      "Order ID #${currentCustomerAddress.orderId ?? ''}",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 16),
+                                                    ),
+                                                    SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    Text(
+                                                      "${formattedDate ?? ''}|${formattedTime ?? ''}",
+                                                      style: TextStyle(
+                                                          // color: Colors.grey,
+                                                          // fontWeight:
+                                                          //     FontWeight.bold,
+                                                          fontSize: 14),
+                                                    ),
+                                                  ])
                                             ],
                                           ),
-                                          Text(
-                                            "Time :    ${formattedTime ?? ''}",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16),
-                                          ),
+                                          // Text(
+                                          //   "Time :    ${formattedTime ?? ''}",
+                                          //   style: TextStyle(
+                                          //       fontWeight: FontWeight.bold,
+                                          //       fontSize: 16),
+                                          // ),
                                         ],
                                       ),
                                       SizedBox(height: 5),
@@ -1507,26 +1580,37 @@ class _AdminHomePageState extends State<AdminHomePage> {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Text(
-                                                "Order ID #${currentCustomerAddress.orderId ?? ''}",
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 16),
-                                              ),
-                                              Text(
-                                                "Date : ${formattedDate ?? ''}",
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 16),
-                                              ),
+                                              Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      "Order ID #${currentCustomerAddress.orderId ?? ''}",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 16),
+                                                    ),
+                                                    SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    Text(
+                                                      "${formattedDate ?? ''}|${formattedTime ?? ''}",
+                                                      style: TextStyle(
+                                                          // color: Colors.grey,
+                                                          // fontWeight:
+                                                          //     FontWeight.bold,
+                                                          fontSize: 14),
+                                                    ),
+                                                  ])
                                             ],
                                           ),
-                                          Text(
-                                            "Time :    ${formattedTime ?? ''}",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16),
-                                          ),
+                                          // Text(
+                                          //   "Time :    ${formattedTime ?? ''}",
+                                          //   style: TextStyle(
+                                          //       fontWeight: FontWeight.bold,
+                                          //       fontSize: 16),
+                                          // ),
                                         ],
                                       ),
                                       SizedBox(height: 5),

@@ -3257,4 +3257,45 @@ class NamFoodApiService {
       handleError();
     }
   }
+
+  // Order  Cancel
+
+  Future ordercancel(postData) async {
+    try {
+      print("test $postData");
+      final url = Uri.parse('${liveApiPath}v1/cancelorder');
+      final response = await client.post(url,
+          headers: headerData, body: jsonEncode(postData));
+
+      if (response.statusCode == 200) {
+        final json = response.body;
+        return json;
+      } else {
+        print('error');
+        throw Exception(
+            'Failed. Status code: ${response.statusCode} ${response.toString()}');
+      }
+    } catch (e) {
+      print('catcherror ${e}');
+      return e;
+    }
+  }
+
+  // Registered List
+  Future getregistereduserList() async {
+    try {
+      final url = Uri.parse('${liveApiPath}v1/getallcustomer');
+      final response = await client.get(
+        url,
+        headers: headerData,
+      );
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        return response;
+      }
+    } catch (e) {
+      return e;
+    }
+  }
 }

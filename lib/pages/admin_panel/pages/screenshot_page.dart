@@ -800,32 +800,52 @@ class _ScreenshotPageState extends State<ScreenshotPage> {
                                         ),
                                         child: Row(
                                           children: [
-                                            // e.imageUrl != null
-                                            //     ?
-                                            e.imageUrl == null
-                                                ? ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            12),
-                                                    child: Image.asset(
-                                                      AppAssets.moneyIcon,
-                                                      width: 28,
-                                                      height: 28,
-                                                      //  fit: BoxFit.cover,
-                                                    ),
-                                                  )
-                                                : Image.network(
-                                                    height: 80,
-                                                    width: 100,
-                                                    AppConstants.imgBaseUrl +
-                                                        (e.imageUrl ?? ''),
+                                            GestureDetector(
+                                              onTap: () {
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (_) => Dialog(
+                                                    backgroundColor:
+                                                        Colors.transparent,
+                                                    child: e.imageUrl == null
+                                                        ? Image.asset(
+                                                            AppAssets.moneyIcon,
+                                                            fit: BoxFit.contain,
+                                                          )
+                                                        : Image.network(
+                                                            AppConstants
+                                                                    .imgBaseUrl +
+                                                                e.imageUrl!,
+                                                            fit: BoxFit.contain,
+                                                          ),
                                                   ),
-                                            // :
-                                            //  Image.asset(
-                                            //     AppAssets.payment,
-                                            //     height: 80,
-                                            //     width: 100,
-                                            //   ),
+                                                );
+                                              },
+                                              child: e.imageUrl == null
+                                                  ? ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              12),
+                                                      child: Image.asset(
+                                                        AppAssets.moneyIcon,
+                                                        width: 28,
+                                                        height: 28,
+                                                      ),
+                                                    )
+                                                  : ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              12),
+                                                      child: Image.network(
+                                                        AppConstants
+                                                                .imgBaseUrl +
+                                                            e.imageUrl!,
+                                                        width: 100,
+                                                        height: 80,
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                    ),
+                                            ),
                                             SizedBox(
                                               width: 10,
                                             ),

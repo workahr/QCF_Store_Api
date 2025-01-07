@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:namstore/constants/app_assets.dart';
 import 'package:namstore/constants/app_colors.dart';
+import 'package:namstore/widgets/sub_heading_widget.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../../services/comFuncService.dart';
 import '../../../services/nam_food_api_service.dart';
+import '../../../widgets/heading_widget.dart';
 import '../api_model/orderpayment_model.dart';
 import '../api_model/screenshot_page_model_api.dart';
 
@@ -120,11 +122,14 @@ class _OrdersPaymentState extends State<OrdersPayment> {
         ),
         backgroundColor: AppColors.red,
         toolbarHeight: 100,
-        leading: const Icon(
-          Icons.chevron_left,
-          size: 30,
+        iconTheme: IconThemeData(
           color: Colors.white,
         ),
+        // leading: const Icon(
+        //   Icons.chevron_left,
+        //   size: 30,
+        //   color: Colors.white,
+        // ),
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
             bottomLeft: Radius.circular(20.0),
@@ -200,7 +205,7 @@ class _OrdersPaymentState extends State<OrdersPayment> {
                             //     fontSize: 18,
                             //   ),
                             // ),
-                            subtitle: Column(
+                            title: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 // for (var item in order.items)
@@ -211,29 +216,38 @@ class _OrdersPaymentState extends State<OrdersPayment> {
                                 //     color: Colors.grey,
                                 //   ),
                                 // ),
-                                const SizedBox(height: 5),
-                                Text(
-                                  order.paymentMethod == 'Cash'
-                                      ? 'Cash On Delivery '
-                                      : 'Online Payment',
-                                  style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.red),
+                                // const SizedBox(height: 5),
+                                Row(
+                                  children: [
+                                    HeadingWidget(
+                                      title: 'Payment Method : ',
+                                    ),
+                                    Text(
+                                      order.paymentMethod == 'Cash'
+                                          ? 'Cash'
+                                          : 'Online Payment',
+                                      style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          color: AppColors.red),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
+                            subtitle: SubHeadingWidget(
+                                title: dateFormat(order.createdDate)),
                             trailing: Column(
                               mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                const Text(
-                                  'Amount:',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.black,
-                                  ),
-                                ),
+                                // const Text(
+                                //   'Amount:',
+                                //   style: TextStyle(
+                                //     fontSize: 14,
+                                //     color: Colors.black,
+                                //   ),
+                                // ),
                                 Text(
                                   order.amount == null
                                       ? "₹"
@@ -241,7 +255,7 @@ class _OrdersPaymentState extends State<OrdersPayment> {
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16,
-                                    color: Colors.red,
+                                    color: AppColors.red,
                                   ),
                                 ),
                               ],

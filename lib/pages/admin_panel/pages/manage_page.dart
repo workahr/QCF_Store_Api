@@ -8,6 +8,7 @@ import 'add_delivery_charge_page.dart';
 import 'delivery_person_list.dart';
 import 'join_deliveryboy_list.dart';
 import 'join_store_list.dart';
+import 'registered_user_list.dart';
 import 'report_page.dart';
 
 class ManagePage extends StatefulWidget {
@@ -125,6 +126,20 @@ class _ManagePageState extends State<ManagePage> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => AddDeliveryChargePage()),
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.person_outline,
+                color: AppColors.red,
+              ),
+              title: const Text('Registered Users'),
+              trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => RegisteredUserList()),
                 );
               },
             ),
