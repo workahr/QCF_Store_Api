@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../../constants/app_colors.dart';
 import '../../../services/comFuncService.dart';
@@ -253,6 +254,76 @@ class _AddDeliveryChargePageState extends State<AddDeliveryChargePage> {
     setState(() {});
   }
 
+//Shimmer
+  Widget _buildShimmerPlaceholder() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      child: Shimmer.fromColors(
+        baseColor: Colors.grey.shade300,
+        highlightColor: Colors.grey.shade100,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(13), // Add border radius
+              child: Container(
+                width: double.infinity,
+                height: 60,
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(13), // Add border radius
+              child: Container(
+                width: double.infinity,
+                height: 60,
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(13), // Add border radius
+              child: Container(
+                width: double.infinity,
+                height: 60,
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Center(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(13), // Add border radius
+                child: Container(
+                  width: 80,
+                  height: 60,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(13), // Add border radius
+              child: Container(
+                width: double.infinity,
+                height: 500,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -270,781 +341,823 @@ class _AddDeliveryChargePageState extends State<AddDeliveryChargePage> {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            Center(
-              child: SizedBox(
-                child: Column(
-                  children: <Widget>[
-                    const SizedBox(height: 20),
-                    if (MainLocationListdata != null)
-                      CustomAutoCompleteWidget(
-                        width: MediaQuery.of(context).size.width / 1.1,
-                        selectedItem: selectedmainlocationedit,
-                        labelText: 'Select Main Location',
-                        labelField: (item) => item.name,
-                        onChanged: (value) {
-                          selectedmainlocation = value.name;
-                          selectedmainlocationId = value.id;
-                          print("mainlocation id$selectedmainlocationId");
-                          // getallsublocationList(selectedmainlocationId);
-                        },
-                        valArr: MainLocationListdata,
-                      ),
+      body: isLoading
+          ? ListView.builder(
+              itemCount: 8,
+              itemBuilder: (context, index) {
+                return _buildShimmerPlaceholder();
+              },
+            )
+          : SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  Center(
+                    child: SizedBox(
+                      child: Column(
+                        children: <Widget>[
+                          const SizedBox(height: 20),
+                          if (MainLocationListdata != null)
+                            CustomAutoCompleteWidget(
+                              width: MediaQuery.of(context).size.width / 1.1,
+                              selectedItem: selectedmainlocationedit,
+                              labelText: 'Select Main Location',
+                              labelField: (item) => item.name,
+                              onChanged: (value) {
+                                selectedmainlocation = value.name;
+                                selectedmainlocationId = value.id;
+                                print("mainlocation id$selectedmainlocationId");
+                                // getallsublocationList(selectedmainlocationId);
+                              },
+                              valArr: MainLocationListdata,
+                            ),
 
-                    // const SizedBox(height: 16),
-                    // TextField
-                    Padding(
-                      padding: const EdgeInsets.all(15),
-                      child: TextField(
-                        cursorColor: AppColors.red,
-                        controller: subController,
-                        decoration: InputDecoration(
-                          border: const OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                          // const SizedBox(height: 16),
+                          // TextField
+                          Padding(
+                            padding: const EdgeInsets.all(15),
+                            child: TextField(
+                              cursorColor: AppColors.red,
+                              controller: subController,
+                              decoration: InputDecoration(
+                                border: const OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10)),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10)),
+                                  borderSide: BorderSide(
+                                      color: AppColors
+                                          .lightGrey5), // Default border color
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10)),
+                                  borderSide: BorderSide(
+                                      color: AppColors
+                                          .red), // Border color when focused
+                                ),
+                                floatingLabelStyle:
+                                    TextStyle(color: AppColors.red),
+                                labelText: 'Sub Location',
+                                labelStyle:
+                                    TextStyle(color: AppColors.lightGrey5),
+                              ),
+                            ),
                           ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            borderSide: BorderSide(
-                                color: AppColors
-                                    .lightGrey5), // Default border color
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            borderSide: BorderSide(
-                                color:
-                                    AppColors.red), // Border color when focused
-                          ),
-                          floatingLabelStyle: TextStyle(color: AppColors.red),
-                          labelText: 'Sub Location',
-                          labelStyle: TextStyle(color: AppColors.lightGrey5),
-                        ),
-                      ),
-                    ),
 
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: TextField(
-                        cursorColor: AppColors.red,
-                        controller: deliverychargeController,
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            child: TextField(
+                              cursorColor: AppColors.red,
+                              controller: deliverychargeController,
+                              keyboardType: TextInputType.number,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                              ],
+                              decoration: InputDecoration(
+                                border: const OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10)),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10)),
+                                  borderSide: BorderSide(
+                                    color: AppColors
+                                        .lightGrey5, // Default border color
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10)),
+                                  borderSide: BorderSide(
+                                    color: AppColors
+                                        .red, // Border color when focused
+                                  ),
+                                ),
+                                floatingLabelStyle:
+                                    TextStyle(color: AppColors.red),
+                                labelText: 'Delivery Charge',
+                                labelStyle:
+                                    TextStyle(color: AppColors.lightGrey5),
+                              ),
+                            ),
+                          ),
+
+                          const SizedBox(height: 16),
+                          ElevatedButton(
+                            child: const Text(
+                              'Add',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            onPressed: () {
+                              if (subController.text.toString() == '' ||
+                                  deliverychargeController.text.toString() ==
+                                      "") {
+                                showInSnackBar(context, "Enter the All Fields");
+                              } else if (selectedmainlocationId == '' ||
+                                  selectedmainlocationId == null ||
+                                  selectedmainlocationId == "null" ||
+                                  selectedmainlocationId == 0) {
+                                showInSnackBar(context, "Enter the All Fields");
+                              } else {
+                                addsublocation();
+                              }
+                            },
+                            style: ButtonStyle(
+                              shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10)),
+                                ),
+                              ),
+                              backgroundColor:
+                                  MaterialStateProperty.all(AppColors.red),
+                              minimumSize:
+                                  MaterialStateProperty.all(const Size(50, 50)),
+                              textStyle: MaterialStateProperty.all(
+                                  const TextStyle(
+                                      fontSize: 16, color: Colors.white)),
+                            ),
+                          ),
                         ],
-                        decoration: InputDecoration(
-                          border: const OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            borderSide: BorderSide(
-                              color:
-                                  AppColors.lightGrey5, // Default border color
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            borderSide: BorderSide(
-                              color: AppColors.red, // Border color when focused
-                            ),
-                          ),
-                          floatingLabelStyle: TextStyle(color: AppColors.red),
-                          labelText: 'Delivery Charge',
-                          labelStyle: TextStyle(color: AppColors.lightGrey5),
-                        ),
                       ),
                     ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(15),
+                    child: SubListData != null && SubListData!.isNotEmpty
+                        // ? SingleChildScrollView(
+                        //     scrollDirection: Axis.horizontal,
+                        //     child: DataTable(
+                        //       border: TableBorder.all(
+                        //         color: Colors.black,
+                        //         width: 2,
+                        //       ),
+                        //       columnSpacing: 10,
+                        //       horizontalMargin: 6,
+                        //       columns: [
+                        //         DataColumn(label: Text('S.No')),
+                        //         DataColumn(label: Text('Main Location')),
+                        //         DataColumn(label: Text('Sub Location')),
+                        //         DataColumn(label: Text('Delivery Charge')),
+                        //         DataColumn(label: Text('Edit')),
+                        //         DataColumn(label: Text('Delete')),
+                        //       ],
+                        //       rows: List<DataRow>.generate(
+                        //         SubListData!.length,
+                        //         (index) {
+                        //           final element = SubListData![index];
+                        //           final subId = element.id?.toString() ?? '';
+                        //           final mainid = element.mainLocationId;
+                        //           final deliveryCharge =
+                        //               element.price.toString() == null
+                        //                   ? ""
+                        //                   : element.price.toString();
+                        //           final sublocation = element.name ?? ' ';
+                        //           final mainLocationMap = {
+                        //             for (var location in MainLocationListdata ?? [])
+                        //               location.id: location.name
+                        //           };
 
-                    const SizedBox(height: 16),
-                    ElevatedButton(
-                      child: const Text(
-                        'Add',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      onPressed: () {
-                        if (subController.text.toString() == '' ||
-                            deliverychargeController.text.toString() == "") {
-                          showInSnackBar(context, "Enter the All Fields");
-                        } else if (selectedmainlocationId == '' ||
-                            selectedmainlocationId == null ||
-                            selectedmainlocationId == "null" ||
-                            selectedmainlocationId == 0) {
-                          showInSnackBar(context, "Enter the All Fields");
-                        } else {
-                          addsublocation();
-                        }
-                      },
-                      style: ButtonStyle(
-                        shape: MaterialStateProperty.all(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                          ),
-                        ),
-                        backgroundColor:
-                            MaterialStateProperty.all(AppColors.red),
-                        minimumSize:
-                            MaterialStateProperty.all(const Size(50, 50)),
-                        textStyle: MaterialStateProperty.all(
-                            const TextStyle(fontSize: 16, color: Colors.white)),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(15),
-              child: SubListData != null && SubListData!.isNotEmpty
-                  // ? SingleChildScrollView(
-                  //     scrollDirection: Axis.horizontal,
-                  //     child: DataTable(
-                  //       border: TableBorder.all(
-                  //         color: Colors.black,
-                  //         width: 2,
-                  //       ),
-                  //       columnSpacing: 10,
-                  //       horizontalMargin: 6,
-                  //       columns: [
-                  //         DataColumn(label: Text('S.No')),
-                  //         DataColumn(label: Text('Main Location')),
-                  //         DataColumn(label: Text('Sub Location')),
-                  //         DataColumn(label: Text('Delivery Charge')),
-                  //         DataColumn(label: Text('Edit')),
-                  //         DataColumn(label: Text('Delete')),
-                  //       ],
-                  //       rows: List<DataRow>.generate(
-                  //         SubListData!.length,
-                  //         (index) {
-                  //           final element = SubListData![index];
-                  //           final subId = element.id?.toString() ?? '';
-                  //           final mainid = element.mainLocationId;
-                  //           final deliveryCharge =
-                  //               element.price.toString() == null
-                  //                   ? ""
-                  //                   : element.price.toString();
-                  //           final sublocation = element.name ?? ' ';
-                  //           final mainLocationMap = {
-                  //             for (var location in MainLocationListdata ?? [])
-                  //               location.id: location.name
-                  //           };
+                        //           final mainLocationName =
+                        //               mainLocationMap[mainid] ?? ' ';
+                        //           print(
+                        //               'Index: $index, SubId: $subId, MainLocation: $mainLocationName');
 
-                  //           final mainLocationName =
-                  //               mainLocationMap[mainid] ?? ' ';
-                  //           print(
-                  //               'Index: $index, SubId: $subId, MainLocation: $mainLocationName');
+                        //           return DataRow(
+                        //             cells: [
+                        //               DataCell(Text((index + 1).toString())),
+                        //               DataCell(Text(mainLocationName)),
+                        //               DataCell(Text(sublocation)),
+                        //               DataCell(Text(deliveryCharge)),
+                        //               DataCell(
+                        //                 TextButton.icon(
+                        //                   onPressed: () {
+                        //                     if (subId.isNotEmpty) {
+                        //                       subController.text = sublocation;
+                        //                       deliverychargeController.text =
+                        //                           deliveryCharge;
 
-                  //           return DataRow(
-                  //             cells: [
-                  //               DataCell(Text((index + 1).toString())),
-                  //               DataCell(Text(mainLocationName)),
-                  //               DataCell(Text(sublocation)),
-                  //               DataCell(Text(deliveryCharge)),
-                  //               DataCell(
-                  //                 TextButton.icon(
-                  //                   onPressed: () {
-                  //                     if (subId.isNotEmpty) {
-                  //                       subController.text = sublocation;
-                  //                       deliverychargeController.text =
-                  //                           deliveryCharge;
+                        //                       selectedmainlocationId = mainid;
+                        //                       print(
+                        //                           "mainlocation${selectedmainlocationId}");
+                        //                       showDialog(
+                        //                         context: context,
+                        //                         builder: (context) {
+                        //                           return AlertDialog(
+                        //                             shape: RoundedRectangleBorder(
+                        //                               borderRadius: BorderRadius.all(
+                        //                                 Radius.circular(30.0),
+                        //                               ),
+                        //                             ),
+                        //                             content: StatefulBuilder(
+                        //                               builder: (BuildContext context,
+                        //                                   StateSetter setState) {
+                        //                                 return SingleChildScrollView(
+                        //                                   child: ConstrainedBox(
+                        //                                     constraints:
+                        //                                         BoxConstraints(
+                        //                                       maxHeight:
+                        //                                           MediaQuery.of(
+                        //                                                       context)
+                        //                                                   .size
+                        //                                                   .height *
+                        //                                               0.8,
+                        //                                     ),
+                        //                                     child: Form(
+                        //                                       child: Column(
+                        //                                         mainAxisSize:
+                        //                                             MainAxisSize.min,
+                        //                                         children: [
+                        //                                           GestureDetector(
+                        //                                             onTap: () {
+                        //                                               Navigator.of(
+                        //                                                       context)
+                        //                                                   .pop();
+                        //                                               subController
+                        //                                                   .clear();
+                        //                                               deliverychargeController
+                        //                                                   .clear();
+                        //                                             },
+                        //                                             child: Align(
+                        //                                               alignment:
+                        //                                                   Alignment
+                        //                                                       .topRight,
+                        //                                               child:
+                        //                                                   CircleAvatar(
+                        //                                                 radius: 17.0,
+                        //                                                 backgroundColor:
+                        //                                                     Colors
+                        //                                                         .black12,
+                        //                                                 child: Icon(
+                        //                                                   Icons.close,
+                        //                                                   color: Colors
+                        //                                                       .red,
+                        //                                                 ),
+                        //                                               ),
+                        //                                             ),
+                        //                                           ),
+                        //                                           SizedBox(
+                        //                                               height: 20),
+                        //                                           if (MainLocationListdata !=
+                        //                                               null)
+                        //                                             CustomAutoCompleteWidget(
+                        //                                               width: MediaQuery.of(
+                        //                                                           context)
+                        //                                                       .size
+                        //                                                       .width *
+                        //                                                   2,
+                        //                                               selectedItem:
+                        //                                                   MainLocationListdata!
+                        //                                                       .firstWhere(
+                        //                                                 (item) =>
+                        //                                                     item.id ==
+                        //                                                     selectedmainlocationId,
+                        //                                                 // Default value
+                        //                                               ),
+                        //                                               labelText:
+                        //                                                   'Select Main Location',
+                        //                                               labelField:
+                        //                                                   (item) =>
+                        //                                                       item.name,
+                        //                                               onChanged:
+                        //                                                   (value) {
+                        //                                                 selectedmainlocation =
+                        //                                                     value
+                        //                                                         .name;
+                        //                                                 selectedmainlocationId =
+                        //                                                     value.id;
+                        //                                                 print(
+                        //                                                     "mainlocation id: $selectedmainlocationId");
+                        //                                               },
+                        //                                               valArr:
+                        //                                                   MainLocationListdata,
+                        //                                             ),
+                        //                                           SizedBox(
+                        //                                               height: 20),
+                        //                                           TextFormField(
+                        //                                             controller:
+                        //                                                 subController,
+                        //                                             decoration:
+                        //                                                 InputDecoration(
+                        //                                               hintText:
+                        //                                                   'Sub Location',
+                        //                                               border:
+                        //                                                   OutlineInputBorder(),
+                        //                                             ),
+                        //                                           ),
+                        //                                           SizedBox(
+                        //                                               height: 10),
+                        //                                           TextFormField(
+                        //                                             controller:
+                        //                                                 deliverychargeController,
+                        //                                             keyboardType:
+                        //                                                 TextInputType
+                        //                                                     .number,
+                        //                                             inputFormatters: [
+                        //                                               FilteringTextInputFormatter
+                        //                                                   .digitsOnly,
+                        //                                             ],
+                        //                                             decoration:
+                        //                                                 InputDecoration(
+                        //                                               hintText:
+                        //                                                   'Delivery Charge',
+                        //                                               border:
+                        //                                                   OutlineInputBorder(),
+                        //                                             ),
+                        //                                           ),
+                        //                                           SizedBox(
+                        //                                               height: 10),
+                        //                                           Container(
+                        //                                             margin: EdgeInsets
+                        //                                                 .all(25),
+                        //                                             child:
+                        //                                                 ElevatedButton(
+                        //                                               onPressed: () {
+                        //                                                 if (subController
+                        //                                                         .text
+                        //                                                         .trim()
+                        //                                                         .isEmpty ||
+                        //                                                     deliverychargeController
+                        //                                                         .text
+                        //                                                         .trim()
+                        //                                                         .isEmpty) {
+                        //                                                   showInSnackBar(
+                        //                                                       context,
+                        //                                                       "Enter the All Fields");
+                        //                                                 } else if (selectedmainlocationId ==
+                        //                                                         '' ||
+                        //                                                     selectedmainlocationId ==
+                        //                                                         null ||
+                        //                                                     selectedmainlocationId ==
+                        //                                                         "null" ||
+                        //                                                     selectedmainlocationId ==
+                        //                                                         0) {
+                        //                                                   showInSnackBar(
+                        //                                                       context,
+                        //                                                       "Enter the All Fields");
+                        //                                                 } else {
+                        //                                                   updatesublocation(
+                        //                                                       subId);
+                        //                                                 }
+                        //                                               },
+                        //                                               child: Text(
+                        //                                                   'Update'),
+                        //                                               style:
+                        //                                                   ButtonStyle(
+                        //                                                 backgroundColor:
+                        //                                                     MaterialStateProperty
+                        //                                                         .all(
+                        //                                                   AppColors
+                        //                                                       .red,
+                        //                                                 ),
+                        //                                                 padding:
+                        //                                                     MaterialStateProperty
+                        //                                                         .all(
+                        //                                                   EdgeInsets
+                        //                                                       .all(
+                        //                                                           15),
+                        //                                                 ),
+                        //                                                 textStyle:
+                        //                                                     MaterialStateProperty
+                        //                                                         .all(
+                        //                                                   TextStyle(
+                        //                                                     fontSize:
+                        //                                                         16,
+                        //                                                     color: Colors
+                        //                                                         .white,
+                        //                                                   ),
+                        //                                                 ),
+                        //                                               ),
+                        //                                             ),
+                        //                                           ),
+                        //                                         ],
+                        //                                       ),
+                        //                                     ),
+                        //                                   ),
+                        //                                 );
+                        //                               },
+                        //                             ),
+                        //                           );
+                        //                         },
+                        //                       );
+                        //                     }
+                        //                   },
+                        //                   icon: Icon(Icons.edit, color: Colors.blue),
+                        //                   label: Text('Edit'),
+                        //                 ),
+                        //               ),
+                        //               DataCell(
+                        //                 TextButton.icon(
+                        //                   onPressed: () {
+                        //                     if (subId.isNotEmpty) {
+                        //                       showDialog(
+                        //                         context: context,
+                        //                         builder: (context) => AlertDialog(
+                        //                           title: Text(
+                        //                             'Confirm Deletion',
+                        //                             style:
+                        //                                 TextStyle(color: Colors.red),
+                        //                           ),
+                        //                           content: Text(
+                        //                               'Do you really want to delete this Sub Location'),
+                        //                           actions: [
+                        //                             TextButton(
+                        //                               onPressed: () {
+                        //                                 Navigator.of(context).pop();
+                        //                                 deletesublocation(subId);
+                        //                               },
+                        //                               child: Text('Confirm',
+                        //                                   style: TextStyle(
+                        //                                       color: Colors.red)),
+                        //                             ),
+                        //                             TextButton(
+                        //                               onPressed: () {
+                        //                                 Navigator.of(context).pop();
+                        //                               },
+                        //                               child: Text('Cancel',
+                        //                                   style: TextStyle(
+                        //                                       color: Colors.grey)),
+                        //                             ),
+                        //                           ],
+                        //                         ),
+                        //                       );
+                        //                     }
+                        //                   },
+                        //                   icon: Icon(Icons.delete, color: Colors.red),
+                        //                   label: Text('Delete'),
+                        //                 ),
+                        //               ),
+                        //             ],
+                        //           );
+                        //         },
+                        //       ),
+                        //     ),
+                        //   )
 
-                  //                       selectedmainlocationId = mainid;
-                  //                       print(
-                  //                           "mainlocation${selectedmainlocationId}");
-                  //                       showDialog(
-                  //                         context: context,
-                  //                         builder: (context) {
-                  //                           return AlertDialog(
-                  //                             shape: RoundedRectangleBorder(
-                  //                               borderRadius: BorderRadius.all(
-                  //                                 Radius.circular(30.0),
-                  //                               ),
-                  //                             ),
-                  //                             content: StatefulBuilder(
-                  //                               builder: (BuildContext context,
-                  //                                   StateSetter setState) {
-                  //                                 return SingleChildScrollView(
-                  //                                   child: ConstrainedBox(
-                  //                                     constraints:
-                  //                                         BoxConstraints(
-                  //                                       maxHeight:
-                  //                                           MediaQuery.of(
-                  //                                                       context)
-                  //                                                   .size
-                  //                                                   .height *
-                  //                                               0.8,
-                  //                                     ),
-                  //                                     child: Form(
-                  //                                       child: Column(
-                  //                                         mainAxisSize:
-                  //                                             MainAxisSize.min,
-                  //                                         children: [
-                  //                                           GestureDetector(
-                  //                                             onTap: () {
-                  //                                               Navigator.of(
-                  //                                                       context)
-                  //                                                   .pop();
-                  //                                               subController
-                  //                                                   .clear();
-                  //                                               deliverychargeController
-                  //                                                   .clear();
-                  //                                             },
-                  //                                             child: Align(
-                  //                                               alignment:
-                  //                                                   Alignment
-                  //                                                       .topRight,
-                  //                                               child:
-                  //                                                   CircleAvatar(
-                  //                                                 radius: 17.0,
-                  //                                                 backgroundColor:
-                  //                                                     Colors
-                  //                                                         .black12,
-                  //                                                 child: Icon(
-                  //                                                   Icons.close,
-                  //                                                   color: Colors
-                  //                                                       .red,
-                  //                                                 ),
-                  //                                               ),
-                  //                                             ),
-                  //                                           ),
-                  //                                           SizedBox(
-                  //                                               height: 20),
-                  //                                           if (MainLocationListdata !=
-                  //                                               null)
-                  //                                             CustomAutoCompleteWidget(
-                  //                                               width: MediaQuery.of(
-                  //                                                           context)
-                  //                                                       .size
-                  //                                                       .width *
-                  //                                                   2,
-                  //                                               selectedItem:
-                  //                                                   MainLocationListdata!
-                  //                                                       .firstWhere(
-                  //                                                 (item) =>
-                  //                                                     item.id ==
-                  //                                                     selectedmainlocationId,
-                  //                                                 // Default value
-                  //                                               ),
-                  //                                               labelText:
-                  //                                                   'Select Main Location',
-                  //                                               labelField:
-                  //                                                   (item) =>
-                  //                                                       item.name,
-                  //                                               onChanged:
-                  //                                                   (value) {
-                  //                                                 selectedmainlocation =
-                  //                                                     value
-                  //                                                         .name;
-                  //                                                 selectedmainlocationId =
-                  //                                                     value.id;
-                  //                                                 print(
-                  //                                                     "mainlocation id: $selectedmainlocationId");
-                  //                                               },
-                  //                                               valArr:
-                  //                                                   MainLocationListdata,
-                  //                                             ),
-                  //                                           SizedBox(
-                  //                                               height: 20),
-                  //                                           TextFormField(
-                  //                                             controller:
-                  //                                                 subController,
-                  //                                             decoration:
-                  //                                                 InputDecoration(
-                  //                                               hintText:
-                  //                                                   'Sub Location',
-                  //                                               border:
-                  //                                                   OutlineInputBorder(),
-                  //                                             ),
-                  //                                           ),
-                  //                                           SizedBox(
-                  //                                               height: 10),
-                  //                                           TextFormField(
-                  //                                             controller:
-                  //                                                 deliverychargeController,
-                  //                                             keyboardType:
-                  //                                                 TextInputType
-                  //                                                     .number,
-                  //                                             inputFormatters: [
-                  //                                               FilteringTextInputFormatter
-                  //                                                   .digitsOnly,
-                  //                                             ],
-                  //                                             decoration:
-                  //                                                 InputDecoration(
-                  //                                               hintText:
-                  //                                                   'Delivery Charge',
-                  //                                               border:
-                  //                                                   OutlineInputBorder(),
-                  //                                             ),
-                  //                                           ),
-                  //                                           SizedBox(
-                  //                                               height: 10),
-                  //                                           Container(
-                  //                                             margin: EdgeInsets
-                  //                                                 .all(25),
-                  //                                             child:
-                  //                                                 ElevatedButton(
-                  //                                               onPressed: () {
-                  //                                                 if (subController
-                  //                                                         .text
-                  //                                                         .trim()
-                  //                                                         .isEmpty ||
-                  //                                                     deliverychargeController
-                  //                                                         .text
-                  //                                                         .trim()
-                  //                                                         .isEmpty) {
-                  //                                                   showInSnackBar(
-                  //                                                       context,
-                  //                                                       "Enter the All Fields");
-                  //                                                 } else if (selectedmainlocationId ==
-                  //                                                         '' ||
-                  //                                                     selectedmainlocationId ==
-                  //                                                         null ||
-                  //                                                     selectedmainlocationId ==
-                  //                                                         "null" ||
-                  //                                                     selectedmainlocationId ==
-                  //                                                         0) {
-                  //                                                   showInSnackBar(
-                  //                                                       context,
-                  //                                                       "Enter the All Fields");
-                  //                                                 } else {
-                  //                                                   updatesublocation(
-                  //                                                       subId);
-                  //                                                 }
-                  //                                               },
-                  //                                               child: Text(
-                  //                                                   'Update'),
-                  //                                               style:
-                  //                                                   ButtonStyle(
-                  //                                                 backgroundColor:
-                  //                                                     MaterialStateProperty
-                  //                                                         .all(
-                  //                                                   AppColors
-                  //                                                       .red,
-                  //                                                 ),
-                  //                                                 padding:
-                  //                                                     MaterialStateProperty
-                  //                                                         .all(
-                  //                                                   EdgeInsets
-                  //                                                       .all(
-                  //                                                           15),
-                  //                                                 ),
-                  //                                                 textStyle:
-                  //                                                     MaterialStateProperty
-                  //                                                         .all(
-                  //                                                   TextStyle(
-                  //                                                     fontSize:
-                  //                                                         16,
-                  //                                                     color: Colors
-                  //                                                         .white,
-                  //                                                   ),
-                  //                                                 ),
-                  //                                               ),
-                  //                                             ),
-                  //                                           ),
-                  //                                         ],
-                  //                                       ),
-                  //                                     ),
-                  //                                   ),
-                  //                                 );
-                  //                               },
-                  //                             ),
-                  //                           );
-                  //                         },
-                  //                       );
-                  //                     }
-                  //                   },
-                  //                   icon: Icon(Icons.edit, color: Colors.blue),
-                  //                   label: Text('Edit'),
-                  //                 ),
-                  //               ),
-                  //               DataCell(
-                  //                 TextButton.icon(
-                  //                   onPressed: () {
-                  //                     if (subId.isNotEmpty) {
-                  //                       showDialog(
-                  //                         context: context,
-                  //                         builder: (context) => AlertDialog(
-                  //                           title: Text(
-                  //                             'Confirm Deletion',
-                  //                             style:
-                  //                                 TextStyle(color: Colors.red),
-                  //                           ),
-                  //                           content: Text(
-                  //                               'Do you really want to delete this Sub Location'),
-                  //                           actions: [
-                  //                             TextButton(
-                  //                               onPressed: () {
-                  //                                 Navigator.of(context).pop();
-                  //                                 deletesublocation(subId);
-                  //                               },
-                  //                               child: Text('Confirm',
-                  //                                   style: TextStyle(
-                  //                                       color: Colors.red)),
-                  //                             ),
-                  //                             TextButton(
-                  //                               onPressed: () {
-                  //                                 Navigator.of(context).pop();
-                  //                               },
-                  //                               child: Text('Cancel',
-                  //                                   style: TextStyle(
-                  //                                       color: Colors.grey)),
-                  //                             ),
-                  //                           ],
-                  //                         ),
-                  //                       );
-                  //                     }
-                  //                   },
-                  //                   icon: Icon(Icons.delete, color: Colors.red),
-                  //                   label: Text('Delete'),
-                  //                 ),
-                  //               ),
-                  //             ],
-                  //           );
-                  //         },
-                  //       ),
-                  //     ),
-                  //   )
-
-                  ? SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          border: Border.all(
-                            color: Colors.grey.shade400,
-                            width: 1,
-                          ),
-                        ),
-                        child: DataTable(
-                          border: TableBorder(
-                            horizontalInside: BorderSide(
-                              color: Colors.grey.shade400,
-                              width: 1,
-                            ),
-                            verticalInside: BorderSide.none,
-                          ),
-                          columnSpacing: 18,
-                          horizontalMargin: 8,
-                          columns: [
-                            DataColumn(
-                              label: Text(
-                                'S.No',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                  color: Colors.black87,
+                        ? SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                                border: Border.all(
+                                  color: Colors.grey.shade400,
+                                  width: 1,
                                 ),
                               ),
-                            ),
-                            DataColumn(
-                              label: Text(
-                                'Main Location',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                  color: Colors.black87,
+                              child: DataTable(
+                                border: TableBorder(
+                                  horizontalInside: BorderSide(
+                                    color: Colors.grey.shade400,
+                                    width: 1,
+                                  ),
+                                  verticalInside: BorderSide.none,
                                 ),
-                              ),
-                            ),
-                            DataColumn(
-                              label: Text(
-                                'Sub Location',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                  color: Colors.black87,
-                                ),
-                              ),
-                            ),
-                            DataColumn(
-                              label: Text(
-                                'Delivery Charge',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                  color: Colors.black87,
-                                ),
-                              ),
-                            ),
-                            DataColumn(
-                              label: Text(
-                                '     Edit',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                  color: Colors.black87,
-                                ),
-                              ),
-                            ),
-                            DataColumn(
-                              label: Text(
-                                '   Delete',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                  color: Colors.black87,
-                                ),
-                              ),
-                            ),
-                          ],
-                          rows: List<DataRow>.generate(
-                            SubListData!.length,
-                            (index) {
-                              final element = SubListData![index];
-                              final subId = element.id?.toString() ?? '';
-                              final mainid = element.mainLocationId;
-                              final deliveryCharge =
-                                  element.price?.toString() ?? '';
-                              final subLocation = element.name ?? ' ';
-                              final mainLocationMap = {
-                                for (var location in MainLocationListdata ?? [])
-                                  location.id: location.name
-                              };
-                              final mainLocationName =
-                                  mainLocationMap[mainid] ?? ' ';
-                              final isEven = index % 2 == 0;
-
-                              return DataRow(
-                                color:
-                                    MaterialStateProperty.resolveWith<Color?>(
-                                  (Set<MaterialState> states) =>
-                                      isEven ? Colors.grey.shade100 : null,
-                                ),
-                                cells: [
-                                  DataCell(Text((index + 1).toString())),
-                                  DataCell(Text(mainLocationName)),
-                                  DataCell(Text(subLocation)),
-                                  DataCell(
-                                    Align(
-                                      alignment: Alignment.centerRight,
-                                      child: Text(deliveryCharge),
+                                columnSpacing: 18,
+                                horizontalMargin: 8,
+                                columns: [
+                                  DataColumn(
+                                    label: Text(
+                                      'S.No',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                        color: Colors.black87,
+                                      ),
                                     ),
                                   ),
-                                  DataCell(
-                                    TextButton.icon(
-                                      onPressed: () {
-                                        if (subId.isNotEmpty) {
-                                          subController.text = subLocation;
-                                          deliverychargeController.text =
-                                              deliveryCharge;
-
-                                          selectedmainlocationId = mainid;
-                                          showDialog(
-                                            context: context,
-                                            builder: (context) {
-                                              return AlertDialog(
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                    Radius.circular(20.0),
-                                                  ),
-                                                ),
-                                                content: StatefulBuilder(
-                                                  builder: (BuildContext
-                                                          context,
-                                                      StateSetter setState) {
-                                                    return SingleChildScrollView(
-                                                      child: Form(
-                                                        child: Column(
-                                                          children: [
-                                                            GestureDetector(
-                                                              onTap: () {
-                                                                Navigator.of(
-                                                                        context)
-                                                                    .pop();
-                                                                subController
-                                                                    .clear();
-                                                                deliverychargeController
-                                                                    .clear();
-                                                              },
-                                                              child: Align(
-                                                                alignment:
-                                                                    Alignment
-                                                                        .topRight,
-                                                                child:
-                                                                    CircleAvatar(
-                                                                  radius: 15.0,
-                                                                  backgroundColor:
-                                                                      Colors
-                                                                          .black12,
-                                                                  child: Icon(
-                                                                    Icons.close,
-                                                                    color: Colors
-                                                                        .red,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            SizedBox(
-                                                                height: 20),
-                                                            CustomAutoCompleteWidget(
-                                                              selectedItem:
-                                                                  MainLocationListdata!
-                                                                      .firstWhere(
-                                                                (item) =>
-                                                                    item.id ==
-                                                                    selectedmainlocationId,
-                                                              ),
-                                                              labelText:
-                                                                  'Select Main Location',
-                                                              labelField:
-                                                                  (item) =>
-                                                                      item.name,
-                                                              onChanged:
-                                                                  (value) {
-                                                                selectedmainlocation =
-                                                                    value.name;
-                                                                selectedmainlocationId =
-                                                                    value.id;
-                                                              },
-                                                              valArr:
-                                                                  MainLocationListdata,
-                                                            ),
-                                                            SizedBox(
-                                                                height: 20),
-                                                            TextFormField(
-                                                              controller:
-                                                                  subController,
-                                                              decoration:
-                                                                  InputDecoration(
-                                                                hintText:
-                                                                    'Sub Location',
-                                                                border:
-                                                                    OutlineInputBorder(),
-                                                              ),
-                                                            ),
-                                                            SizedBox(
-                                                                height: 10),
-                                                            TextFormField(
-                                                              controller:
-                                                                  deliverychargeController,
-                                                              keyboardType:
-                                                                  TextInputType
-                                                                      .number,
-                                                              inputFormatters: [
-                                                                FilteringTextInputFormatter
-                                                                    .digitsOnly,
-                                                              ],
-                                                              decoration:
-                                                                  InputDecoration(
-                                                                hintText:
-                                                                    'Delivery Charge',
-                                                                border:
-                                                                    OutlineInputBorder(),
-                                                              ),
-                                                            ),
-                                                            SizedBox(
-                                                                height: 10),
-                                                            ElevatedButton(
-                                                              onPressed: () {
-                                                                if (subController.text.trim().isEmpty ||
-                                                                    deliverychargeController
-                                                                        .text
-                                                                        .trim()
-                                                                        .isEmpty ||
-                                                                    selectedmainlocationId ==
-                                                                        '') {
-                                                                  showInSnackBar(
-                                                                      context,
-                                                                      "Enter all fields");
-                                                                } else {
-                                                                  updatesublocation(
-                                                                      subId);
-                                                                }
-                                                              },
-                                                              child: Text(
-                                                                  'Update'),
-                                                              style:
-                                                                  ButtonStyle(
-                                                                backgroundColor:
-                                                                    MaterialStateProperty.all(
-                                                                        AppColors
-                                                                            .red),
-                                                                padding: MaterialStateProperty
-                                                                    .all(EdgeInsets
-                                                                        .all(
-                                                                            15)),
-                                                                textStyle: MaterialStateProperty
-                                                                    .all(TextStyle(
-                                                                        fontSize:
-                                                                            16,
-                                                                        color: Colors
-                                                                            .white)),
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    );
-                                                  },
-                                                ),
-                                              );
-                                            },
-                                          );
-                                        }
-                                      },
-                                      icon:
-                                          Icon(Icons.edit, color: Colors.blue),
-                                      label: Text('Edit'),
+                                  DataColumn(
+                                    label: Text(
+                                      'Main Location',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                        color: Colors.black87,
+                                      ),
                                     ),
                                   ),
-                                  DataCell(
-                                    TextButton.icon(
-                                      onPressed: () {
-                                        if (subId.isNotEmpty) {
-                                          showDialog(
-                                            context: context,
-                                            builder: (context) => AlertDialog(
-                                              title: Text('Confirm Deletion',
-                                                  style: TextStyle(
-                                                      color: Colors.red)),
-                                              content: Text(
-                                                  'Do you really want to delete this Sub Location?'),
-                                              actions: [
-                                                TextButton(
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                    deletesublocation(subId);
-                                                  },
-                                                  child: Text('Confirm',
-                                                      style: TextStyle(
-                                                          color: Colors.red)),
-                                                ),
-                                                TextButton(
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                  child: Text('Cancel',
-                                                      style: TextStyle(
-                                                          color: Colors.grey)),
-                                                ),
-                                              ],
-                                            ),
-                                          );
-                                        }
-                                      },
-                                      icon:
-                                          Icon(Icons.delete, color: Colors.red),
-                                      label: Text('Delete'),
+                                  DataColumn(
+                                    label: Text(
+                                      'Sub Location',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                        color: Colors.black87,
+                                      ),
+                                    ),
+                                  ),
+                                  DataColumn(
+                                    label: Text(
+                                      'Delivery Charge',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                        color: Colors.black87,
+                                      ),
+                                    ),
+                                  ),
+                                  DataColumn(
+                                    label: Text(
+                                      '     Edit',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                        color: Colors.black87,
+                                      ),
+                                    ),
+                                  ),
+                                  DataColumn(
+                                    label: Text(
+                                      '   Delete',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                        color: Colors.black87,
+                                      ),
                                     ),
                                   ),
                                 ],
-                              );
-                            },
+                                rows: List<DataRow>.generate(
+                                  SubListData!.length,
+                                  (index) {
+                                    final element = SubListData![index];
+                                    final subId = element.id?.toString() ?? '';
+                                    final mainid = element.mainLocationId;
+                                    final deliveryCharge =
+                                        element.price?.toString() ?? '';
+                                    final subLocation = element.name ?? ' ';
+                                    final mainLocationMap = {
+                                      for (var location
+                                          in MainLocationListdata ?? [])
+                                        location.id: location.name
+                                    };
+                                    final mainLocationName =
+                                        mainLocationMap[mainid] ?? ' ';
+                                    final isEven = index % 2 == 0;
+
+                                    return DataRow(
+                                      color: MaterialStateProperty.resolveWith<
+                                          Color?>(
+                                        (Set<MaterialState> states) => isEven
+                                            ? Colors.grey.shade100
+                                            : null,
+                                      ),
+                                      cells: [
+                                        DataCell(Text((index + 1).toString())),
+                                        DataCell(Text(mainLocationName)),
+                                        DataCell(Text(subLocation)),
+                                        DataCell(
+                                          Align(
+                                            alignment: Alignment.centerRight,
+                                            child: Text(deliveryCharge),
+                                          ),
+                                        ),
+                                        DataCell(
+                                          TextButton.icon(
+                                            onPressed: () {
+                                              if (subId.isNotEmpty) {
+                                                subController.text =
+                                                    subLocation;
+                                                deliverychargeController.text =
+                                                    deliveryCharge;
+
+                                                selectedmainlocationId = mainid;
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (context) {
+                                                    return AlertDialog(
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                          Radius.circular(20.0),
+                                                        ),
+                                                      ),
+                                                      content: StatefulBuilder(
+                                                        builder: (BuildContext
+                                                                context,
+                                                            StateSetter
+                                                                setState) {
+                                                          return SingleChildScrollView(
+                                                            child: Form(
+                                                              child: Column(
+                                                                children: [
+                                                                  GestureDetector(
+                                                                    onTap: () {
+                                                                      Navigator.of(
+                                                                              context)
+                                                                          .pop();
+                                                                      subController
+                                                                          .clear();
+                                                                      deliverychargeController
+                                                                          .clear();
+                                                                    },
+                                                                    child:
+                                                                        Align(
+                                                                      alignment:
+                                                                          Alignment
+                                                                              .topRight,
+                                                                      child:
+                                                                          CircleAvatar(
+                                                                        radius:
+                                                                            15.0,
+                                                                        backgroundColor:
+                                                                            Colors.black12,
+                                                                        child:
+                                                                            Icon(
+                                                                          Icons
+                                                                              .close,
+                                                                          color:
+                                                                              Colors.red,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  SizedBox(
+                                                                      height:
+                                                                          20),
+                                                                  CustomAutoCompleteWidget(
+                                                                    selectedItem:
+                                                                        MainLocationListdata!
+                                                                            .firstWhere(
+                                                                      (item) =>
+                                                                          item.id ==
+                                                                          selectedmainlocationId,
+                                                                    ),
+                                                                    labelText:
+                                                                        'Select Main Location',
+                                                                    labelField:
+                                                                        (item) =>
+                                                                            item.name,
+                                                                    onChanged:
+                                                                        (value) {
+                                                                      selectedmainlocation =
+                                                                          value
+                                                                              .name;
+                                                                      selectedmainlocationId =
+                                                                          value
+                                                                              .id;
+                                                                    },
+                                                                    valArr:
+                                                                        MainLocationListdata,
+                                                                  ),
+                                                                  SizedBox(
+                                                                      height:
+                                                                          20),
+                                                                  TextFormField(
+                                                                    controller:
+                                                                        subController,
+                                                                    decoration:
+                                                                        InputDecoration(
+                                                                      hintText:
+                                                                          'Sub Location',
+                                                                      border:
+                                                                          OutlineInputBorder(),
+                                                                    ),
+                                                                  ),
+                                                                  SizedBox(
+                                                                      height:
+                                                                          10),
+                                                                  TextFormField(
+                                                                    controller:
+                                                                        deliverychargeController,
+                                                                    keyboardType:
+                                                                        TextInputType
+                                                                            .number,
+                                                                    inputFormatters: [
+                                                                      FilteringTextInputFormatter
+                                                                          .digitsOnly,
+                                                                    ],
+                                                                    decoration:
+                                                                        InputDecoration(
+                                                                      hintText:
+                                                                          'Delivery Charge',
+                                                                      border:
+                                                                          OutlineInputBorder(),
+                                                                    ),
+                                                                  ),
+                                                                  SizedBox(
+                                                                      height:
+                                                                          10),
+                                                                  ElevatedButton(
+                                                                    onPressed:
+                                                                        () {
+                                                                      if (subController.text.trim().isEmpty ||
+                                                                          deliverychargeController
+                                                                              .text
+                                                                              .trim()
+                                                                              .isEmpty ||
+                                                                          selectedmainlocationId ==
+                                                                              '') {
+                                                                        showInSnackBar(
+                                                                            context,
+                                                                            "Enter all fields");
+                                                                      } else {
+                                                                        updatesublocation(
+                                                                            subId);
+                                                                      }
+                                                                    },
+                                                                    child: Text(
+                                                                        'Update'),
+                                                                    style:
+                                                                        ButtonStyle(
+                                                                      backgroundColor:
+                                                                          MaterialStateProperty.all(
+                                                                              AppColors.red),
+                                                                      padding: MaterialStateProperty.all(
+                                                                          EdgeInsets.all(
+                                                                              15)),
+                                                                      textStyle: MaterialStateProperty.all(TextStyle(
+                                                                          fontSize:
+                                                                              16,
+                                                                          color:
+                                                                              Colors.white)),
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          );
+                                                        },
+                                                      ),
+                                                    );
+                                                  },
+                                                );
+                                              }
+                                            },
+                                            icon: Icon(Icons.edit,
+                                                color: Colors.blue),
+                                            label: Text('Edit'),
+                                          ),
+                                        ),
+                                        DataCell(
+                                          TextButton.icon(
+                                            onPressed: () {
+                                              if (subId.isNotEmpty) {
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (context) =>
+                                                      AlertDialog(
+                                                    title: Text(
+                                                        'Confirm Deletion',
+                                                        style: TextStyle(
+                                                            color: Colors.red)),
+                                                    content: Text(
+                                                        'Do you really want to delete this Sub Location?'),
+                                                    actions: [
+                                                      TextButton(
+                                                        onPressed: () {
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                          deletesublocation(
+                                                              subId);
+                                                        },
+                                                        child: Text('Confirm',
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .red)),
+                                                      ),
+                                                      TextButton(
+                                                        onPressed: () {
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                        },
+                                                        child: Text('Cancel',
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .grey)),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                );
+                                              }
+                                            },
+                                            icon: Icon(Icons.delete,
+                                                color: Colors.red),
+                                            label: Text('Delete'),
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                          )
+                        : Center(
+                            child: Text(
+                              'No Sub Location found.',
+                              style:
+                                  TextStyle(fontSize: 16, color: Colors.grey),
+                            ),
                           ),
-                        ),
-                      ),
-                    )
-                  : Center(
-                      child: Text(
-                        'No Sub Location found.',
-                        style: TextStyle(fontSize: 16, color: Colors.grey),
-                      ),
-                    ),
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
-      ),
     );
   }
 }

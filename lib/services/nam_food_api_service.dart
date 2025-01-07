@@ -3298,4 +3298,44 @@ class NamFoodApiService {
       return e;
     }
   }
+
+  // Admin Set Minimum Order Amount
+
+  Future Mininumorderamount(postData) async {
+    try {
+      final url = Uri.parse('${liveApiPath}v1/alterorderitem');
+      final response = await client.post(url,
+          headers: headerData, body: jsonEncode(postData));
+
+      if (response.statusCode == 200) {
+        final json = response.body;
+        return json;
+      } else {
+        print('error');
+        throw Exception(
+            'Failed. Status code: ${response.statusCode} ${response.toString()}');
+      }
+    } catch (e) {
+      print('catcherror ${e}');
+      return e;
+    }
+  }
+
+  //Admin Dashboard Record
+  Future getadmindashboardrecord() async {
+    try {
+      final url = Uri.parse('${liveApiPath}v1/getdashboarrecord');
+      final response = await client.get(
+        url,
+        headers: headerData,
+      );
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        return response;
+      }
+    } catch (e) {
+      return e;
+    }
+  }
 }

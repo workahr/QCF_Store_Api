@@ -8,6 +8,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../services/comFuncService.dart';
 import '../../../services/nam_food_api_service.dart';
+import '../api_model/admin_dashboard_recordlist.dart';
+import '../api_model/admin_update_minorder.dart';
 import '../api_model/dashboard_orderlist_model.dart';
 import '../api_model/deliveryperson_list_model.dart';
 import '../api_model/store_list_model.dart';
@@ -32,6 +34,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
     getunassignDashboardOrderdetailslist();
     getalldeliverypersonlist();
     getStoreList();
+    getdashboarrecord();
   }
 
   List<OrderList> unassignorderdetailspage = [];
@@ -276,6 +279,39 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
     setState(() {});
   }
 
+  DashboardRecord? DashboardRecordlistpage;
+
+  Future getdashboarrecord() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      var result = await apiService.getadmindashboardrecord();
+      var response = adminDashboardrecordListmodelFromJson(result);
+      if (response.status.toString() == 'SUCCESS') {
+        setState(() {
+          print("hi");
+          DashboardRecordlistpage = response.list;
+
+          isLoading = false;
+        });
+      } else {
+        setState(() {
+          isLoading = false;
+        });
+        showInSnackBar(context, response.message.toString());
+      }
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      showInSnackBar(context, 'Error occurred: $e');
+    }
+
+    setState(() {});
+  }
+
   Widget _buildShimmerPlaceholder() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -354,7 +390,6 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
             SizedBox(
               height: 30,
             ),
-
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -406,25 +441,6 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                 ),
               ],
             ),
-            // ClipRRect(
-            //   borderRadius: BorderRadius.circular(13), // Add border radius
-            //   child: Container(
-            //     width: double.infinity,
-            //     height: 383,
-            //     color: Colors.white,
-            //   ),
-            // ),
-            // SizedBox(
-            //   height: 30,
-            // ),
-            // ClipRRect(
-            //   borderRadius: BorderRadius.circular(13), // Add border radius
-            //   child: Container(
-            //     width: double.infinity,
-            //     height: 283,
-            //     color: Colors.white,
-            //   ),
-            // ),
           ],
         ),
       ),
@@ -474,9 +490,12 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                         ),
                         SizedBox(height: 10),
                         Text(
-                          totalOrderPrice == null
+                          DashboardRecordlistpage!.totalearn.toString() == null
                               ? '0'
-                              : "₹${totalOrderPrice!.toStringAsFixed(2)}",
+                              : DashboardRecordlistpage!.totalearn.toString(),
+                          // totalOrderPrice == null
+                          //     ? '0'
+                          //     : "₹${totalOrderPrice!.toStringAsFixed(2)}",
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 24,
@@ -538,9 +557,12 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                                               width: 25,
                                             ),
                                             Text(
-                                              totalTodayOrdersCount == null
-                                                  ? '0'
-                                                  : "$totalTodayOrdersCount", // "250",
+                                              DashboardRecordlistpage!
+                                                  .todaycount
+                                                  .toString(),
+                                              // totalTodayOrdersCount == null
+                                              //     ? '0'
+                                              //     : "$totalTodayOrdersCount", // "250",
                                               style: TextStyle(
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.bold),
@@ -597,9 +619,11 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                                             width: 25,
                                           ),
                                           Text(
-                                            totalTodayOrderPrice == null
-                                                ? '0'
-                                                : "₹${totalTodayOrderPrice!.toStringAsFixed(2)}",
+                                            DashboardRecordlistpage!.todayearn
+                                                .toString(),
+                                            // totalTodayOrderPrice == null
+                                            //     ? '0'
+                                            //     : "₹${totalTodayOrderPrice!.toStringAsFixed(2)}",
                                             style: TextStyle(
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.bold),
@@ -671,7 +695,9 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                                             width: 25,
                                           ),
                                           Text(
-                                            "₹0.00",
+                                            DashboardRecordlistpage!
+                                                .todaystoreearn
+                                                .toString(),
                                             style: TextStyle(
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.bold),
@@ -740,7 +766,9 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                                           width: 25,
                                         ),
                                         Text(
-                                          '0.00',
+                                          DashboardRecordlistpage!
+                                              .todayadminearn
+                                              .toString(),
                                           style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
@@ -854,9 +882,11 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                                             width: 25,
                                           ),
                                           Text(
-                                            totalOrdersCount == null
-                                                ? '0'
-                                                : "$totalOrdersCount",
+                                            DashboardRecordlistpage!.totalcount
+                                                .toString(),
+                                            // totalOrdersCount == null
+                                            //     ? '0'
+                                            //     : "$totalOrdersCount",
                                             style: TextStyle(
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.bold),
@@ -910,9 +940,11 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                                             width: 25,
                                           ),
                                           Text(
-                                            totalOrderPrice == null
-                                                ? '0'
-                                                : "₹${totalOrderPrice!.toStringAsFixed(2)}",
+                                            DashboardRecordlistpage!.totalearn
+                                                .toString(),
+                                            // totalOrderPrice == null
+                                            //     ? '0'
+                                            //     : "₹${totalOrderPrice!.toStringAsFixed(2)}",
                                             style: TextStyle(
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.bold),
@@ -966,7 +998,10 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                                           width: 25,
                                         ),
                                         Text(
-                                          '${DeliveryPerson.length}',
+                                          DashboardRecordlistpage!
+                                              .deliveryboycount
+                                              .toString(),
+                                          //  '${DeliveryPerson.length}',
                                           style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
@@ -1083,7 +1118,9 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                                             width: 25,
                                           ),
                                           Text(
-                                            '${storedetaillistpage.length}',
+                                            DashboardRecordlistpage!.storecount
+                                                .toString(),
+                                            // '${storedetaillistpage.length}',
                                             style: TextStyle(
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.bold),

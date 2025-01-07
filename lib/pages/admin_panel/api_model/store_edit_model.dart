@@ -71,6 +71,7 @@ class ListStore {
   String? updatedDate;
   String? slug;
   int storeStatus;
+  String? minimum_order_amount;
 
   ListStore({
     required this.storeId,
@@ -98,6 +99,7 @@ class ListStore {
     this.updatedDate,
     this.slug,
     required this.storeStatus,
+    this.minimum_order_amount,
   });
 
   factory ListStore.fromJson(Map<String, dynamic> json) => ListStore(
@@ -126,6 +128,7 @@ class ListStore {
         updatedDate: json["updated_date"],
         slug: json["slug"],
         storeStatus: json["store_status"] ?? 0,
+        minimum_order_amount: json["minimum_order_amount"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -154,6 +157,7 @@ class ListStore {
         "updated_date": updatedDate,
         "slug": slug,
         "store_status": storeStatus,
+        "minimum_order_amount": minimum_order_amount,
       };
 }
 

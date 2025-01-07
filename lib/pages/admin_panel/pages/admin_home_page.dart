@@ -149,7 +149,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
               height: 30,
             ),
             ClipRRect(
-              borderRadius: BorderRadius.circular(13), // Add border radius
+              borderRadius: BorderRadius.circular(13),
               child: Container(
                 width: double.infinity,
                 height: 383,
@@ -160,7 +160,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
               height: 30,
             ),
             ClipRRect(
-              borderRadius: BorderRadius.circular(13), // Add border radius
+              borderRadius: BorderRadius.circular(13),
               child: Container(
                 width: double.infinity,
                 height: 283,

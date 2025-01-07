@@ -43,6 +43,7 @@ class _AddStorePageState extends State<AddStorePage> {
   final TextEditingController gstController = TextEditingController();
   final TextEditingController pannoController = TextEditingController();
   final TextEditingController zipcodeController = TextEditingController();
+  final TextEditingController minimumamountController = TextEditingController();
 
   @override
   void initState() {
@@ -84,6 +85,7 @@ class _AddStorePageState extends State<AddStorePage> {
           zipcodeController.text = storeList?.zipcode ?? '';
           liveimgSrc = storeDetails?.imageUrl ?? '';
           liveimgSrc1 = storeList?.frontImg ?? '';
+          minimumamountController.text = storeList?.minimum_order_amount ?? '';
         });
       } else {
         showInSnackBar(context, response.message);
@@ -158,6 +160,9 @@ class _AddStorePageState extends State<AddStorePage> {
         "online_visibility": "Yes",
         "tags": "store1",
         "store_status": 1,
+        "minimum_order_amount": minimumamountController.text,
+        "latitude": "",
+        "longitude": "",
       };
       print(postData);
 
@@ -184,6 +189,9 @@ class _AddStorePageState extends State<AddStorePage> {
           "online_visibility": "Yes",
           "tags": "store1",
           "store_status": 1,
+          "minimum_order_amount": minimumamountController.text,
+          "latitude": "",
+          "longitude": "",
         };
         url = 'v1/updatestore';
       }
@@ -637,6 +645,14 @@ class _AddStorePageState extends State<AddStorePage> {
                     control: anothermobileNumberController,
                     type: TextInputType.phone,
                     labelText: "Contact Number",
+                    borderColor: Color(0xFFEEEEEE),
+                  ),
+
+                  CustomeTextField(
+                    width: double.infinity,
+                    control: minimumamountController,
+                    type: TextInputType.number,
+                    labelText: "Enter Minimum Amount",
                     borderColor: Color(0xFFEEEEEE),
                   ),
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../../constants/app_colors.dart';
 import '../../../services/comFuncService.dart';
 import '../../../services/nam_food_api_service.dart';
@@ -51,6 +52,30 @@ class _RegisteredUserListState extends State<RegisteredUserList> {
     }
   }
 
+//Shimmer
+  Widget _buildShimmerPlaceholder() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      child: Shimmer.fromColors(
+        baseColor: Colors.grey.shade300,
+        highlightColor: Colors.grey.shade100,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(13), // Add border radius
+              child: Container(
+                width: double.infinity,
+                height: 800,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,76 +96,88 @@ class _RegisteredUserListState extends State<RegisteredUserList> {
             ),
           ),
         ),
-        body: SingleChildScrollView(
-            child: Padding(
-          padding: EdgeInsets.all(15),
-          child: RegisteredListData != null && RegisteredListData!.isNotEmpty
-              ? SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      border: Border.all(
-                        color: Colors.grey.shade400,
-                        width: 1,
-                      ),
-                    ),
-                    child: DataTable(
-                      border: TableBorder(
-                        horizontalInside: BorderSide(
-                          color: Colors.grey.shade400,
-                          width: 1,
-                        ),
-                        verticalInside: BorderSide.none,
-                      ),
-                      columnSpacing: 18,
-                      horizontalMargin: 8,
-                      columns: [
-                        DataColumn(label: Text('S.No')),
-                        DataColumn(label: Text('Date')),
-                        DataColumn(label: Text('User Name')),
-                        DataColumn(label: Text('Mobile')),
-                      ],
-                      rows: List<DataRow>.generate(
-                        RegisteredListData!.length,
-                        (index) {
-                          final element = RegisteredListData![index];
-                          final RegisteredId = element.id?.toString() ?? '';
-
-                          final Registereduser = element.fullname != null &&
-                                  element.fullname!.isNotEmpty
-                              ? element.fullname![0].toUpperCase() +
-                                  element.fullname!.substring(1)
-                              : "-";
-                          final mobile = element.mobile ?? ' ';
-                          String formattedDate = element.createdDate != null
-                              ? DateFormat('dd-MM-yyyy')
-                                  .format(element.createdDate!)
-                              : '';
-                          final isEven = index % 2 == 0;
-
-                          return DataRow(
-                            color: MaterialStateProperty.resolveWith<Color?>(
-                              (Set<MaterialState> states) =>
-                                  isEven ? Colors.grey.shade100 : null,
+        body: isLoading
+            ? ListView.builder(
+                itemCount: 8,
+                itemBuilder: (context, index) {
+                  return _buildShimmerPlaceholder();
+                },
+              )
+            : SingleChildScrollView(
+                child: Padding(
+                padding: EdgeInsets.all(15),
+                child: RegisteredListData != null &&
+                        RegisteredListData!.isNotEmpty
+                    ? SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            border: Border.all(
+                              color: Colors.grey.shade400,
+                              width: 1,
                             ),
-                            cells: [
-                              DataCell(Text((index + 1).toString())),
-                              DataCell(Text(formattedDate)),
-                              DataCell(Text(Registereduser)),
-                              DataCell(Text(mobile)),
+                          ),
+                          child: DataTable(
+                            border: TableBorder(
+                              horizontalInside: BorderSide(
+                                color: Colors.grey.shade400,
+                                width: 1,
+                              ),
+                              verticalInside: BorderSide.none,
+                            ),
+                            columnSpacing: 18,
+                            horizontalMargin: 8,
+                            columns: [
+                              DataColumn(label: Text('S.No')),
+                              DataColumn(label: Text('Date')),
+                              DataColumn(label: Text('User Name')),
+                              DataColumn(label: Text('Mobile')),
                             ],
-                          );
-                        },
+                            rows: List<DataRow>.generate(
+                              RegisteredListData!.length,
+                              (index) {
+                                final element = RegisteredListData![index];
+                                final RegisteredId =
+                                    element.id?.toString() ?? '';
+
+                                final Registereduser =
+                                    element.fullname != null &&
+                                            element.fullname!.isNotEmpty
+                                        ? element.fullname![0].toUpperCase() +
+                                            element.fullname!.substring(1)
+                                        : "-";
+                                final mobile = element.mobile ?? ' ';
+                                String formattedDate =
+                                    element.createdDate != null
+                                        ? DateFormat('dd-MM-yyyy')
+                                            .format(element.createdDate!)
+                                        : '';
+                                final isEven = index % 2 == 0;
+
+                                return DataRow(
+                                  color:
+                                      MaterialStateProperty.resolveWith<Color?>(
+                                    (Set<MaterialState> states) =>
+                                        isEven ? Colors.grey.shade100 : null,
+                                  ),
+                                  cells: [
+                                    DataCell(Text((index + 1).toString())),
+                                    DataCell(Text(formattedDate)),
+                                    DataCell(Text(Registereduser)),
+                                    DataCell(Text(mobile)),
+                                  ],
+                                );
+                              },
+                            ),
+                          ),
+                        ))
+                    : Center(
+                        child: Text(
+                          'No Registered User found.',
+                          style: TextStyle(fontSize: 16, color: Colors.grey),
+                        ),
                       ),
-                    ),
-                  ))
-              : Center(
-                  child: Text(
-                    'No Registered User found.',
-                    style: TextStyle(fontSize: 16, color: Colors.grey),
-                  ),
-                ),
-        )));
+              )));
   }
 }
