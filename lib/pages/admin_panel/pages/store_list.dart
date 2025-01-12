@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:namstore/constants/app_assets.dart';
 import 'package:namstore/constants/app_colors.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -8,10 +9,12 @@ import '../../../constants/app_constants.dart';
 import '../../../services/comFuncService.dart';
 import '../../../services/nam_food_api_service.dart';
 
+import '../../maincontainer.dart';
 import '../../store_menu/menu_details_screen.dart';
 import '../api_model/delete_store_model.dart';
 import '../api_model/store_list_model.dart';
 
+import '../api_model/totalstore_status_model.dart';
 import 'add_store_page.dart';
 import 'menu_details_screen_admin.dart';
 
@@ -26,6 +29,7 @@ class _StoreListState extends State<StoreList> {
   void initState() {
     super.initState();
     getStoreList();
+    _loadSwitchState();
   }
 
   //Store Menu Details
@@ -118,6 +122,53 @@ class _StoreListState extends State<StoreList> {
     }
   }
 
+  // Store Status Update
+
+  Future totaladminupdateStoreStatus(status) async {
+    await apiService.getBearerToken();
+
+    Map<String, dynamic> postData = {
+      "store_status": status,
+      // "store_id": widget.storeId
+    };
+    print("store_status $postData");
+    var result = await apiService.totaladminupdateStoreStatus(postData);
+
+    TotalStoreStatusUpdateAdminmodel response =
+        totalstoreStatusUpdatemodelFromJson(result);
+
+    if (response.status.toString() == 'SUCCESS') {
+      // showInSnackBar(context, response.message.toString());
+      showInSnackBar(context, "Store Status updated");
+      //    Navigator.pop(context);
+
+      // Navigator.of(context).pushAndRemoveUntil(
+      //   MaterialPageRoute(
+      //       builder: (context) => AdminMainContainer(admininitialPage: 3)),
+      //   (Route<dynamic> route) => false,
+      // );
+      setState(() {
+        _saveSwitchState(status == 1);
+      });
+    } else {
+      print(response.message.toString());
+      showInSnackBar(context, response.message.toString());
+    }
+  }
+
+  Future<void> _loadSwitchState() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _isOn = prefs.getBool('switchState') ?? false; // Default is 'false'
+    });
+  }
+
+  // Save the switch state to SharedPreferences
+  Future<void> _saveSwitchState(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('switchState', value);
+  }
+
   Widget _buildShimmerPlaceholder() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -152,6 +203,8 @@ class _StoreListState extends State<StoreList> {
     );
   }
 
+  bool _isOn = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -166,7 +219,40 @@ class _StoreListState extends State<StoreList> {
         ),
         title: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [Text("Stores", style: TextStyle(color: Colors.white))],
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text("Stores", style: TextStyle(color: Colors.white)),
+            Row(
+              children: [
+                Text(
+                  _isOn ? 'On' : 'Off',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18.0,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 0.0),
+                  child: Transform.scale(
+                    scale: 0.8,
+                    child: Switch(
+                      value: _isOn,
+                      onChanged: (value) {
+                        setState(() {
+                          _isOn = value;
+                          totaladminupdateStoreStatus(_isOn ? 1 : 0);
+                        });
+                      },
+                      activeColor: Colors.white,
+                      activeTrackColor: Colors.green,
+                      inactiveThumbColor: Colors.white,
+                      inactiveTrackColor: Colors.grey[300],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
         centerTitle: true,
       ),

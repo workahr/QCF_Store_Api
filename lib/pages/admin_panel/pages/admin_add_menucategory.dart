@@ -496,6 +496,45 @@ class _AdminAddMenuCategoryState extends State<AdminAddMenuCategory> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                          e.category_status == 1
+                                              ? 'In Stock'
+                                              : 'Out of Stock',
+                                          style: TextStyle(
+                                              color: e.category_status == 1
+                                                  ? Colors.green
+                                                  : AppColors.red,
+                                              fontSize: 18.0)),
+                                      Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 0.0),
+                                          child: Transform.scale(
+                                              scale: 0.8,
+                                              child: Switch(
+                                                value: e.category_status == 1,
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    e.category_status =
+                                                        value ? 1 : 0;
+
+                                                    categoryStatusUpdate(
+                                                        e.categoryId,
+                                                        value ? 1 : 0);
+                                                    //  print(e.itemStock);
+                                                  });
+                                                },
+                                                activeColor: Colors.white,
+                                                activeTrackColor: Colors.green,
+                                                inactiveThumbColor:
+                                                    Colors.white,
+                                                inactiveTrackColor:
+                                                    Colors.grey[300],
+                                              ))),
+                                    ]),
+                                Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
@@ -509,54 +548,20 @@ class _AdminAddMenuCategoryState extends State<AdminAddMenuCategory> {
                                         SizedBox(
                                           height: 10,
                                         ),
-                                        HeadingWidget(
-                                          title: e.categoryName.toString(),
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 18.00,
-                                        ),
+                                        Container(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                1.3,
+                                            child: HeadingWidget(
+                                              title: e.categoryName.toString(),
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 18.00,
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                            )),
                                       ],
                                     ),
-                                    Row(
-                                        // mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      vertical: 0.0),
-                                              child: Transform.scale(
-                                                  scale: 0.8,
-                                                  child: Switch(
-                                                    value:
-                                                        e.category_status == 1,
-                                                    onChanged: (value) {
-                                                      setState(() {
-                                                        e.category_status =
-                                                            value ? 1 : 0;
-
-                                                        categoryStatusUpdate(
-                                                            e.categoryId,
-                                                            value ? 1 : 0);
-                                                        //  print(e.itemStock);
-                                                      });
-                                                    },
-                                                    activeColor: Colors.white,
-                                                    activeTrackColor:
-                                                        Colors.green,
-                                                    inactiveThumbColor:
-                                                        Colors.white,
-                                                    inactiveTrackColor:
-                                                        Colors.grey[300],
-                                                  ))),
-                                          Text(
-                                              e.category_status == 1
-                                                  ? 'In Stock'
-                                                  : 'Out of Stock',
-                                              style: TextStyle(
-                                                  color: e.category_status == 1
-                                                      ? Colors.green
-                                                      : AppColors.red,
-                                                  fontSize: 18.0))
-                                        ]),
                                   ],
                                 ),
                                 SizedBox(

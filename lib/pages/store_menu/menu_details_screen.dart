@@ -328,45 +328,49 @@ class _MenuDetailsScreenState extends State<MenuDetailsScreen> {
           color: Colors.white,
         ),
         actions: [
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                HeadingWidget(
-                  title: toggleTitle.toString(),
-                  color: Colors.white,
-                  fontSize: 18.0,
-                ),
-                SizedBox(
-                  width: 8.0,
-                ),
-                Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 0.0),
-                    child: Transform.scale(
-                        scale: 0.9,
-                        child: Switch(
-                          value: MyStoreDetails!.storeStatus == 1, // isOnDuty,
-                          onChanged: (value1) {
-                            setState(() {
-                              isOnDuty = value1;
-                              if (MyStoreDetails!.storeStatus == 1) {
-                                toggleTitle = "Off Duty";
-                              } else {
-                                toggleTitle = "On Duty";
-                              }
-                              updateStoreStatus(value1 ? 1 : 0);
-                              print(value1 ? 1 : 0);
-                            });
-                          },
-                          activeColor: Colors.white,
-                          activeTrackColor: Colors.green,
-                          inactiveThumbColor: Colors.grey,
-                          inactiveTrackColor: Colors.grey.shade300,
-                        ))),
-              ],
-            ),
-          )
+          if (MyStoreDetails!.storeStatus != null)
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  if (MyStoreDetails!.storeStatus != null)
+                    HeadingWidget(
+                      title: toggleTitle.toString(),
+                      color: Colors.white,
+                      fontSize: 18.0,
+                    ),
+                  SizedBox(
+                    width: 8.0,
+                  ),
+                  if (MyStoreDetails!.storeStatus != null)
+                    Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 0.0),
+                        child: Transform.scale(
+                            scale: 0.9,
+                            child: Switch(
+                              value:
+                                  MyStoreDetails!.storeStatus == 1, // isOnDuty,
+                              onChanged: (value1) {
+                                setState(() {
+                                  isOnDuty = value1;
+                                  if (MyStoreDetails!.storeStatus == 1) {
+                                    toggleTitle = "Off Duty";
+                                  } else {
+                                    toggleTitle = "On Duty";
+                                  }
+                                  updateStoreStatus(value1 ? 1 : 0);
+                                  print(value1 ? 1 : 0);
+                                });
+                              },
+                              activeColor: Colors.white,
+                              activeTrackColor: Colors.green,
+                              inactiveThumbColor: Colors.grey,
+                              inactiveTrackColor: Colors.grey.shade300,
+                            ))),
+                ],
+              ),
+            )
         ],
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
@@ -412,50 +416,53 @@ class _MenuDetailsScreenState extends State<MenuDetailsScreen> {
                           padding: EdgeInsets.all(8.0),
                           child: Row(
                             children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(8),
-                                child:
-                                    //  Image.asset(
-                                    //   AppAssets.restaurant_briyani,
-                                    //   height: 100,
-                                    //   width: 100,
-                                    // )
-                                    Image.network(
-                                        AppConstants.imgBaseUrl +
-                                            MyStoreDetails!.frontImg.toString(),
-                                        width: 90,
-                                        height: 90,
-                                        fit: BoxFit.fill, errorBuilder:
-                                            (BuildContext context,
-                                                Object exception,
-                                                StackTrace? stackTrace) {
-                                  return Image.asset(
-                                    AppAssets.restaurant_briyani,
-                                    width: 90,
-                                    height: 90,
-                                    // fit: BoxFit.cover,
-                                  );
-                                }),
-                              ),
+                              if (MyStoreDetails!.frontImg != null)
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(8),
+                                  child:
+                                      //  Image.asset(
+                                      //   AppAssets.restaurant_briyani,
+                                      //   height: 100,
+                                      //   width: 100,
+                                      // )
+                                      Image.network(
+                                          AppConstants.imgBaseUrl +
+                                              MyStoreDetails!.frontImg
+                                                  .toString(),
+                                          width: 90,
+                                          height: 90,
+                                          fit: BoxFit.fill, errorBuilder:
+                                              (BuildContext context,
+                                                  Object exception,
+                                                  StackTrace? stackTrace) {
+                                    return Image.asset(
+                                      AppAssets.noimage,
+                                      width: 90,
+                                      height: 90,
+                                      // fit: BoxFit.cover,
+                                    );
+                                  }),
+                                ),
                               SizedBox(width: 12),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(MyStoreDetails!.name.toString(),
-                                      //'Grill Chicken Arabian\nRestaurant',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 20)),
-                                  SizedBox(height: 8),
-                                  Text('South Indian Foods',
-                                      style: TextStyle(
-                                          color: Colors.black, fontSize: 14)),
-                                  SizedBox(height: 4),
-                                  // Text('Open Time: 8.30am - 11.00pm',
-                                  //     style: TextStyle(
-                                  //         color: Colors.black, fontSize: 14)),
-                                ],
-                              ),
+                              if (MyStoreDetails!.name != null)
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(MyStoreDetails!.name.toString(),
+                                        //'Grill Chicken Arabian\nRestaurant',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20)),
+                                    SizedBox(height: 8),
+                                    Text('South Indian Foods',
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 14)),
+                                    SizedBox(height: 4),
+                                    // Text('Open Time: 8.30am - 11.00pm',
+                                    //     style: TextStyle(
+                                    //         color: Colors.black, fontSize: 14)),
+                                  ],
+                                ),
                             ],
                           ),
                         ),

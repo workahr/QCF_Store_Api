@@ -19,7 +19,6 @@ import '../api_model/menu_list_model.dart';
 import '../api_model/mystoredetails_model.dart';
 import '../api_model/storestatusupdate_model.dart';
 import 'admin_add_menucategory.dart';
-import 'admin_add_menuvariant.dart';
 import 'admin_add_new_menu.dart';
 
 class MenuDetailsScreenAdmin extends StatefulWidget {
@@ -427,7 +426,7 @@ class _MenuDetailsScreenAdminState extends State<MenuDetailsScreenAdmin> {
                                                 Object exception,
                                                 StackTrace? stackTrace) {
                                   return Image.asset(
-                                    AppAssets.restaurant_briyani,
+                                    AppAssets.noimage,
                                     width: 90,
                                     height: 90,
                                     // fit: BoxFit.cover,

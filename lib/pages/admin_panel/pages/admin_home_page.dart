@@ -173,71 +173,140 @@ class _AdminHomePageState extends State<AdminHomePage> {
     );
   }
 
-  void _showpickupconfirmDialog(List<Item> items) {
+  void _showpickupconfirmDialog(String? deliveryChargeStr,
+      String? totalAmountWithoutDeliveryStr, List<Item> items) {
+    // Convert string inputs to double
+    double deliveryCharge = double.tryParse(deliveryChargeStr!) ?? 0.0;
+    double totalAmount = double.tryParse(totalAmountWithoutDeliveryStr!) ?? 0.0;
+
+    // Calculate the total payable amount (with delivery charge)
+    double totalAmountWithoutDelivery = totalAmount - deliveryCharge;
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           content: SingleChildScrollView(
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              // widget.orderitems.map((e) {
-              // return
-              Padding(
-                padding: const EdgeInsets.only(bottom: 10.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          'Order ${items.length.toString()} items',
-                          style: TextStyle(
-                            fontSize: 17,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.red,
-                          ),
-                        ),
-                        SizedBox(width: 8),
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(18),
-                            color: Colors.green,
-                          ),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 4),
-                          child: Text(
-                            "#${items[0].orderId.toString()}",
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            'Order ${items.length.toString()} items',
                             style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.white,
+                              fontSize: 17,
                               fontWeight: FontWeight.bold,
+                              color: Colors.red, // Replace with AppColors.red
                             ),
                           ),
-                        ),
-                      ],
+                          SizedBox(width: 8),
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(18),
+                              color: Colors.green,
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 4),
+                            child: Text(
+                              "#${items[0].orderId.toString()}",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 15),
+                      ...items.map((e) {
+                        return _buildItemDetailCard(
+                          e.quantity.toString(),
+                          e.productName.toString(),
+                          e.price.toString(),
+                        );
+                      }).toList(),
+                    ],
+                  ),
+                ),
+                Divider(), // Separate the main content from the footer
+                // Footer for Total and Delivery Charge
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Amount:",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                    SizedBox(height: 15),
-
-                    ...items.map((e) {
-                      return _buildItemDetailCard(
-                        e.quantity.toString(),
-                        e.productName.toString(),
-                      );
-                    }).toList(), //
+                    Text(
+                      "₹${totalAmountWithoutDelivery.toStringAsFixed(2)}",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ],
                 ),
-              )
-            ]
-                    // }).toList(),
+                SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Delivery Charge:",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
+                    Text(
+                      "₹${deliveryCharge.toStringAsFixed(2)}",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                Divider(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Total Payable:",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.black, // Highlight total payable
+                      ),
+                    ),
+                    Text(
+                      "₹${totalAmount.toStringAsFixed(2)}",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.red, // Highlight total payable
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         );
       },
     );
   }
 
-  Widget _buildItemDetailCard(String qty, String name) {
+  Widget _buildItemDetailCard(String qty, String name, String price) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(10.0),
@@ -248,7 +317,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
         border: Border.all(color: Colors.grey[300]!),
       ),
       child: Text(
-        "$qty x $name",
+        "$qty x $name = ₹$price",
         style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
       ),
     );
@@ -511,6 +580,8 @@ class _AdminHomePageState extends State<AdminHomePage> {
                                                 GestureDetector(
                                                   onTap: () async {
                                                     _showpickupconfirmDialog(
+                                                        e.deliveryCharges,
+                                                        e.totalPrice,
                                                         e.items);
                                                   },
                                                   child: Row(

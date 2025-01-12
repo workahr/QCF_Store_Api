@@ -166,4 +166,5 @@ class AppAssets {
   static const String delivery_charge = 'assets/images/delivery_charge.png';
   static const String join_deliveryboy = 'assets/images/join_deliveryboy.png';
   static const String prime_location = 'assets/images/prime_location.png';
+  static const String noimage = 'assets/images/noimage.png';
 }
