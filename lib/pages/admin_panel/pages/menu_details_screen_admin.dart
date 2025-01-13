@@ -437,11 +437,19 @@ class _MenuDetailsScreenAdminState extends State<MenuDetailsScreenAdmin> {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(widget.storename.toString(),
+                                  Container(
+                                    width:
+                                        MediaQuery.of(context).size.width / 1.7,
+                                    child: Text(
+                                      widget.storename.toString(),
                                       //'Grill Chicken Arabian\nRestaurant',
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
-                                          fontSize: 20)),
+                                          fontSize: 20),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 2,
+                                    ),
+                                  ),
                                   SizedBox(height: 8),
                                   Container(
                                     width: 200,
@@ -778,6 +786,20 @@ class _MenuDetailsScreenAdminState extends State<MenuDetailsScreenAdmin> {
                                                                     e.itemId,
                                                                 storeId:
                                                                     e.storeId,
+                                                                storename: widget
+                                                                    .storename,
+                                                                storestatus: widget
+                                                                    .storestatus,
+                                                                frontimg: widget
+                                                                    .frontimg,
+                                                                address: widget
+                                                                    .address,
+                                                                city:
+                                                                    widget.city,
+                                                                state: widget
+                                                                    .state,
+                                                                zipcode: widget
+                                                                    .zipcode,
                                                               ))).then(
                                                       (value) {});
                                                 },
@@ -823,6 +845,13 @@ class _MenuDetailsScreenAdminState extends State<MenuDetailsScreenAdmin> {
                             builder: (context) {
                               return AdminAddNewMenu(
                                 storeId: widget.storeId,
+                                storename: widget.storename,
+                                storestatus: widget.storestatus,
+                                frontimg: widget.frontimg,
+                                address: widget.address,
+                                city: widget.city,
+                                state: widget.state,
+                                zipcode: widget.zipcode,
                               );
                             },
                           ));

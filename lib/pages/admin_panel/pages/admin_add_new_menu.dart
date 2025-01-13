@@ -18,11 +18,29 @@ import '../api_model/adminadd_category_model.dart';
 import '../api_model/admincategory_list_model.dart';
 import '../api_model/adminmenu_edit_model.dart';
 import 'admin_add_menucategory.dart';
+import 'menu_details_screen_admin.dart';
 
 class AdminAddNewMenu extends StatefulWidget {
   int? menuId;
   int? storeId;
-  AdminAddNewMenu({super.key, this.menuId, this.storeId});
+  String? storename;
+  String? storestatus;
+  String? frontimg;
+  String? address;
+  String? city;
+  String? state;
+  String? zipcode;
+  AdminAddNewMenu(
+      {super.key,
+      this.menuId,
+      this.storeId,
+      this.storename,
+      this.storestatus,
+      this.frontimg,
+      this.address,
+      this.city,
+      this.state,
+      this.zipcode});
   @override
   _AdminAddNewMenuState createState() => _AdminAddNewMenuState();
 }
@@ -128,17 +146,28 @@ class _AdminAddNewMenuState extends State<AdminAddNewMenu> {
         showInSnackBar(context, response.message.toString());
         // Navigator.pushNamedAndRemoveUntil(
         //     context, '/home', ModalRoute.withName('/home'));
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(
-        //     builder: (context) => MenuDetailsScreen(),
-        //   ),
-        // );
-        Navigator.of(context).pushAndRemoveUntil(
+        Navigator.pushAndRemoveUntil(
+          context,
           MaterialPageRoute(
-              builder: (context) => AdminMainContainer(admininitialPage: 3)),
-          (Route<dynamic> route) => false,
+            builder: (context) => MenuDetailsScreenAdmin(
+              storeId: widget.storeId,
+              storename: widget.storename,
+              storestatus: widget.storestatus,
+              frontimg: widget.frontimg,
+              address: widget.address,
+              city: widget.city,
+              state: widget.state,
+              zipcode: widget.zipcode,
+            ),
+          ),
+          (route) => route.isFirst,
         );
+
+        // Navigator.of(context).pushAndRemoveUntil(
+        //   MaterialPageRoute(
+        //       builder: (context) => AdminMainContainer(admininitialPage: 3)),
+        //   (Route<dynamic> route) => false,
+        // );
       } else {
         print(response.message.toString());
         showInSnackBar(context, response.message.toString());

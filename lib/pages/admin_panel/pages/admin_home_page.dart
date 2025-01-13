@@ -746,7 +746,11 @@ class _AdminHomePageState extends State<AdminHomePage> {
                                       ),
                                       SizedBox(height: 10),
                                       Text(
-                                        "${currentCustomerAddress.address ?? ''}, ${currentCustomerAddress.city ?? ''}, ${currentCustomerAddress.state ?? ''}",
+                                        "${currentCustomerAddress.address ?? ''},${currentCustomerAddress.main_location ?? ''},${currentCustomerAddress.sub_location ?? ''}",
+                                        style: TextStyle(fontSize: 14),
+                                      ),
+                                      Text(
+                                        "${currentCustomerAddress.city ?? ''},${currentCustomerAddress.state ?? ''}",
                                         style: TextStyle(fontSize: 14),
                                       ),
                                       Divider(
@@ -1176,7 +1180,11 @@ class _AdminHomePageState extends State<AdminHomePage> {
                                       ),
                                       SizedBox(height: 10),
                                       Text(
-                                        "${currentCustomerAddress.address ?? ''}, ${currentCustomerAddress.city ?? ''}, ${currentCustomerAddress.state ?? ''}",
+                                        "${currentCustomerAddress.address ?? ''},${currentCustomerAddress.main_location ?? ''},${currentCustomerAddress.sub_location ?? ''}",
+                                        style: TextStyle(fontSize: 14),
+                                      ),
+                                      Text(
+                                        "${currentCustomerAddress.city ?? ''},${currentCustomerAddress.state ?? ''}",
                                         style: TextStyle(fontSize: 14),
                                       ),
                                       Divider(
@@ -1499,7 +1507,11 @@ class _AdminHomePageState extends State<AdminHomePage> {
                                       ),
                                       SizedBox(height: 10),
                                       Text(
-                                        "${currentCustomerAddress.address ?? ''}, ${currentCustomerAddress.city ?? ''}, ${currentCustomerAddress.state ?? ''}",
+                                        "${currentCustomerAddress.address ?? ''},${currentCustomerAddress.main_location ?? ''},${currentCustomerAddress.sub_location ?? ''}",
+                                        style: TextStyle(fontSize: 14),
+                                      ),
+                                      Text(
+                                        "${currentCustomerAddress.city ?? ''},${currentCustomerAddress.state ?? ''}",
                                         style: TextStyle(fontSize: 14),
                                       ),
                                       Divider(
@@ -1820,7 +1832,11 @@ class _AdminHomePageState extends State<AdminHomePage> {
                                       ),
                                       SizedBox(height: 10),
                                       Text(
-                                        "${currentCustomerAddress.address ?? ''}, ${currentCustomerAddress.city ?? ''}, ${currentCustomerAddress.state ?? ''}",
+                                        "${currentCustomerAddress.address ?? ''},${currentCustomerAddress.main_location ?? ''},${currentCustomerAddress.sub_location ?? ''}",
+                                        style: TextStyle(fontSize: 14),
+                                      ),
+                                      Text(
+                                        "${currentCustomerAddress.city ?? ''},${currentCustomerAddress.state ?? ''}",
                                         style: TextStyle(fontSize: 14),
                                       ),
                                       Divider(

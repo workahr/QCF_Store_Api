@@ -96,7 +96,11 @@ class OrderList {
         deliveryBoyName: json["delivery_boy_name"],
         deliveryBoyMobile: json["delivery_boy_mobile"],
         items: List<Item>.from(json["items"].map((x) => Item.fromJson(x))),
-        customerAddress: CustomerAddress.fromJson(json["customer_address"]),
+        // customerAddress: CustomerAddress.fromJson(json["customer_address"]),
+        customerAddress: (json["customer_address"] is List &&
+                json["customer_address"].isEmpty)
+            ? CustomerAddress() // Return an empty address object
+            : CustomerAddress.fromJson(json["customer_address"]),
         storeAddress: StoreAddress.fromJson(json["store_address"]),
       );
 
@@ -131,6 +135,8 @@ class CustomerAddress {
   String? state;
   String? country;
   String? pincode;
+  String? main_location;
+  String? sub_location;
   String? addressLine2;
   int? status;
   DateTime? createdDate;
@@ -145,6 +151,8 @@ class CustomerAddress {
     this.country,
     this.pincode,
     this.addressLine2,
+    this.main_location,
+    this.sub_location,
     this.status,
     this.createdDate,
   });
@@ -159,6 +167,8 @@ class CustomerAddress {
         state: json["state"],
         country: json["country"],
         pincode: json["pincode"],
+        main_location: json["main_location"],
+        sub_location: json["sub_location"],
         addressLine2: json["address_line_2"],
         status: json["status"],
         createdDate: DateTime.parse(json["created_date"]),
@@ -173,6 +183,8 @@ class CustomerAddress {
         "state": state,
         "country": country,
         "pincode": pincode,
+        "main_location": main_location,
+        "sub_location": sub_location,
         "address_line_2": addressLine2,
         "status": status,
         "created_date": createdDate!.toIso8601String(),
