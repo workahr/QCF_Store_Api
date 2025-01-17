@@ -289,7 +289,8 @@ class _OrderlistPageState extends State<OrderlistPage> {
                           String formattedDate = DateFormat('dd-MMM-yyyy')
                               .format(DateTime.parse(e.createdDate.toString()));
 
-                          return e.orderStatus == "Cancelled"
+                          return e.orderStatus == "Cancelled" ||
+                                  e.orderStatus == "Order Placed"
                               ? SizedBox()
                               : Padding(
                                   padding: EdgeInsets.only(

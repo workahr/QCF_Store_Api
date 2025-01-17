@@ -693,7 +693,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                                           ]),
                                       SizedBox(height: 10),
                                       Text(
-                                        "${currentStoreAddress!.name ?? 'Unknown'}, ${currentStoreAddress.address ?? 'N/A'}, ${currentStoreAddress.city ?? 'N/A'}",
+                                        "${currentStoreAddress!.name ?? ''}, ${currentStoreAddress.address ?? ''}, ${currentStoreAddress.city ?? ''}",
                                         style: TextStyle(fontSize: 14),
                                       ),
                                       SizedBox(height: 10),
@@ -745,6 +745,12 @@ class _AdminHomePageState extends State<AdminHomePage> {
                                         ],
                                       ),
                                       SizedBox(height: 10),
+                                      Text(
+                                        "${e.customerName}",
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold),
+                                      ),
                                       Text(
                                         "${currentCustomerAddress.address ?? ''},${currentCustomerAddress.main_location ?? ''},${currentCustomerAddress.sub_location ?? ''}",
                                         style: TextStyle(fontSize: 14),
@@ -1180,6 +1186,12 @@ class _AdminHomePageState extends State<AdminHomePage> {
                                       ),
                                       SizedBox(height: 10),
                                       Text(
+                                        "${e.customerName}",
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(
                                         "${currentCustomerAddress.address ?? ''},${currentCustomerAddress.main_location ?? ''},${currentCustomerAddress.sub_location ?? ''}",
                                         style: TextStyle(fontSize: 14),
                                       ),
@@ -1507,6 +1519,12 @@ class _AdminHomePageState extends State<AdminHomePage> {
                                       ),
                                       SizedBox(height: 10),
                                       Text(
+                                        "${e.customerName}",
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(
                                         "${currentCustomerAddress.address ?? ''},${currentCustomerAddress.main_location ?? ''},${currentCustomerAddress.sub_location ?? ''}",
                                         style: TextStyle(fontSize: 14),
                                       ),
@@ -1831,6 +1849,12 @@ class _AdminHomePageState extends State<AdminHomePage> {
                                         ],
                                       ),
                                       SizedBox(height: 10),
+                                      Text(
+                                        "${e.customerName}",
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold),
+                                      ),
                                       Text(
                                         "${currentCustomerAddress.address ?? ''},${currentCustomerAddress.main_location ?? ''},${currentCustomerAddress.sub_location ?? ''}",
                                         style: TextStyle(fontSize: 14),
