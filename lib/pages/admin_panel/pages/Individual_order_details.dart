@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import 'package:namstore/widgets/heading_widget.dart';
 import 'package:namstore/widgets/sub_heading_widget.dart';
@@ -30,7 +31,8 @@ class Individualorderdetails extends StatefulWidget {
   String? storename;
   String? storemobilenumber;
   String? storeaddress;
-
+  String? pickup_date;
+  String? delivered_date;
   String? storeaddressline2;
   String? storelandmark;
   String? storecity;
@@ -61,6 +63,8 @@ class Individualorderdetails extends StatefulWidget {
     this.userpincode,
     this.storename,
     this.storeaddress,
+    this.pickup_date,
+    this.delivered_date,
     this.storeaddressline2,
     this.storelandmark,
     this.storecity,
@@ -84,11 +88,13 @@ class Individualorderdetails extends StatefulWidget {
 
 class _IndividualorderdetailsState extends State<Individualorderdetails> {
   final NamFoodApiService apiService = NamFoodApiService();
-
+  String? totalPriceFormatted;
   @override
   void initState() {
     super.initState();
-
+    double totalPrice = double.parse(widget.totalPrice!) -
+        double.parse(widget.deliverycharge!); // Convert to double and calculate
+    totalPriceFormatted = "$totalPrice";
     // getindividualorderdetails();
   }
 
@@ -267,7 +273,11 @@ class _IndividualorderdetailsState extends State<Individualorderdetails> {
                                                             .start,
                                                     children: [
                                                       HeadingWidget(
-                                                        title: widget.username,
+                                                        title: widget
+                                                                    .username ==
+                                                                null
+                                                            ? ""
+                                                            : widget.username,
                                                       ),
                                                       SubHeadingWidget(
                                                         title: widget
@@ -315,6 +325,22 @@ class _IndividualorderdetailsState extends State<Individualorderdetails> {
                                                         " ${widget.userpincode != null ? widget.userpincode : ''}${widget.userpincode != null ? "," : ""}"),
                                               ],
                                             ),
+                                            SizedBox(height: 10),
+                                            Row(children: [
+                                              HeadingWidget(
+                                                title: "Delivery Time: ",
+                                              ),
+                                              SubHeadingWidget(
+                                                title: widget.delivered_date !=
+                                                        null
+                                                    ? DateFormat('hh:mm a').format(
+                                                        DateTime.parse(widget
+                                                            .delivered_date!) // Parse the string to DateTime
+                                                        )
+                                                    : "",
+                                                color: AppColors.black,
+                                              ),
+                                            ])
                                           ],
                                         ),
                                       ),
@@ -395,6 +421,22 @@ class _IndividualorderdetailsState extends State<Individualorderdetails> {
                                                   title: widget.storeaddress
                                                       .toString(),
                                                 ),
+                                                SizedBox(height: 10),
+                                                Row(children: [
+                                                  HeadingWidget(
+                                                    title: "Pick up Time: ",
+                                                  ),
+                                                  SubHeadingWidget(
+                                                    title: widget.pickup_date !=
+                                                            null
+                                                        ? DateFormat('hh:mm a').format(
+                                                            DateTime.parse(widget
+                                                                .pickup_date!) // Parse the string to DateTime
+                                                            )
+                                                        : "",
+                                                    color: AppColors.black,
+                                                  ),
+                                                ])
                                               ],
                                             ),
                                             SizedBox(
@@ -434,15 +476,16 @@ class _IndividualorderdetailsState extends State<Individualorderdetails> {
                                                         CrossAxisAlignment
                                                             .start,
                                                     children: [
-                                                      HeadingWidget(
-                                                        title:
-                                                            widget.storename ==
-                                                                    null
-                                                                ? ''
-                                                                : widget
-                                                                    .storename
-                                                                    .toString(),
-                                                      ),
+                                                      Wrap(children: [
+                                                        HeadingWidget(
+                                                          title: widget
+                                                                      .storename ==
+                                                                  null
+                                                              ? ''
+                                                              : widget.storename
+                                                                  .toString(),
+                                                        ),
+                                                      ]),
                                                       SubHeadingWidget(
                                                         title: widget
                                                                     .storemobilenumber ==
@@ -726,7 +769,7 @@ class _IndividualorderdetailsState extends State<Individualorderdetails> {
                                       fontWeight: FontWeight.w500,
                                     ),
                                     HeadingWidget(
-                                      title: "₹${widget.totalPrice}",
+                                      title: "₹${totalPriceFormatted}  ",
                                       fontWeight: FontWeight.w500,
                                     )
                                   ],

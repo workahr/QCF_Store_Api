@@ -88,38 +88,38 @@ Future<void> main() async {
 //   runApp(MyApp());
 // }
 
-// Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-//   showNotification(message);
-// }
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  showNotification(message);
+}
 
-// Future<void> showNotification(RemoteMessage message) async {
-//   print("notify");
+Future<void> showNotification(RemoteMessage message) async {
+  print("notify");
 
-//   // Define notification details for Android
-//   const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
-//     'channel_id_5',
-//     'test',
-//     sound: RawResourceAndroidNotificationSound('sound'), // Set custom sound
-//     importance: Importance.high,
-//     priority: Priority.high,
-//   );
-//   const NotificationDetails platformDetails =
-//       NotificationDetails(android: androidDetails);
-//   print(platformDetails);
+  // Define notification details for Android
+  const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
+    'channel_id_5',
+    'test',
+    sound: RawResourceAndroidNotificationSound('sound'), // Set custom sound
+    importance: Importance.high,
+    priority: Priority.high,
+  );
+  const NotificationDetails platformDetails =
+      NotificationDetails(android: androidDetails);
+  print(platformDetails);
 
-//   int? notificationId; // nullable
-//   notificationId ??= 12;
-//   // print(notification.title);
-//   // Show the notification
-//   await flutterLocalNotificationsPlugin.show(
-//     notificationId,
-//     message.notification?.title,
-//     message.notification?.body,
-//     platformDetails,
-//     payload: 'Custom_Sound_Notification',
-//   );
-//   // showInSnackBar(context, 'Processing...');
-// }
+  int? notificationId; // nullable
+  notificationId ??= 12;
+  // print(notification.title);
+  // Show the notification
+  await flutterLocalNotificationsPlugin.show(
+    notificationId,
+    message.notification?.title,
+    message.notification?.body,
+    platformDetails,
+    payload: 'Custom_Sound_Notification',
+  );
+  // showInSnackBar(context, 'Processing...');
+}
 
 class MyApp extends StatefulWidget with WidgetsBindingObserver {
   const MyApp({Key? key}) : super(key: key);

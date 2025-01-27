@@ -147,13 +147,16 @@ class _EditorderState extends State<Editorder> {
 
   late String newqty;
 
+
+   Future<bool> _onWillPop() async {
+  Navigator.pop(context, true); // Notify the parent screen
+  return false; // Block default back navigation
+}
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-        onWillPop: () async {
-          // Perform any action before navigating back
-          return true; // Allow back navigation
-        },
+        onWillPop: _onWillPop,
         child: Scaffold(
           backgroundColor: Color(0xFFF6F6F6),
           appBar: AppBar(

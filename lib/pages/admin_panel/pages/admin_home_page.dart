@@ -306,6 +306,25 @@ class _AdminHomePageState extends State<AdminHomePage> {
     );
   }
 
+Future<void> _navigateToMenus(String? invoiceNumber, items) async {
+  final updatedCartItems = await Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => Editorder(
+        invoiceNumber: invoiceNumber,
+        items: items,
+      ),
+    ),
+  );
+
+  if (updatedCartItems == true) {
+    setState(() {
+      getallDashboardOrderdetailslist(); // Fetch and update the UI
+    });
+  }
+}
+
+
   Widget _buildItemDetailCard(String qty, String name, String price) {
     return Container(
       width: double.infinity,
@@ -693,7 +712,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                                           ]),
                                       SizedBox(height: 10),
                                       Text(
-                                        "${currentStoreAddress!.name ?? ''}, ${currentStoreAddress.address ?? ''}, ${currentStoreAddress.city ?? ''}",
+                                        "${currentStoreAddress!.name ?? ''}, ${currentStoreAddress.address ?? ''}, ${currentStoreAddress.city ?? 'N/A'}",
                                         style: TextStyle(fontSize: 14),
                                       ),
                                       SizedBox(height: 10),
@@ -746,7 +765,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                                       ),
                                       SizedBox(height: 10),
                                       Text(
-                                        "${e.customerName}",
+                                        "${e.customerName == null ? "" : e.customerName}",
                                         style: TextStyle(
                                             fontSize: 14,
                                             fontWeight: FontWeight.bold),
@@ -785,17 +804,20 @@ class _AdminHomePageState extends State<AdminHomePage> {
                                           children: [
                                             InkWell(
                                               onTap: () {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        Editorder(
-                                                      invoiceNumber:
+                                                 _navigateToMenus(
                                                           e.invoiceNumber,
-                                                      items: e.items,
-                                                    ),
-                                                  ),
-                                                );
+                                                      e.items,);
+                                                // Navigator.push(
+                                                //   context,
+                                                //   MaterialPageRoute(
+                                                //     builder: (context) =>
+                                                //         Editorder(
+                                                //       invoiceNumber:
+                                                //           e.invoiceNumber,
+                                                //       items: e.items,
+                                                //     ),
+                                                //   ),
+                                                // );
                                               },
                                               child: Container(
                                                 padding: EdgeInsets.all(8.0),
@@ -1186,7 +1208,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                                       ),
                                       SizedBox(height: 10),
                                       Text(
-                                        "${e.customerName}",
+                                        "${e.customerName == null ? "" : e.customerName}",
                                         style: TextStyle(
                                             fontSize: 14,
                                             fontWeight: FontWeight.bold),
@@ -1519,7 +1541,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                                       ),
                                       SizedBox(height: 10),
                                       Text(
-                                        "${e.customerName}",
+                                        "${e.customerName == null ? "" : e.customerName}",
                                         style: TextStyle(
                                             fontSize: 14,
                                             fontWeight: FontWeight.bold),
@@ -1850,7 +1872,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                                       ),
                                       SizedBox(height: 10),
                                       Text(
-                                        "${e.customerName}",
+                                        "${e.customerName == null ? "" : e.customerName}",
                                         style: TextStyle(
                                             fontSize: 14,
                                             fontWeight: FontWeight.bold),

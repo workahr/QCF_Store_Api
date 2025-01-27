@@ -71,7 +71,8 @@ class _AddNewMenuState extends State<AddNewMenu> {
         "item_type": selectedId,
         "item_desc": descriptionController.text,
         "item_price": actualpriceController.text,
-        "item_offer_price": actualpriceController.text,
+        "item_offer_price":
+           actualpriceController.text,
         "item_category_id": selectedcategoryId,
         "tax_id": 0,
         "item_stock": 1,

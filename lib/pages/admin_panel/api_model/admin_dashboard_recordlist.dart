@@ -45,9 +45,9 @@ class DashboardRecord {
   String totalearn;
   int totalcount;
   int todaycount;
-  int todayearn;
-  int todaystoreearn;
-  int todayadminearn;
+  String todayearn;
+  String todaystoreearn;
+  String todayadminearn;
   int storecount;
   int deliveryboycount;
 

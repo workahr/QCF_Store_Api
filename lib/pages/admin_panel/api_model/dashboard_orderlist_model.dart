@@ -51,6 +51,8 @@ class OrderList {
   int? userId;
   String? deliveryPartnerId;
   String? customerName;
+  String? pickup_date;
+  String? delivered_date;
   String? customerMobile;
   String? deliveryBoyName;
   String? deliveryBoyMobile;
@@ -71,6 +73,8 @@ class OrderList {
     this.userId,
     this.deliveryPartnerId,
     this.customerName,
+    this.pickup_date,
+    this.delivered_date,
     this.customerMobile,
     this.deliveryBoyName,
     this.deliveryBoyMobile,
@@ -92,6 +96,8 @@ class OrderList {
         userId: json["user_id"],
         deliveryPartnerId: json["delivery_partner_id"],
         customerName: json["customer_name"],
+        pickup_date: json["pickup_date"],
+        delivered_date: json["delivered_date"],
         customerMobile: json["customer_mobile"],
         deliveryBoyName: json["delivery_boy_name"],
         deliveryBoyMobile: json["delivery_boy_mobile"],
@@ -117,6 +123,8 @@ class OrderList {
         "user_id": userId,
         "delivery_partner_id": deliveryPartnerId,
         "customer_name": customerName,
+        "pickup_date": pickup_date,
+        "delivered_date": delivered_date,
         "customer_mobile": customerMobile,
         "delivery_boy_name": deliveryBoyName,
         "delivery_boy_mobile": deliveryBoyMobile,

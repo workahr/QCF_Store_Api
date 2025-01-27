@@ -555,6 +555,8 @@ class _TotalorderState extends State<Totalorder> {
                                   storeaddress: e.storeAddress.address,
                                   storeaddressline2: e.storeAddress.city,
                                   storelandmark: e.storeAddress.state,
+                                  pickup_date: e.pickup_date,
+                                  delivered_date: e.delivered_date,
                                   storepincode:
                                       e.storeAddress.zipcode.toString(),
                                   deliveryboyname: e.deliveryBoyName,

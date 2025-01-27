@@ -3360,4 +3360,22 @@ class NamFoodApiService {
       return e;
     }
   }
+  // delete payments
+  Future deletepaymentsById(postData) async {
+    try {
+      final url = Uri.parse('${liveApiPath}v1/deletepayment');
+      final response = await client.delete(
+        url,
+        headers: headerData,
+        body: jsonEncode(postData),
+      );
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        return [];
+      }
+    } catch (e) {
+      return e;
+    }
+  }
 }
