@@ -489,6 +489,9 @@ class _TotalorderState extends State<Totalorder> {
                             .where((OrderList e) => e.invoiceNumber
                                 .toString()
                                 .toLowerCase()
+                                .contains(value)|| e.orderStatus
+                                .toString()
+                                .toLowerCase()
                                 .contains(value))
                             .toList();
                       } else {
@@ -499,16 +502,16 @@ class _TotalorderState extends State<Totalorder> {
                   ),
                 ),
                 const SizedBox(width: 10),
-                Flexible(
-                  flex: 1,
-                  child: ButtonWidget(
-                    borderRadius: 10,
-                    title: 'Filter',
-                    width: double.infinity,
-                    color: AppColors.red,
-                    onTap: _showFilterSheet,
-                  ),
-                ),
+                // Flexible(
+                //   flex: 1,
+                //   child: ButtonWidget(
+                //     borderRadius: 10,
+                //     title: 'Filter',
+                //     width: double.infinity,
+                //     color: AppColors.red,
+                //     onTap: _showFilterSheet,
+                //   ),
+                // ),
               ],
             ),
             Expanded(
@@ -519,9 +522,16 @@ class _TotalorderState extends State<Totalorder> {
                   return Column(
                     children: [
                       ListTile(
-                        title: HeadingWidget(
+                        title:Column(mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [ HeadingWidget(
                           fontSize: 20.0,
-                          title: e.invoiceNumber.toString(),
+                          title: e.invoiceNumber.toString()),
+                          HeadingWidget(
+                          fontSize: 16.0,
+                          color: e.orderStatus == "Cancelled"? AppColors.red:e.orderStatus == "Order Picked"?
+                           Color.fromARGB(255, 208, 208, 46):AppColors.green,
+                          title: e.orderStatus.toString())]
                         ),
                         subtitle: SubHeadingWidget(
                           title:

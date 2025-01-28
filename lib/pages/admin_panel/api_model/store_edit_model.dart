@@ -72,6 +72,8 @@ class ListStore {
   String? slug;
   int storeStatus;
   String? minimum_order_amount;
+  int? stick_price_percent;
+  int? base_price_percent;
 
   ListStore({
     required this.storeId,
@@ -100,6 +102,8 @@ class ListStore {
     this.slug,
     required this.storeStatus,
     this.minimum_order_amount,
+    this.stick_price_percent,
+    this.base_price_percent,
   });
 
   factory ListStore.fromJson(Map<String, dynamic> json) => ListStore(
@@ -129,6 +133,8 @@ class ListStore {
         slug: json["slug"],
         storeStatus: json["store_status"] ?? 0,
         minimum_order_amount: json["minimum_order_amount"],
+        stick_price_percent: json["stick_price_percent"],
+        base_price_percent: json["base_price_percent"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -158,6 +164,8 @@ class ListStore {
         "slug": slug,
         "store_status": storeStatus,
         "minimum_order_amount": minimum_order_amount,
+        "stick_price_percent": stick_price_percent,
+        "base_price_percent": base_price_percent,
       };
 }
 

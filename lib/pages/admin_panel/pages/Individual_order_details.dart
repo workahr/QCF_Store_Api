@@ -468,15 +468,15 @@ class _IndividualorderdetailsState extends State<Individualorderdetails> {
                                                     height: 18,
                                                   ),
                                                 ),
-                                                Padding(
-                                                  padding: const EdgeInsets
-                                                      .symmetric(horizontal: 8),
-                                                  child: Column(
+                                              Column(
                                                     crossAxisAlignment:
                                                         CrossAxisAlignment
                                                             .start,
                                                     children: [
-                                                      Wrap(children: [
+                                                       Container(
+                                    width:
+                                        MediaQuery.of(context).size.width / 1.9,
+                                    child: 
                                                         HeadingWidget(
                                                           title: widget
                                                                       .storename ==
@@ -484,8 +484,10 @@ class _IndividualorderdetailsState extends State<Individualorderdetails> {
                                                               ? ''
                                                               : widget.storename
                                                                   .toString(),
+                                                                   overflow: TextOverflow.ellipsis,
+                                      maxLines: 2,
                                                         ),
-                                                      ]),
+                                                      ),
                                                       SubHeadingWidget(
                                                         title: widget
                                                                     .storemobilenumber ==
@@ -497,7 +499,7 @@ class _IndividualorderdetailsState extends State<Individualorderdetails> {
                                                       ),
                                                     ],
                                                   ),
-                                                ),
+                                               
                                                 GestureDetector(
                                                     onTap: () async {
                                                       _makePhoneCall(widget

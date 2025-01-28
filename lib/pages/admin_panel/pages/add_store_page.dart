@@ -44,6 +44,8 @@ class _AddStorePageState extends State<AddStorePage> {
   final TextEditingController pannoController = TextEditingController();
   final TextEditingController zipcodeController = TextEditingController();
   final TextEditingController minimumamountController = TextEditingController();
+  final TextEditingController strickoutperController = TextEditingController();
+  final TextEditingController sellingperController = TextEditingController();
 
   @override
   void initState() {
@@ -86,6 +88,8 @@ class _AddStorePageState extends State<AddStorePage> {
           liveimgSrc = storeDetails?.imageUrl ?? '';
           liveimgSrc1 = storeList?.frontImg ?? '';
           minimumamountController.text = storeList?.minimum_order_amount ?? '';
+          strickoutperController.text = storeList?.stick_price_percent.toString() ?? '';
+          sellingperController.text = storeList?.base_price_percent.toString() ?? '';
         });
       } else {
         showInSnackBar(context, response.message);
@@ -161,6 +165,8 @@ class _AddStorePageState extends State<AddStorePage> {
         "tags": "store1",
         "store_status": 1,
         "minimum_order_amount": minimumamountController.text,
+         "stick_price_percent": strickoutperController.text,
+        "base_price_percent": sellingperController.text,
         "latitude": "",
         "longitude": "",
       };
@@ -190,6 +196,8 @@ class _AddStorePageState extends State<AddStorePage> {
           "tags": "store1",
           "store_status": 1,
           "minimum_order_amount": minimumamountController.text,
+          "stick_price_percent": strickoutperController.text,
+          "base_price_percent": sellingperController.text,
           "latitude": "",
           "longitude": "",
         };
@@ -653,6 +661,23 @@ class _AddStorePageState extends State<AddStorePage> {
                     control: minimumamountController,
                     type: TextInputType.number,
                     labelText: "Enter Minimum Amount",
+                    borderColor: Color(0xFFEEEEEE),
+                  ),
+
+                    CustomeTextField(
+                    width: double.infinity,
+                    control: strickoutperController,
+                    type: TextInputType.number,
+                    labelText: "Strick Out percentage",
+                    borderColor: Color(0xFFEEEEEE),
+                  ),
+
+
+                   CustomeTextField(
+                    width: double.infinity,
+                    control: sellingperController,
+                    type: TextInputType.number,
+                    labelText: "Selling percentage",
                     borderColor: Color(0xFFEEEEEE),
                   ),
 

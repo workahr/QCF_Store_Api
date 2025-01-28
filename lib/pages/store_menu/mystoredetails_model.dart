@@ -64,6 +64,8 @@ class StoreDetails {
   DateTime? updatedDate;
   String? slug; // Make nullable
   int? storeStatus;
+  int? base_price_percent;
+  int? stick_price_percent;
 
   StoreDetails({
     required this.storeId,
@@ -90,6 +92,8 @@ class StoreDetails {
     this.updatedDate,
     this.slug,
     this.storeStatus,
+    this.base_price_percent,
+    this.stick_price_percent,
   });
 
   factory StoreDetails.fromJson(Map<String, dynamic> json) => StoreDetails(
@@ -121,6 +125,8 @@ class StoreDetails {
             : DateTime.parse(json["updated_date"]),
         slug: json["slug"],
         storeStatus: json["store_status"],
+        base_price_percent: json["base_price_percent"],
+        stick_price_percent: json["stick_price_percent"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -148,5 +154,7 @@ class StoreDetails {
         "updated_date": updatedDate?.toIso8601String(),
         "slug": slug,
         "store_status": storeStatus,
+        "base_price_percent": base_price_percent,
+        "stick_price_percent": stick_price_percent,
       };
 }

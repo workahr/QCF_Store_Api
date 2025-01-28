@@ -22,7 +22,9 @@ import 'menu_edit_model.dart';
 
 class AddNewMenu extends StatefulWidget {
   int? menuId;
-  AddNewMenu({super.key, this.menuId});
+  int? base_price_percent;
+  int? stick_price_percent;
+  AddNewMenu({super.key, this.menuId,this.base_price_percent,this.stick_price_percent});
   @override
   _AddNewMenuState createState() => _AddNewMenuState();
 }
@@ -45,6 +47,36 @@ class _AddNewMenuState extends State<AddNewMenu> {
   bool isVeg = true;
   int? selectedId;
   int type = 0;
+
+
+  void calculatePrices() {
+    double? actualPrice = double.tryParse(actualpriceController.text);
+
+    if (actualPrice != null && actualPrice > 0) {
+      setState(() {
+        // Use base_price_percent and stick_price_percent to calculate
+        double basePrice = actualPrice *
+            (widget.base_price_percent != null
+                ? widget.base_price_percent! / 100
+                : 0);
+        double strikePrice = actualPrice *
+            (widget.stick_price_percent != null
+                ? widget.stick_price_percent! / 100
+                : 0);
+
+        // Update controllers for UI
+        offerpriceController.text = basePrice.toStringAsFixed(2);
+        strickoutpriceController.text = strikePrice.toStringAsFixed(2);
+      });
+    } else {
+      // Handle invalid inputs
+      setState(() {
+        offerpriceController.text = actualpriceController.text;
+        strickoutpriceController.text = actualpriceController.text;
+      });
+    }
+  }
+
 
   @override
   void initState() {
@@ -157,6 +189,7 @@ class _AddNewMenuState extends State<AddNewMenu> {
         endTimeController.text = menuDetails!.to_time ?? '';
         // selectedyes = carDetails!.rental ?? '';
         selectedcategoryId = menuDetails!.itemCategoryId;
+        
 
         // if (referList.isNotEmpty) {
         //   selectedrentalyesornoArray();
@@ -567,6 +600,10 @@ class _AddNewMenuState extends State<AddNewMenu> {
                     width: MediaQuery.of(context).size.width,
                     type: const TextInputType.numberWithOptions(),
                     borderColor: Color.fromARGB(255, 225, 225, 225),
+                     onChanged: (value) {
+                  // Trigger calculation whenever the actual price changes
+                  calculatePrices();
+                },
                     // boxRadius: BorderRadius.all(Radius.circular(1)),
                   ),
                   // SizedBox(height: 16),

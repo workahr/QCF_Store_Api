@@ -747,7 +747,7 @@ class _MenuDetailsScreenState extends State<MenuDetailsScreen> {
                         onTap: () {
                           Navigator.push(context, MaterialPageRoute(
                             builder: (context) {
-                              return AddNewMenu();
+                              return AddNewMenu(base_price_percent: MyStoreDetails!.base_price_percent,stick_price_percent: MyStoreDetails!.stick_price_percent,);
                             },
                           ));
                         },
