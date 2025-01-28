@@ -26,6 +26,8 @@ class MenuDetailsScreenAdmin extends StatefulWidget {
   String? storename;
   String? storestatus;
   String? frontimg;
+  int? base_price_percent;
+  int? stick_price_percent;
   String? address;
   String? city;
   String? state;
@@ -36,6 +38,8 @@ class MenuDetailsScreenAdmin extends StatefulWidget {
       this.storeId,
       this.storename,
       this.storestatus,
+      this.base_price_percent,
+      this.stick_price_percent,
       this.frontimg,
       this.address,
       this.city,
@@ -849,6 +853,8 @@ class _MenuDetailsScreenAdminState extends State<MenuDetailsScreenAdmin> {
                                 storestatus: widget.storestatus,
                                 frontimg: widget.frontimg,
                                 address: widget.address,
+                                base_price_percent: widget.base_price_percent,  
+                                stick_price_percent: widget.stick_price_percent,  
                                 city: widget.city,
                                 state: widget.state,
                                 zipcode: widget.zipcode,

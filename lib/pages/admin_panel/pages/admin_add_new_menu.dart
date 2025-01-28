@@ -27,6 +27,8 @@ class AdminAddNewMenu extends StatefulWidget {
   String? storestatus;
   String? frontimg;
   String? address;
+  int? base_price_percent;
+  int? stick_price_percent;
   String? city;
   String? state;
   String? zipcode;
@@ -35,6 +37,8 @@ class AdminAddNewMenu extends StatefulWidget {
       this.menuId,
       this.storeId,
       this.storename,
+      this.base_price_percent,
+      this.stick_price_percent,
       this.storestatus,
       this.frontimg,
       this.address,
@@ -172,6 +176,39 @@ class _AdminAddNewMenuState extends State<AdminAddNewMenu> {
         print(response.message.toString());
         showInSnackBar(context, response.message.toString());
       }
+    }
+  }
+
+   void calculatePrices() {
+    double? actualPrice = double.tryParse(actualpriceController.text);
+
+    if (actualPrice != null && actualPrice > 0) {
+      setState(() {
+        // Use base_price_percent and stick_price_percent to calculate
+        print("base_price_percent: ${widget.base_price_percent}");
+        double basePrice = actualPrice *
+                (widget.base_price_percent != null
+                    ? widget.base_price_percent! / 100
+                    : 0) +
+            actualPrice;
+        double strikePrice = actualPrice *
+                (widget.stick_price_percent != null
+                    ? widget.stick_price_percent! / 100
+                    : 0) +
+            actualPrice;
+        print("basePrice :$basePrice");
+
+        // Update controllers for UI
+        offerpriceController.text = basePrice.toString();
+        strickoutpriceController.text = strikePrice.toString();
+        print("offerpriceController :${offerpriceController.text}");
+      });
+    } else {
+      // Handle invalid inputs
+      setState(() {
+        offerpriceController.text = actualpriceController.text;
+        strickoutpriceController.text = actualpriceController.text;
+      });
     }
   }
 

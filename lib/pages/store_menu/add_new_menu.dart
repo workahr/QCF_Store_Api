@@ -24,7 +24,11 @@ class AddNewMenu extends StatefulWidget {
   int? menuId;
   int? base_price_percent;
   int? stick_price_percent;
-  AddNewMenu({super.key, this.menuId,this.base_price_percent,this.stick_price_percent});
+  AddNewMenu(
+      {super.key,
+      this.menuId,
+      this.base_price_percent,
+      this.stick_price_percent});
   @override
   _AddNewMenuState createState() => _AddNewMenuState();
 }
@@ -48,25 +52,29 @@ class _AddNewMenuState extends State<AddNewMenu> {
   int? selectedId;
   int type = 0;
 
-
   void calculatePrices() {
     double? actualPrice = double.tryParse(actualpriceController.text);
 
     if (actualPrice != null && actualPrice > 0) {
       setState(() {
         // Use base_price_percent and stick_price_percent to calculate
+        print("base_price_percent: ${widget.base_price_percent}");
         double basePrice = actualPrice *
-            (widget.base_price_percent != null
-                ? widget.base_price_percent! / 100
-                : 0);
+                (widget.base_price_percent != null
+                    ? widget.base_price_percent! / 100
+                    : 0) +
+            actualPrice;
         double strikePrice = actualPrice *
-            (widget.stick_price_percent != null
-                ? widget.stick_price_percent! / 100
-                : 0);
+                (widget.stick_price_percent != null
+                    ? widget.stick_price_percent! / 100
+                    : 0) +
+            actualPrice;
+        print("basePrice :$basePrice");
 
         // Update controllers for UI
-        offerpriceController.text = basePrice.toStringAsFixed(2);
-        strickoutpriceController.text = strikePrice.toStringAsFixed(2);
+        offerpriceController.text = basePrice.toString();
+        strickoutpriceController.text = strikePrice.toString();
+        print("offerpriceController :${offerpriceController.text}");
       });
     } else {
       // Handle invalid inputs
@@ -76,7 +84,6 @@ class _AddNewMenuState extends State<AddNewMenu> {
       });
     }
   }
-
 
   @override
   void initState() {
@@ -102,9 +109,8 @@ class _AddNewMenuState extends State<AddNewMenu> {
         "item_name": dishNameController.text,
         "item_type": selectedId,
         "item_desc": descriptionController.text,
-        "item_price": actualpriceController.text,
-        "item_offer_price":
-           actualpriceController.text,
+        "item_price": strickoutpriceController.text,
+        "item_offer_price": offerpriceController.text,
         "item_category_id": selectedcategoryId,
         "tax_id": 0,
         "item_stock": 1,
@@ -189,7 +195,6 @@ class _AddNewMenuState extends State<AddNewMenu> {
         endTimeController.text = menuDetails!.to_time ?? '';
         // selectedyes = carDetails!.rental ?? '';
         selectedcategoryId = menuDetails!.itemCategoryId;
-        
 
         // if (referList.isNotEmpty) {
         //   selectedrentalyesornoArray();
@@ -600,10 +605,11 @@ class _AddNewMenuState extends State<AddNewMenu> {
                     width: MediaQuery.of(context).size.width,
                     type: const TextInputType.numberWithOptions(),
                     borderColor: Color.fromARGB(255, 225, 225, 225),
-                     onChanged: (value) {
-                  // Trigger calculation whenever the actual price changes
-                  calculatePrices();
-                },
+                    onChanged: (value) {
+                      // Trigger calculation whenever the actual price changes
+                      calculatePrices();
+                      print("cal");
+                    },
                     // boxRadius: BorderRadius.all(Radius.circular(1)),
                   ),
                   // SizedBox(height: 16),

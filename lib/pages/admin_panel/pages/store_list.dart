@@ -1,3 +1,6 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
+
+
 import 'package:flutter/material.dart';
 import 'package:namstore/constants/app_assets.dart';
 import 'package:namstore/constants/app_colors.dart';
@@ -519,6 +522,8 @@ class _StoreListState extends State<StoreList> {
                                                 address: e.address,
                                                 city: e.city,
                                                 state: e.state,
+                                                base_price_percent: e.base_price_percent,
+                                                stick_price_percent: e.stick_price_percent,
                                                 zipcode: e.zipcode,
                                               )));
                                 },

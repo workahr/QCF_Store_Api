@@ -64,6 +64,8 @@ class StoreListData {
   dynamic slug;
   int? storeStatus;
   String? owner_name;
+  int? base_price_percent;
+  int? stick_price_percent;
 
   StoreListData({
     required this.storeId,
@@ -91,6 +93,8 @@ class StoreListData {
     required this.slug,
     this.storeStatus,
     this.owner_name,
+    this.base_price_percent,
+    this.stick_price_percent,
   });
 
   factory StoreListData.fromJson(Map<String, dynamic> json) => StoreListData(
@@ -118,7 +122,10 @@ class StoreListData {
       updatedDate: json["updated_date"],
       slug: json["slug"],
       storeStatus: json["store_status"],
-      owner_name: json["owner_name"]);
+      owner_name: json["owner_name"],
+       base_price_percent: json["base_price_percent"],
+      stick_price_percent: json["stick_price_percent"],
+       );
 
   Map<String, dynamic> toJson() => {
         "store_id": storeId,
@@ -146,5 +153,7 @@ class StoreListData {
         "slug": slug,
         "store_status": storeStatus,
         "owner_name": owner_name,
+        "base_price_percent": base_price_percent,
+        "stick_price_percent": stick_price_percent,
       };
 }
