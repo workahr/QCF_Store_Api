@@ -794,6 +794,8 @@ class _MenuDetailsScreenAdminState extends State<MenuDetailsScreenAdmin> {
                                                                     .storename,
                                                                 storestatus: widget
                                                                     .storestatus,
+                                                                      base_price_percent: widget.base_price_percent,  
+                                stick_price_percent: widget.stick_price_percent, 
                                                                 frontimg: widget
                                                                     .frontimg,
                                                                 address: widget

@@ -699,6 +699,7 @@ class _MenuDetailsScreenState extends State<MenuDetailsScreen> {
                                                                     AddNewMenu(
                                                                       menuId: e
                                                                           .itemId,
+                                                                          base_price_percent: MyStoreDetails!.base_price_percent,stick_price_percent: MyStoreDetails!.stick_price_percent,
                                                                     ))).then(
                                                         (value) {});
                                                   },

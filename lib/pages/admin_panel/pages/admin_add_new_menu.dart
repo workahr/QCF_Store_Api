@@ -632,7 +632,11 @@ class _AdminAddNewMenuState extends State<AdminAddNewMenu> {
                     width: MediaQuery.of(context).size.width,
                     type: const TextInputType.numberWithOptions(),
                     borderColor: Color.fromARGB(255, 225, 225, 225),
-                    // boxRadius: BorderRadius.all(Radius.circular(1)),
+                     onChanged: (value) {
+                      // Trigger calculation whenever the actual price changes
+                      calculatePrices();
+                      print("cal");
+                    },
                   ),
                   SizedBox(height: 16),
                   Text("Strick Out price",
