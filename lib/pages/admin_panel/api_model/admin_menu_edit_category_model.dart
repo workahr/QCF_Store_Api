@@ -50,7 +50,9 @@ class AdminEditCategory {
   int? serial;
   String? imageUrl;
   int? status;
+ // String? itemImageUrl;
   int? createdBy;
+  
   String? createdDate;
   int? updatedBy;
   String? updatedDate;
@@ -64,6 +66,7 @@ class AdminEditCategory {
     this.serial,
     this.imageUrl,
     this.status,
+   // this.itemImageUrl,
     this.createdBy,
     this.createdDate,
     this.updatedBy,
@@ -80,6 +83,7 @@ class AdminEditCategory {
         serial: json["serial"],
         imageUrl: json["image_url"],
         status: json["status"],
+     //   itemImageUrl: json["item_image_url"],
         createdBy: json["created_by"],
         createdDate: json["created_date"],
         updatedBy: json["updated_by"],
@@ -94,6 +98,7 @@ class AdminEditCategory {
         "slug": slug,
         "serial": serial,
         "image_url": imageUrl,
+
         "status": status,
         "created_by": createdBy,
         "created_date": createdDate,

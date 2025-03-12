@@ -4,6 +4,7 @@ import 'package:shimmer/shimmer.dart';
 import '../../../constants/app_colors.dart';
 import '../../../services/comFuncService.dart';
 import '../../../services/nam_food_api_service.dart';
+import '../api_model/delete_userdetails_model.dart';
 import '../api_model/prime_location_list_model.dart';
 import '../api_model/registered_user_list.dart';
 
@@ -48,6 +49,31 @@ class _RegisteredUserListState extends State<RegisteredUserList> {
         RegisteredListDataAll = [];
         isLoading = false;
       });
+      showInSnackBar(context, response.message.toString());
+    }
+  }
+
+
+
+  // Delete User 
+  Future deleteuser(String id) async {
+    await apiService.getBearerToken();
+
+    Map<String, dynamic> postData = {
+      "id": id,
+    };
+    print("delete $postData");
+
+    var result = await apiService.deleteuser(postData);
+    DeleteUserdetailsModel response = deleteUserdetailsModelFromJson(result);
+
+    if (response.status.toString() == 'SUCCESS') {
+      showInSnackBar(context, response.message.toString());
+      setState(() {
+        getRegistereduserList();
+      });
+    } else {
+      print(response.message.toString());
       showInSnackBar(context, response.message.toString());
     }
   }
@@ -133,6 +159,7 @@ class _RegisteredUserListState extends State<RegisteredUserList> {
                               DataColumn(label: Text('Date')),
                               DataColumn(label: Text('User Name')),
                               DataColumn(label: Text('Mobile')),
+                               DataColumn(label: Text('Delete User')),
                             ],
                             rows: List<DataRow>.generate(
                               RegisteredListData!.length,
@@ -166,6 +193,53 @@ class _RegisteredUserListState extends State<RegisteredUserList> {
                                     DataCell(Text(formattedDate)),
                                     DataCell(Text(Registereduser)),
                                     DataCell(Text(mobile)),
+                                    DataCell(
+                                          TextButton.icon(
+                                            onPressed: () {
+                                              if (RegisteredId.isNotEmpty) {
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (context) =>
+                                                      AlertDialog(
+                                                    title: Text(
+                                                        'Confirm Deletion',
+                                                        style: TextStyle(
+                                                            color: Colors.red)),
+                                                    content: Text(
+                                                        'Do you really want to delete this User Details?'),
+                                                    actions: [
+                                                      TextButton(
+                                                        onPressed: () {
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                          deleteuser(
+                                                              RegisteredId);
+                                                        },
+                                                        child: Text('Confirm',
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .red)),
+                                                      ),
+                                                      TextButton(
+                                                        onPressed: () {
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                        },
+                                                        child: Text('Cancel',
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .grey)),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                );
+                                              }
+                                            },
+                                            icon: Icon(Icons.delete,
+                                                color: Colors.red),
+                                            label: Text('Delete'),
+                                          ),
+                                        ),
                                   ],
                                 );
                               },

@@ -1,4 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:namstore/widgets/button_widget.dart';
 import 'package:namstore/widgets/heading_widget.dart';
 import 'package:namstore/widgets/svgiconButtonWidget.dart';
@@ -6,9 +10,11 @@ import 'package:shimmer/shimmer.dart';
 
 import '../../../constants/app_assets.dart';
 import '../../../constants/app_colors.dart';
+import '../../../constants/app_constants.dart';
 import '../../../services/comFuncService.dart';
 import '../../../services/nam_food_api_service.dart';
 import '../../../widgets/custom_text_field.dart';
+import '../../../widgets/outline_btn_widget.dart';
 import '../api_model/admin_menu_add_category_model.dart';
 import '../api_model/admin_menu_category_list_model.dart';
 import '../api_model/admin_menu_delete_category_model.dart';
@@ -82,14 +88,22 @@ class _AdminAddMenuCategoryState extends State<AdminAddMenuCategory> {
   }
 
   Future<void> AdminaddCategory() async {
+    //  if (imageFile == null) {
+    //   showInSnackBar(context, 'Menu image is required');
+    //   return;
+    // }
+     print("image :$imageFile");
     Map<String, dynamic> postData = {
       "category_name": categoryNameController.text,
       "description": categoryDescriptionController.text,
       "slug": formattedCategoryNameController.text,
       "serial": ordernoController.text,
-      "store_id": widget.storeId
+      "store_id": widget.storeId,
+      
     };
-    var result = await apiService.Adminaddcategory(postData);
+    
+    String url = 'v1/createitemcategory_admin';
+    var result = await apiService.Adminaddcategory(url,postData,imageFile);
     AdminMenuAddCategorymodel response =
         adminmenuaddCategorymodelFromJson(result);
     if (response.status.toString() == 'SUCCESS') {
@@ -125,6 +139,7 @@ class _AdminAddMenuCategoryState extends State<AdminAddMenuCategory> {
         editordernoController.text = categoriesDetails?.serial.toString() ?? '';
         editcategoryDescriptionController.text =
             categoriesDetails?.description ?? '';
+            liveimgSrc = categoriesDetails!.imageUrl ?? '';
       });
 
       // Debugging prints
@@ -179,7 +194,8 @@ class _AdminAddMenuCategoryState extends State<AdminAddMenuCategory> {
       "store_id": widget.storeId
     };
     print("updateItemCategory $postData");
-    var result = await apiService.AdminupdateItemCategory(postData);
+     String url = 'v1/updateitemcategory_admin';
+    var result = await apiService.AdminupdateItemCategory(url,postData,imageFile);
 
     AdminMenuUpdateItemCategoryModel response =
         adminmenuupdateItemCategoryModelFromJson(result);
@@ -195,6 +211,90 @@ class _AdminAddMenuCategoryState extends State<AdminAddMenuCategory> {
     // } else {
     //   // showInSnackBar(context, "Please fill all fields");
     // }
+  }
+
+
+
+  XFile? imageFile;
+  File? imageSrc;
+  String? liveimgSrc;
+  int type = 0;
+
+  getImage(ImageSource source) async {
+    try {
+      Navigator.pop(context);
+      final pickedImage = await ImagePicker().pickImage(source: source);
+      if (pickedImage != null) {
+        imageFile = pickedImage;
+        imageSrc = File(pickedImage.path);
+        getRecognizedText(pickedImage);
+        setState(() {});
+      }
+    } catch (e) {
+      setState(() {});
+    }
+  }
+
+  void getRecognizedText(image) async {
+    try {
+      final inputImage = InputImage.fromFilePath(image.path);
+
+      final textDetector = TextRecognizer();
+      RecognizedText recognisedText =
+          await textDetector.processImage(inputImage);
+      final resVal = recognisedText.blocks.toList();
+      List allDates = [];
+      for (TextBlock block in resVal) {
+        for (TextLine line in block.lines) {
+          String recognizedLine = line.text;
+          RegExp dateRegex = RegExp(r"\b\d{1,2}/\d{1,2}/\d{2,4}\b");
+          Iterable<Match> matches = dateRegex.allMatches(recognizedLine);
+
+          for (Match match in matches) {
+            allDates.add(match.group(0));
+          }
+        }
+      }
+
+      await textDetector.close();
+
+      print(allDates); // For example, print the dates
+    } catch (e) {
+      showInSnackBar(context, e.toString());
+    }
+  }
+
+  showActionSheet(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              ListTile(
+                leading: const Icon(Icons.photo_library),
+                title: const Text('Gallery'),
+                onTap: () async {
+                  await getImage(ImageSource.gallery);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.camera_alt),
+                title: const Text('Camera'),
+                onTap: () async {
+                  await getImage(ImageSource.camera);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.close_rounded),
+                title: const Text('Close'),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          );
+        });
   }
 
 //add
@@ -252,14 +352,87 @@ class _AdminAddMenuCategoryState extends State<AdminAddMenuCategory> {
                   width: MediaQuery.of(context).size.width,
                   borderColor: const Color.fromARGB(255, 225, 225, 225),
                 ),
-                const SizedBox(height: 20),
+  SizedBox(height: 10),
+                   OutlineBtnWidget(
+                      title: 'Upload Image of Dish',
+                      titleColor: Color(0xFF2C54D6),
+                      fillColor: Color(0xFFF3F6FF),
+                      iconColor: Color(0xFF2C54D6),
+                      imageUrl: Image.asset(
+                        AppAssets.image_plus_icon,
+                        height: 25,
+                        width: 25,
+                      ),
+                      width: MediaQuery.of(context).size.width - 10,
+                      height: 50,
+                      borderColor: Color(0xFF2C54D6),
+                      onTap: () {
+                        type = 0;
+                        showActionSheet(context);
+                      }),
+                         SizedBox(
+                    height: 10,
+                  ),
+                  Center(
+                    child: Stack(
+                      children: [
+                        liveimgSrc != "" &&
+                                liveimgSrc != null &&
+                                imageSrc == null
+                            ? ClipRRect(
+                                borderRadius: BorderRadius.circular(16),
+                                child: Container(
+                                  width: 160,
+                                  height: 160,
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: NetworkImage(
+                                        AppConstants.imgBaseUrl +
+                                            (liveimgSrc ?? ''),
+                                      ),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  child: liveimgSrc == null
+                                      ? Image.asset(
+                                          AppAssets.user,
+                                          fit: BoxFit.fill,
+                                        )
+                                      : null,
+                                ),
+                              )
+                            : imageSrc != null
+                                ? ClipRRect(
+                                    borderRadius: BorderRadius.circular(
+                                        16), // Adjust the radius as needed
+                                    child: Container(
+                                      width: 160,
+                                      height: 160,
+                                      decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                          image: FileImage(imageSrc!),
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                : SizedBox(),
+                      ],
+                    ),
+                  ),
+                const SizedBox(height:10),
                 Center(
                   child: SizedBox(
                     width: MediaQuery.of(context).size.width / 2.5,
                     child: ElevatedButton(
                       onPressed: () {
-                        categoryNameController.removeListener(() {});
+                         if (imageFile == null ) {
+                          showInSnackBar(context, 'Menu image is required');
+                        } else {
+                           categoryNameController.removeListener(() {});
                         AdminaddCategory();
+                        }
+                      
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.red,
@@ -685,9 +858,9 @@ class _AdminAddMenuCategoryState extends State<AdminAddMenuCategory> {
 
 
 
-// Before category on off button 
 
 
+//  Category nam food 
 
 // import 'package:flutter/material.dart';
 // import 'package:namstore/widgets/button_widget.dart';
@@ -705,6 +878,7 @@ class _AdminAddMenuCategoryState extends State<AdminAddMenuCategory> {
 // import '../api_model/admin_menu_delete_category_model.dart';
 // import '../api_model/admin_menu_edit_category_model.dart';
 // import '../api_model/admin_menu_update_category_model.dart';
+// import '../api_model/admincategory_status_update.dart';
 
 // class AdminAddMenuCategory extends StatefulWidget {
 //   int? category;
@@ -733,6 +907,11 @@ class _AdminAddMenuCategoryState extends State<AdminAddMenuCategory> {
 //   List<AdminCategoryList>? categoryListDataAll;
 
 //   bool isLoading = false;
+
+//   // bool? isOnDuty;
+//   // bool inStock1 = true;
+//   // String toggleTitle = "On Duty";
+//   // bool? inStock;
 
 //   @override
 //   void initState() {
@@ -1091,6 +1270,30 @@ class _AdminAddMenuCategoryState extends State<AdminAddMenuCategory> {
 //     );
 //   }
 
+//   Future categoryStatusUpdate(id, value) async {
+//     try {
+//       Map<String, dynamic> postData = {
+//         "category_status": value,
+//         "category_id": id
+//       };
+//       var result = await apiService.categoryStatusUpdate(postData);
+//       Categorystatusupdatemodel response =
+//           categorystatusupdatemodelFromJson(result);
+
+//       closeSnackBar(context: context);
+
+//       if (response.status.toString() == 'SUCCESS') {
+//         setState(() {
+//           getCategoryList();
+//         });
+//       } else {
+//         //   showInSnackBar(context, response.message.toString());
+//       }
+//     } catch (error) {
+//       //   showInSnackBar(context, error.toString());
+//     }
+//   }
+
 //   @override
 //   Widget build(BuildContext context) {
 //     return Scaffold(
@@ -1157,6 +1360,45 @@ class _AdminAddMenuCategoryState extends State<AdminAddMenuCategory> {
 //                               crossAxisAlignment: CrossAxisAlignment.start,
 //                               children: [
 //                                 Row(
+//                                     mainAxisAlignment:
+//                                         MainAxisAlignment.spaceBetween,
+//                                     children: [
+//                                       Text(
+//                                           e.category_status == 1
+//                                               ? 'In Stock'
+//                                               : 'Out of Stock',
+//                                           style: TextStyle(
+//                                               color: e.category_status == 1
+//                                                   ? Colors.green
+//                                                   : AppColors.red,
+//                                               fontSize: 18.0)),
+//                                       Padding(
+//                                           padding: const EdgeInsets.symmetric(
+//                                               vertical: 0.0),
+//                                           child: Transform.scale(
+//                                               scale: 0.8,
+//                                               child: Switch(
+//                                                 value: e.category_status == 1,
+//                                                 onChanged: (value) {
+//                                                   setState(() {
+//                                                     e.category_status =
+//                                                         value ? 1 : 0;
+
+//                                                     categoryStatusUpdate(
+//                                                         e.categoryId,
+//                                                         value ? 1 : 0);
+//                                                     //  print(e.itemStock);
+//                                                   });
+//                                                 },
+//                                                 activeColor: Colors.white,
+//                                                 activeTrackColor: Colors.green,
+//                                                 inactiveThumbColor:
+//                                                     Colors.white,
+//                                                 inactiveTrackColor:
+//                                                     Colors.grey[300],
+//                                               ))),
+//                                     ]),
+//                                 Row(
 //                                   mainAxisAlignment:
 //                                       MainAxisAlignment.spaceBetween,
 //                                   children: [
@@ -1170,11 +1412,45 @@ class _AdminAddMenuCategoryState extends State<AdminAddMenuCategory> {
 //                                         SizedBox(
 //                                           height: 10,
 //                                         ),
+//                                         Container(
+//                                             width: MediaQuery.of(context)
+//                                                     .size
+//                                                     .width /
+//                                                 1.3,
+//                                             child: HeadingWidget(
+//                                               title: e.categoryName.toString(),
+//                                               fontWeight: FontWeight.w500,
+//                                               fontSize: 18.00,
+//                                               maxLines: 2,
+//                                               overflow: TextOverflow.ellipsis,
+//                                             )),
+//                                       ],
+//                                     ),
+//                                   ],
+//                                 ),
+//                                 SizedBox(
+//                                   height: 12,
+//                                 ),
+//                                 Row(
+//                                   mainAxisAlignment:
+//                                       MainAxisAlignment.spaceBetween,
+//                                   children: [
+//                                     Column(
+//                                       children: [
 //                                         HeadingWidget(
-//                                           title: e.categoryName.toString(),
+//                                           title: 'Description :',
+//                                         ),
+//                                         SizedBox(
+//                                           height: 6,
+//                                         ),
+//                                         HeadingWidget(
+//                                           title:
+//                                               e.description.toString() == "null"
+//                                                   ? ' '
+//                                                   : e.description.toString(),
 //                                           fontWeight: FontWeight.w500,
 //                                           fontSize: 18.00,
-//                                         ),
+//                                         )
 //                                       ],
 //                                     ),
 //                                     Row(
@@ -1228,22 +1504,6 @@ class _AdminAddMenuCategoryState extends State<AdminAddMenuCategory> {
 //                                     ),
 //                                   ],
 //                                 ),
-//                                 SizedBox(
-//                                   height: 12,
-//                                 ),
-//                                 HeadingWidget(
-//                                   title: 'Description :',
-//                                 ),
-//                                 SizedBox(
-//                                   height: 6,
-//                                 ),
-//                                 HeadingWidget(
-//                                   title: e.description.toString() == "null"
-//                                       ? ' '
-//                                       : e.description.toString(),
-//                                   fontWeight: FontWeight.w500,
-//                                   fontSize: 18.00,
-//                                 )
 //                               ],
 //                             ),
 //                           ),

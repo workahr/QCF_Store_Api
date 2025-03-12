@@ -228,14 +228,16 @@ class _PrimeLocationPageState extends State<PrimeLocationPage> {
             ),
           ),
         ),
-        body: isLoading
+        body:
+         isLoading
             ? ListView.builder(
                 itemCount: 8,
                 itemBuilder: (context, index) {
                   return _buildShimmerPlaceholder();
                 },
               )
-            : SingleChildScrollView(
+            :
+             SingleChildScrollView(
                 child: Column(children: <Widget>[
                 Center(
                     child: SizedBox(
@@ -253,12 +255,12 @@ class _PrimeLocationPageState extends State<PrimeLocationPage> {
                           borderRadius: BorderRadius.all(Radius.circular(10)),
                           borderSide: BorderSide(
                               color:
-                                  AppColors.lightGrey5), // Default border color
+                                  AppColors.lightGrey5), 
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
                               color: AppColors
-                                  .lightGrey5), // Border color when enabled
+                                  .lightGrey5), 
                           borderRadius: BorderRadius.all(Radius.circular(10)),
                         ),
                         focusedBorder: OutlineInputBorder(

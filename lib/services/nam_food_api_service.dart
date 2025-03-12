@@ -1836,25 +1836,64 @@ class NamFoodApiService {
   //   }
   // }
 
-  Future Adminaddcategory(postData) async {
+
+  // Nam Food Admin Add Category
+
+  // Future Adminaddcategory(postData) async {
+  //   try {
+  //     final url = Uri.parse('${liveApiPath}v1/createitemcategory_admin');
+  //     print("test1 ");
+  //     final response = await client.post(
+  //       url,
+  //       headers: headerData,
+  //       body: jsonEncode(postData),
+  //     );
+  //     print("test2 ");
+  //     if (response.statusCode == 200) {
+  //       return response.body;
+  //     } else {
+  //       return response;
+  //     }
+  //   } catch (e) {
+  //     return e;
+  //   }
+  // }
+
+
+// Sarathy Foods Admin Add Category
+
+    Future Adminaddcategory(
+      String apiCtrl, Map<String, dynamic> postData, imageFile) async {
     try {
-      final url = Uri.parse('${liveApiPath}v1/createitemcategory_admin');
-      print("test1 ");
-      final response = await client.post(
+      final url = Uri.parse(liveApiPath + apiCtrl);
+
+      var headers = headerData;
+      var request = http.MultipartRequest(
+        'POST',
         url,
-        headers: headerData,
-        body: jsonEncode(postData),
       );
-      print("test2 ");
+      request.headers.addAll(headerData);
+
+      for (var entry in postData.entries) {
+        request.fields[entry.key] = entry.value.toString();
+      }
+      if (imageFile != null) {
+        var image = await http.MultipartFile.fromPath('media', imageFile!.path);
+        request.files.add(image);
+      }
+      request.headers.addAll(headers);
+      var response = await request.send();
       if (response.statusCode == 200) {
-        return response.body;
+        final json = await response.stream.bytesToString();
+        return json;
       } else {
-        return response;
+        return [];
       }
     } catch (e) {
       return e;
     }
   }
+
 
   // Category List
   Future getcategoryList() async {
@@ -2861,25 +2900,72 @@ class NamFoodApiService {
   //   }
   // }
 
-  Future AdminupdateItemCategory(postData) async {
-    try {
-      final url = Uri.parse('${liveApiPath}v1/updateitemcategory_admin');
-      final response = await client.post(url,
-          headers: headerData, body: jsonEncode(postData));
 
+
+ // Nam Food Admin update Category
+
+  // Future AdminupdateItemCategory(postData) async {
+  //   try {
+  //     final url = Uri.parse('${liveApiPath}v1/updateitemcategory_admin');
+  //     final response = await client.post(url,
+  //         headers: headerData, body: jsonEncode(postData));
+
+  //     if (response.statusCode == 200) {
+  //       final json = response.body;
+  //       return json;
+  //     } else {
+  //       print('error');
+  //       throw Exception(
+  //           'Failed. Status code: ${response.statusCode} ${response.toString()}');
+  //     }
+  //   } catch (e) {
+  //     print('catcherror ${e}');
+  //     return e;
+  //   }
+  // }
+
+
+
+
+  // Sarathy Foods Admin update Category
+
+    Future AdminupdateItemCategory(
+      String apiCtrl, Map<String, dynamic> postData, imageFile) async {
+    try {
+      final url = Uri.parse(liveApiPath + apiCtrl);
+
+      var headers = headerData;
+      var request = http.MultipartRequest(
+        'POST',
+        url,
+      );
+      request.headers.addAll(headerData);
+
+      for (var entry in postData.entries) {
+        request.fields[entry.key] = entry.value.toString();
+      }
+      if (imageFile != null) {
+        var image = await http.MultipartFile.fromPath('media', imageFile!.path);
+        request.files.add(image);
+      }
+      request.headers.addAll(headers);
+      var response = await request.send();
       if (response.statusCode == 200) {
-        final json = response.body;
+        final json = await response.stream.bytesToString();
         return json;
       } else {
-        print('error');
-        throw Exception(
-            'Failed. Status code: ${response.statusCode} ${response.toString()}');
+        return [];
       }
     } catch (e) {
-      print('catcherror ${e}');
       return e;
+      
     }
   }
+
+
+
+
+  
 
   // Admin Category List
   Future getadmincategoryList() async {
@@ -3378,4 +3464,29 @@ class NamFoodApiService {
       return e;
     }
   }
+
+
+
+  // delete User Details
+  Future deleteuser(postData) async {
+    print('  delete test $postData');
+    try {
+      final url = Uri.parse('${liveApiPath}v1/deleteuser');
+      final response = await client.post(
+        url,
+        headers: headerData,
+        body: jsonEncode(postData),
+      );
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        return [];
+      }
+    } catch (e) {
+      return e;
+    }
+  }
+
+
+  
 }

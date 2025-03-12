@@ -158,6 +158,8 @@ class _AdminAddNewMenuState extends State<AdminAddNewMenu> {
               storename: widget.storename,
               storestatus: widget.storestatus,
               frontimg: widget.frontimg,
+                base_price_percent:widget.base_price_percent,
+               stick_price_percent:widget.stick_price_percent,
               address: widget.address,
               city: widget.city,
               state: widget.state,
