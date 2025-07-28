@@ -53,7 +53,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
         setState(() {
           final today = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
-          orderdetailslistpageAll = response.list;
+          orderdetailslistpageAll = response.list!;
           unassigneddeliveryboy = orderdetailslistpageAll.where((entry) {
             return (entry.orderStatus == "Order Placed" ||
                     entry.orderStatus == "Ready to Pickup" ||
@@ -430,8 +430,7 @@ Future<void> _navigateToMenus(String? invoiceNumber, items) async {
                                     .where((order) =>
                                         order.orderStatus == "Order Placed" &&
                                         order.deliveryPartnerId == '0' &&
-                                        (order.customerAddress.orderId
-                                                ?.toString()
+                                        (order.customerAddress!.orderId.toString()
                                                 .toLowerCase()
                                                 .contains(value) ??
                                             false))
@@ -454,7 +453,7 @@ Future<void> _navigateToMenus(String? invoiceNumber, items) async {
                                         DateFormat('yyyy-MM-dd')
                                                 .format(order.createdDate!) ==
                                             today &&
-                                        (order.customerAddress.orderId
+                                        (order.customerAddress!.orderId
                                                 ?.toString()
                                                 .toLowerCase()
                                                 .contains(value) ??
@@ -476,7 +475,7 @@ Future<void> _navigateToMenus(String? invoiceNumber, items) async {
                                         order.orderStatus ==
                                             "Order Delivered" &&
                                         order.deliveryPartnerId != '0' &&
-                                        (order.customerAddress.orderId
+                                        (order.customerAddress!.orderId
                                                 ?.toString()
                                                 .toLowerCase()
                                                 .contains(value) ??
@@ -498,7 +497,7 @@ Future<void> _navigateToMenus(String? invoiceNumber, items) async {
                                         order.orderStatus == "Cancelled" &&
                                         (order.deliveryPartnerId != '0' ||
                                             order.deliveryPartnerId == '0') &&
-                                        (order.customerAddress.orderId
+                                        (order.customerAddress!.orderId
                                                 ?.toString()
                                                 .toLowerCase()
                                                 .contains(value) ??
@@ -570,7 +569,7 @@ Future<void> _navigateToMenus(String? invoiceNumber, items) async {
                                                             .start,
                                                     children: [
                                                       Text(
-                                                        "Order ID #${currentCustomerAddress.orderId ?? ''}",
+                                                        "Order ID #${currentCustomerAddress!.orderId ?? ''}",
                                                         style: TextStyle(
                                                             fontWeight:
                                                                 FontWeight.bold,
@@ -601,7 +600,7 @@ Future<void> _navigateToMenus(String? invoiceNumber, items) async {
                                                     _showpickupconfirmDialog(
                                                         e.deliveryCharges,
                                                         e.totalPrice,
-                                                        e.items);
+                                                        e.items!);
                                                   },
                                                   child: Row(
                                                     mainAxisAlignment:
@@ -1042,7 +1041,7 @@ Future<void> _navigateToMenus(String? invoiceNumber, items) async {
                                                             .start,
                                                     children: [
                                                       Text(
-                                                        "Order ID #${currentCustomerAddress.orderId ?? ''}",
+                                                        "Order ID #${currentCustomerAddress!.orderId ?? ''}",
                                                         style: TextStyle(
                                                             fontWeight:
                                                                 FontWeight.bold,
@@ -1377,7 +1376,7 @@ Future<void> _navigateToMenus(String? invoiceNumber, items) async {
                                                       CrossAxisAlignment.start,
                                                   children: [
                                                     Text(
-                                                      "Order ID #${currentCustomerAddress.orderId ?? ''}",
+                                                      "Order ID #${currentCustomerAddress!.orderId ?? ''}",
                                                       style: TextStyle(
                                                           fontWeight:
                                                               FontWeight.bold,
@@ -1708,7 +1707,7 @@ Future<void> _navigateToMenus(String? invoiceNumber, items) async {
                                                       CrossAxisAlignment.start,
                                                   children: [
                                                     Text(
-                                                      "Order ID #${currentCustomerAddress.orderId ?? ''}",
+                                                      "Order ID #${currentCustomerAddress!.orderId ?? ''}",
                                                       style: TextStyle(
                                                           fontWeight:
                                                               FontWeight.bold,

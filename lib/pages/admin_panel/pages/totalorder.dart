@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:namstore/pages/admin_panel/pages/Individual_order_details.dart';
@@ -35,48 +37,133 @@ class _TotalorderState extends State<Totalorder> {
     getallOrderdetailslist();
   }
 
-  //totalorder
-  List<OrderList> indivualorderpage = [];
-  List<OrderList> indivualorderpageAll = [];
-  bool isLoading1 = false;
+//   //totalorder
+//   List<OrderList> indivualorderpage = [];
+//   List<OrderList> indivualorderpageAll = [];
+   bool isLoading1 = false;
 
-  Future<void> getallOrderdetailslist() async {
-    setState(() {
-      isLoading1 = true;
-    });
+//   Future<void> getallOrderdetailslist() async {
+//     setState(() {
+//       isLoading1 = true;
+//     });
 
-    try {
-      final result = await apiService.getallOrderdetailslist();
+//     try {
+//       final result = await apiService.getallOrderdetailslist();
+// print(json.decode(result).runtimeType);  // Will say "List" or "Map"
 
-      print("Result Type: ${result.runtimeType}");
-      final response = orderListmodelFromJson(result);
+//       print("Result Type: ${result.runtimeType}");
+//       final response = orderListmodelFromJson(result);
 
-      print("Response Status: ${response.status}");
+//     //  print("Response Status: ${response.status}");
 
-      if (response.status == 'SUCCESS') {
-        setState(() {
-          indivualorderpage = response.list ?? [];
-          indivualorderpageAll = response.list ?? [];
-          isLoading1 = false;
-        });
-      } else {
-        setState(() {
-          indivualorderpage = [];
-          indivualorderpageAll = [];
-          isLoading1 = false;
-        });
-        showInSnackBar(context, response.message ?? 'Unknown error occurred');
-      }
-    } catch (e, stackTrace) {
-      print("Error: $e\nStack Trace: $stackTrace");
+//       if (response.status == 'SUCCESS') {
+//         setState(() {
+//           indivualorderpage = response.list ?? [];
+//           indivualorderpageAll = response.list ?? [];
+//           isLoading1 = false;
+//         });
+//       } else {
+//         setState(() {
+//           indivualorderpage = [];
+//           indivualorderpageAll = [];
+//           isLoading1 = false;
+//         });
+//         showInSnackBar(context, response.message ?? 'Unknown error occurred');
+//       }
+//     } catch (e, stackTrace) {
+//       print("Error: $e\nStack Trace: $stackTrace");
+//       setState(() {
+//         indivualorderpage = [];
+//         indivualorderpageAll = [];
+//         isLoading1 = false;
+//       });
+//       showInSnackBar(context, 'Error: $e');
+//     }
+//   }
+
+
+List<OrderList> indivualorderpage = [];
+List<OrderList> indivualorderpageAll = [];
+
+Future<void> getallOrderdetailslist() async {
+  setState(() {
+    isLoading1 = true;
+  });
+
+  try {
+    final result = await apiService.getallOrderdetailslist();
+
+    print("Result Type: ${result.runtimeType}");
+    final OrderListmodel response = orderListmodelFromJson(result);
+
+    if (response.status == 'SUCCESS') {
+      setState(() {
+        indivualorderpage = response.list ?? [];
+        indivualorderpageAll = response.list ?? [];
+        isLoading1 = false;
+      });
+    } else {
       setState(() {
         indivualorderpage = [];
         indivualorderpageAll = [];
         isLoading1 = false;
       });
-      showInSnackBar(context, 'Error: $e');
+      showInSnackBar(context, response.message ?? 'Unknown error occurred');
     }
+  } catch (e, stackTrace) {
+    print("Error: $e\nStack Trace: $stackTrace");
+    setState(() {
+      indivualorderpage = [];
+      indivualorderpageAll = [];
+      isLoading1 = false;
+    });
+    showInSnackBar(context, 'Error: $e');
   }
+}
+
+
+// Future<void> getallOrderdetailslist() async {
+//   setState(() {
+//     isLoading1 = true;
+//   });
+
+//   try {
+//     final result = await apiService.getallOrderdetailslist();
+
+//     print("Raw API result: $result");
+
+//     // Parse the outer JSON as a map
+//     final Map<String, dynamic> jsonMap = json.decode(result);
+
+//     // Extract the list from the 'list' key
+//     final List<dynamic> jsonList = jsonMap['list'];
+
+//     // Convert each item in the list to an OrderList object
+//     final List<OrderList> responseList = jsonList
+//         .map((item) => OrderList.fromJson(item as Map<String, dynamic>))
+//         .toList();
+
+//     setState(() {
+//       indivualorderpage = responseList;
+//       indivualorderpageAll = responseList;
+//       isLoading1 = false;
+//     });
+
+//   } catch (e, stackTrace) {
+//     print("Error: $e\nStack Trace: $stackTrace");
+
+//     setState(() {
+//       indivualorderpage = [];
+//       indivualorderpageAll = [];
+//       isLoading1 = false;
+//     });
+
+//     showInSnackBar(context, 'Error: $e');
+//   }
+// }
+
+
+
 
   errValidatepickfrom(String? value) {
     return (value) {
@@ -86,6 +173,7 @@ class _TotalorderState extends State<Totalorder> {
       return null;
     };
   }
+  
 
   errValidatepickto(String? value) {
     return (value) {
@@ -451,17 +539,22 @@ class _TotalorderState extends State<Totalorder> {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 100.0,
-        title: const Text(
+        title:  Text(
           'Total orders',
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: AppColors.red,
-        shape: const RoundedRectangleBorder(
+        shape:  RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
             bottomLeft: Radius.circular(20.0),
             bottomRight: Radius.circular(20.0),
           ),
         ),
+         leading: InkWell(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child:  Icon(Icons.arrow_back, color: Colors.white),),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
@@ -521,63 +614,139 @@ class _TotalorderState extends State<Totalorder> {
                   final e = indivualorderpage[index];
                   return Column(
                     children: [
+                      // ListTile(
+                      //   title:Column(mainAxisAlignment: MainAxisAlignment.start,
+                      //   crossAxisAlignment: CrossAxisAlignment.start,
+                      //     children: [ HeadingWidget(
+                      //     fontSize: 20.0,
+                      //     title: e.invoiceNumber.toString()),
+                      //     HeadingWidget(
+                      //     fontSize: 16.0,
+                      //     color: e.orderStatus == "Cancelled"? AppColors.red:e.orderStatus == "Order Picked"?
+                      //      Color.fromARGB(255, 208, 208, 46):AppColors.green,
+                      //     title: e.orderStatus.toString())]
+                      //   ),
+                      //   subtitle: SubHeadingWidget(
+                      //     title:
+                      //         '${e.totalProduct.toString()}items | ${dateFormat(e.createdDate.toString())}',
+                      //   ),
+                      //   trailing: const Icon(
+                      //     Icons.arrow_forward_ios,
+                      //     size: 20,
+                      //   ),
+                      //   onTap: () {
+                      //     Navigator.push(context, MaterialPageRoute(
+                      //       builder: (context) {
+                      //         return Individualorderdetails(
+                      //             invoiceNumber: e.invoiceNumber.toString(),
+                      //             items: e.items!,
+                      //             date: e.createdDate != null
+                      //                 ? DateFormat('dd-MM-yyyy')
+                      //                     .format(e.createdDate!)
+                      //                 : '',
+                      //             username: e.customerName,
+                      //             usermobilenumber: e.customerMobile,
+                      //             useraddress: e.customerAddress!.address,
+                      //             useraddressline2:
+                      //                 e.customerAddress!.addressLine2,
+                      //             userlandmark: e.customerAddress!.landmark,
+                      //             usercity: e.customerAddress!.city,
+                      //             userstate: e.customerAddress!.state,
+                      //             userpincode: e.customerAddress!.pincode,
+                      //             storename: e.storeAddress!.name,
+                      //             storemobilenumber: e.storeAddress!.mobile,
+                      //             storeaddress: e.storeAddress!.address,
+                      //             storeaddressline2: e.storeAddress!.city,
+                      //             storelandmark: e.storeAddress!.state,
+                      //             pickup_date: e.pickup_date,
+                      //             delivered_date: e.delivered_date,
+                      //             storepincode:
+                      //                 e.storeAddress!.zipcode.toString(),
+                      //             deliveryboyname: e.deliveryBoyName,
+                      //             deliveryboymobilenumber: e.deliveryBoyMobile,
+                      //             totalPrice: e.totalPrice,
+                      //             deliverycharge: e.deliveryCharges,
+                      //             paymentMethod: e.paymentMethod);
+                      //       },
+                      //     ));
+                      //   },
+                      // ),
+
                       ListTile(
-                        title:Column(mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [ HeadingWidget(
-                          fontSize: 20.0,
-                          title: e.invoiceNumber.toString()),
-                          HeadingWidget(
-                          fontSize: 16.0,
-                          color: e.orderStatus == "Cancelled"? AppColors.red:e.orderStatus == "Order Picked"?
-                           Color.fromARGB(255, 208, 208, 46):AppColors.green,
-                          title: e.orderStatus.toString())]
-                        ),
-                        subtitle: SubHeadingWidget(
-                          title:
-                              '${e.totalProduct.toString()}items | ${dateFormat(e.createdDate.toString())}',
-                        ),
-                        trailing: const Icon(
-                          Icons.arrow_forward_ios,
-                          size: 20,
-                        ),
-                        onTap: () {
-                          Navigator.push(context, MaterialPageRoute(
-                            builder: (context) {
-                              return Individualorderdetails(
-                                  invoiceNumber: e.invoiceNumber.toString(),
-                                  items: e.items,
-                                  date: e.createdDate != null
-                                      ? DateFormat('dd-MM-yyyy')
-                                          .format(e.createdDate!)
-                                      : '',
-                                  username: e.customerName,
-                                  usermobilenumber: e.customerMobile,
-                                  useraddress: e.customerAddress.address,
-                                  useraddressline2:
-                                      e.customerAddress.addressLine2,
-                                  userlandmark: e.customerAddress.landmark,
-                                  usercity: e.customerAddress.city,
-                                  userstate: e.customerAddress.state,
-                                  userpincode: e.customerAddress.pincode,
-                                  storename: e.storeAddress.name,
-                                  storemobilenumber: e.storeAddress.mobile,
-                                  storeaddress: e.storeAddress.address,
-                                  storeaddressline2: e.storeAddress.city,
-                                  storelandmark: e.storeAddress.state,
-                                  pickup_date: e.pickup_date,
-                                  delivered_date: e.delivered_date,
-                                  storepincode:
-                                      e.storeAddress.zipcode.toString(),
-                                  deliveryboyname: e.deliveryBoyName,
-                                  deliveryboymobilenumber: e.deliveryBoyMobile,
-                                  totalPrice: e.totalPrice,
-                                  deliverycharge: e.deliveryCharges,
-                                  paymentMethod: e.paymentMethod);
-                            },
-                          ));
-                        },
-                      ),
+  title: Column(
+    mainAxisAlignment: MainAxisAlignment.start,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      HeadingWidget(
+        fontSize: 20.0,
+        title: e.invoiceNumber.toString(),
+      ),
+      HeadingWidget(
+        fontSize: 16.0,
+        color: e.orderStatus == "Cancelled"
+            ? AppColors.red
+            : e.orderStatus == "Order Picked"
+                ? Color.fromARGB(255, 208, 208, 46)
+                : AppColors.green,
+        title: e.orderStatus.toString(),
+      ),
+    if (e.code != null && e.code != 0 && e.orderStatus != "Cancelled")
+ Row(children: [ HeadingWidget(
+    fontSize: 14.0,
+    color: Colors.black,
+    title: 'Delivery OTP : ',
+  ), HeadingWidget(
+    fontSize: 14.0,
+    color: Colors.black,
+    title: e.customercode == null ? "":'${e.customercode.toString()}',
+  ),],)
+
+    ],
+  ),
+  subtitle: SubHeadingWidget(
+    title:
+        '${e.totalProduct.toString()} items | ${dateFormat(e.createdDate.toString())}',
+  ),
+  trailing: const Icon(
+    Icons.arrow_forward_ios,
+    size: 20,
+  ),
+  onTap: () {
+    Navigator.push(context, MaterialPageRoute(
+      builder: (context) {
+        return Individualorderdetails(
+          invoiceNumber: e.invoiceNumber.toString(),
+          items: e.items!,
+          date: e.createdDate != null
+              ? DateFormat('dd-MM-yyyy').format(e.createdDate!)
+              : '',
+          username: e.customerName,
+          usermobilenumber: e.customerMobile,
+          useraddress: e.customerAddress!.address,
+          useraddressline2: e.customerAddress!.addressLine2,
+          userlandmark: e.customerAddress!.landmark,
+          usercity: e.customerAddress!.city,
+          userstate: e.customerAddress!.state,
+          userpincode: e.customerAddress!.pincode,
+          storename: e.storeAddress!.name,
+          storemobilenumber: e.storeAddress!.mobile,
+          storeaddress: e.storeAddress!.address,
+          storeaddressline2: e.storeAddress!.city,
+          storelandmark: e.storeAddress!.state,
+          pickup_date: e.pickup_date,
+          delivered_date: e.delivered_date,
+          storepincode: e.storeAddress!.zipcode.toString(),
+          deliveryboyname: e.deliveryBoyName,
+          deliveryboymobilenumber: e.deliveryBoyMobile,
+          totalPrice: e.totalPrice,
+          deliverycharge: e.deliveryCharges,
+          paymentMethod: e.paymentMethod,
+        );
+      },
+    ));
+  },
+),
+
                       Divider(
                         color: AppColors.grey1,
                       )

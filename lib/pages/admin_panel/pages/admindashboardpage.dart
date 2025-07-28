@@ -52,7 +52,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
 
       if (response.status == 'SUCCESS') {
         setState(() {
-          unassignorderdetailspage = response.list;
+          unassignorderdetailspage = response.list!;
           unassignorderdetailspageAll = unassignorderdetailspage;
 
           isLoading = false;

@@ -16,7 +16,6 @@ import 'pages/auth/login_page.dart';
 import 'pages/landing_page.dart';
 import 'pages/loginmanagement.dart';
 import 'pages/maincontainer.dart';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -31,62 +30,62 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 // import 'package:flutter/services.dart';
 final navigatorKey = GlobalKey<NavigatorState>();
 
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
-  // if (Platform.isAndroid) {
-  //   // Request notification permission on Android 13+
-  //   if (await Permission.notification.isDenied) {
-  //     await Permission.notification.request();
-  //   }
-  // }
-  // // Initialize Firebase
-  // await Firebase.initializeApp();
-
-  if (!kIsWeb) {
-    // await FirebaseAPIServices().initNotifications();
-  }
-
-  BaseController baseCtrl = Get.put(BaseController());
-
-  // Ensure the token is retrieved after initialization
-  // String? token = await FirebaseMessaging.instance.getToken();
-  // print("token $token");
-
-  runApp(MyApp());
-}
-
 // Future<void> main() async {
 //   WidgetsFlutterBinding.ensureInitialized();
 
-//   if (Platform.isAndroid) {
-//     // Request notification permission on Android 13+
-//     if (await Permission.notification.isDenied) {
-//       await Permission.notification.request();
-//     }
-//   }
-//   // Initialize Firebase
-//   await Firebase.initializeApp();
-
-//   // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-
-//   // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-//   //   showNotification(message);
-//   // });
+//   // if (Platform.isAndroid) {
+//   //   // Request notification permission on Android 13+
+//   //   if (await Permission.notification.isDenied) {
+//   //     await Permission.notification.request();
+//   //   }
+//   // }
+//   // // Initialize Firebase
+//   // await Firebase.initializeApp();
 
 //   if (!kIsWeb) {
-//     await FirebaseAPIServices().initNotifications();
+//     // await FirebaseAPIServices().initNotifications();
 //   }
 
 //   BaseController baseCtrl = Get.put(BaseController());
 
 //   // Ensure the token is retrieved after initialization
-//   String? token = await FirebaseMessaging.instance.getToken();
-//   print("token $token");
-//   baseCtrl.fbUserId = token;
+//   // String? token = await FirebaseMessaging.instance.getToken();
+//   // print("token $token");
 
 //   runApp(MyApp());
 // }
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  if (Platform.isAndroid) {
+    // Request notification permission on Android 13+
+    if (await Permission.notification.isDenied) {
+      await Permission.notification.request();
+    }
+  }
+  // Initialize Firebase
+  await Firebase.initializeApp();
+
+  // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+  // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+  //   showNotification(message);
+  // });
+
+  if (!kIsWeb) {
+    await FirebaseAPIServices().initNotifications();
+  }
+
+  BaseController baseCtrl = Get.put(BaseController());
+
+  // Ensure the token is retrieved after initialization
+  String? token = await FirebaseMessaging.instance.getToken();
+  print("token $token");
+  baseCtrl.fbUserId = token;
+
+  runApp(MyApp());
+}
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   showNotification(message);
