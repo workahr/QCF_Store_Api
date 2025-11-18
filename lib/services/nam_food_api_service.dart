@@ -2242,9 +2242,9 @@ class NamFoodApiService {
 
   //  get All Order Detail List for Admin Dashboard
 
-  Future getallDashboardOrderdetailslist() async {
+  Future getallDashboardOrderdetailslist(page,limit) async {
     try {
-      final url = Uri.parse('${liveApiPath}v1/getallorderbyadmin');
+      final url = Uri.parse('${liveApiPath}v1/getallorders_admin?page=$page&limit=$limit');
       final response = await client.get(
         url,
         headers: headerData,
@@ -2312,9 +2312,9 @@ class NamFoodApiService {
     }
   }
 
-  Future<String> getallOrderdetailslist() async {
+  Future<String> getallOrderdetailslist(page,limit) async {
     try {
-      final url = Uri.parse('${liveApiPath}v1/getallorderbyadmin');
+      final url = Uri.parse('${liveApiPath}v1/getallorders_admin?page=$page&limit=$limit');
       // final response = await client.get(
       //   url,
       //   headers: headerData,
@@ -3481,6 +3481,26 @@ class NamFoodApiService {
         return response.body;
       } else {
         return [];
+      }
+    } catch (e) {
+      return e;
+    }
+  }
+
+
+// Admin Dashboard get All Order Detail List 
+
+  Future getallDashboardOrderlist() async {
+    try {
+      final url = Uri.parse('${liveApiPath}v1/getallorderbyadmin');
+      final response = await client.get(
+        url,
+        headers: headerData,
+      );
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        return response;
       }
     } catch (e) {
       return e;

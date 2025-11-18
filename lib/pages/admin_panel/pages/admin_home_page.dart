@@ -24,12 +24,32 @@ class _AdminHomePageState extends State<AdminHomePage> {
   final NamFoodApiService apiService = NamFoodApiService();
   int selectedIndex = 0;
 
-  @override
-  void initState() {
-    super.initState();
+late ScrollController _scrollController;
 
-    getallDashboardOrderdetailslist();
+@override
+void initState() {
+  super.initState();
+  _scrollController = ScrollController();
+  _scrollController.addListener(_scrollListener);
+
+  getallDashboardOrderdetailslist(page: _page, limit: _limit);
+}
+
+void _scrollListener() {
+  if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
+    if (_hasMore && !_isFetchingMore) {
+      _page++;
+      getallDashboardOrderdetailslist(page: _page, limit: _limit, isLoadMore: true);
+    }
   }
+}
+
+@override
+void dispose() {
+  _scrollController.dispose();
+  super.dispose();
+}
+
 
   List<OrderList> orderdetailslistpage = [];
   List<OrderList> orderdetailslistpageAll = [];
@@ -39,73 +59,178 @@ class _AdminHomePageState extends State<AdminHomePage> {
   List<OrderList> canceledorder = [];
   bool isLoading = false;
 
-  Future<void> getallDashboardOrderdetailslist() async {
-    await apiService.getBearerToken();
+  // Future<void> getallDashboardOrderdetailslist() async {
+  //   await apiService.getBearerToken();
+  //   setState(() {
+  //     isLoading = true;
+  //   });
+
+  //   try {
+  //     var result = await apiService.getallDashboardOrderdetailslist();
+  //     var response = orderListmodelFromJson(result);
+
+  //     if (response.status == 'SUCCESS') {
+  //       setState(() {
+  //         final today = DateFormat('yyyy-MM-dd').format(DateTime.now());
+
+  //         orderdetailslistpageAll = response.list!;
+  //         unassigneddeliveryboy = orderdetailslistpageAll.where((entry) {
+  //           return (entry.orderStatus == "Order Placed" ||
+  //                   entry.orderStatus == "Ready to Pickup" ||
+  //                   entry.orderStatus == "Order Confirmed" ||
+  //                   entry.orderStatus == "Order Picked") &&
+  //               entry.deliveryPartnerId == '0' &&
+  //               DateFormat('yyyy-MM-dd').format(entry.createdDate!) == today;
+  //         }).toList();
+
+  //         inprogress = orderdetailslistpageAll.where((entry) {
+  //           return entry.orderStatus != "Order Delivered" &&
+  //               entry.deliveryPartnerId != '0' &&
+  //               DateFormat('yyyy-MM-dd').format(entry.createdDate!) == today;
+  //         }).toList();
+
+  //         orderdelivered = orderdetailslistpageAll.where((entry) {
+  //           return entry.orderStatus == "Order Delivered" &&
+  //               entry.deliveryPartnerId != '0' &&
+  //               DateFormat('yyyy-MM-dd').format(entry.createdDate!) == today;
+  //         }).toList();
+
+  //         canceledorder = orderdetailslistpageAll.where((entry) {
+  //           return entry.orderStatus == "Cancelled" &&
+  //               (entry.deliveryPartnerId != '0' ||
+  //                   entry.deliveryPartnerId == '0') &&
+  //               DateFormat('yyyy-MM-dd').format(entry.createdDate!) == today;
+  //         }).toList();
+
+  //         orderdetailslistpage = response.list;
+  //         isLoading = false;
+  //         print("tap 1 : $unassigneddeliveryboy");
+  //         print("tap 2 : $inprogress");
+  //         print("tap 3 : $orderdelivered");
+  //         print("tap 3 : $canceledorder");
+  //       });
+  //     } else {
+  //       setState(() {
+  //         orderdetailslistpage = [];
+  //         orderdetailslistpageAll = [];
+  //         isLoading = false;
+  //       });
+  //     }
+  //   } catch (e) {
+  //     setState(() {
+  //       orderdetailslistpage = [];
+  //       orderdetailslistpageAll = [];
+  //       isLoading = false;
+  //     });
+
+  //     print("Error: $e");
+  //   }
+  // }
+
+
+  int _page = 1;
+final int _limit = 10;
+bool _hasMore = true;
+bool _isFetchingMore = false;
+Future<void> getallDashboardOrderdetailslist({int page = 1, int limit = 10, bool isLoadMore = false}) async {
+  await apiService.getBearerToken();
+
+  if (isLoadMore) {
+    setState(() {
+      _isFetchingMore = true;
+    });
+  } else {
     setState(() {
       isLoading = true;
     });
+  }
 
-    try {
-      var result = await apiService.getallDashboardOrderdetailslist();
-      var response = orderListmodelFromJson(result);
+  try {
+    var result = await apiService.getallDashboardOrderdetailslist(page, limit);
+    var response = orderListmodelFromJson(result);
 
-      if (response.status == 'SUCCESS') {
-        setState(() {
-          final today = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    if (response.status == 'SUCCESS') {
+      setState(() {
+        final today = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
-          orderdetailslistpageAll = response.list!;
-          unassigneddeliveryboy = orderdetailslistpageAll.where((entry) {
-            return (entry.orderStatus == "Order Placed" ||
-                    entry.orderStatus == "Ready to Pickup" ||
-                    entry.orderStatus == "Order Confirmed" ||
-                    entry.orderStatus == "Order Picked") &&
-                entry.deliveryPartnerId == '0' &&
-                DateFormat('yyyy-MM-dd').format(entry.createdDate!) == today;
-          }).toList();
+        if (isLoadMore) {
+          orderdetailslistpageAll.addAll(response.list ?? []);
+        } else {
+          orderdetailslistpageAll = response.list ?? [];
+        }
 
-          inprogress = orderdetailslistpageAll.where((entry) {
-            return entry.orderStatus != "Order Delivered" &&
-                entry.deliveryPartnerId != '0' &&
-                DateFormat('yyyy-MM-dd').format(entry.createdDate!) == today;
-          }).toList();
+        // Filter by conditions
+        unassigneddeliveryboy = orderdetailslistpageAll.where((entry) {
+          return (entry.orderStatus == "Order Placed" ||
+                  entry.orderStatus == "Ready to Pickup" ||
+                  entry.orderStatus == "Order Confirmed" ||
+                  entry.orderStatus == "Order Picked") &&
+              entry.deliveryPartnerId == '0' &&
+              DateFormat('yyyy-MM-dd').format(entry.createdDate!) == today;
+        }).toList();
 
-          orderdelivered = orderdetailslistpageAll.where((entry) {
-            return entry.orderStatus == "Order Delivered" &&
-                entry.deliveryPartnerId != '0' &&
-                DateFormat('yyyy-MM-dd').format(entry.createdDate!) == today;
-          }).toList();
+        inprogress = orderdetailslistpageAll.where((entry) {
+          return entry.orderStatus != "Order Delivered" &&
+              entry.deliveryPartnerId != '0' &&
+              DateFormat('yyyy-MM-dd').format(entry.createdDate!) == today;
+        }).toList();
 
-          canceledorder = orderdetailslistpageAll.where((entry) {
-            return entry.orderStatus == "Cancelled" &&
-                (entry.deliveryPartnerId != '0' ||
-                    entry.deliveryPartnerId == '0') &&
-                DateFormat('yyyy-MM-dd').format(entry.createdDate!) == today;
-          }).toList();
+        orderdelivered = orderdetailslistpageAll.where((entry) {
+          return entry.orderStatus == "Order Delivered" &&
+              entry.deliveryPartnerId != '0' &&
+              DateFormat('yyyy-MM-dd').format(entry.createdDate!) == today;
+        }).toList();
 
-          orderdetailslistpage = response.list;
+        canceledorder = orderdetailslistpageAll.where((entry) {
+          return entry.orderStatus == "Cancelled" &&
+              (entry.deliveryPartnerId != '0' || entry.deliveryPartnerId == '0') &&
+              DateFormat('yyyy-MM-dd').format(entry.createdDate!) == today;
+        }).toList();
+
+        orderdetailslistpage = orderdetailslistpageAll;
+
+        if (isLoadMore) {
+          _isFetchingMore = false;
+        } else {
           isLoading = false;
-          print("tap 1 : $unassigneddeliveryboy");
-          print("tap 2 : $inprogress");
-          print("tap 3 : $orderdelivered");
-          print("tap 3 : $canceledorder");
-        });
-      } else {
-        setState(() {
+        }
+
+        // Check if more data exists
+        if (response.list == null || response.list!.length < limit) {
+          _hasMore = false;
+        }
+
+        print("tap 1 : $unassigneddeliveryboy");
+        print("tap 2 : $inprogress");
+        print("tap 3 : $orderdelivered");
+        print("tap 4 : $canceledorder");
+      });
+    } else {
+      setState(() {
+        if (isLoadMore) {
+          _isFetchingMore = false;
+        } else {
           orderdetailslistpage = [];
           orderdetailslistpageAll = [];
           isLoading = false;
-        });
-      }
-    } catch (e) {
-      setState(() {
+        }
+      });
+    }
+  } catch (e) {
+    setState(() {
+      if (isLoadMore) {
+        _isFetchingMore = false;
+      } else {
         orderdetailslistpage = [];
         orderdetailslistpageAll = [];
         isLoading = false;
-      });
+      }
+    });
 
-      print("Error: $e");
-    }
+    print("Error: $e");
   }
+}
+
 
   void _makePhoneCall(String phoneNumber) async {
     final Uri telUri = Uri(scheme: 'tel', path: phoneNumber);
@@ -522,6 +647,7 @@ Future<void> _navigateToMenus(String? invoiceNumber, items) async {
                 if (selectedIndex == 0 && unassigneddeliveryboy.isNotEmpty)
                   Expanded(
                       child: ListView.builder(
+                        controller: _scrollController,
                     itemCount: unassigneddeliveryboy.length,
                     shrinkWrap: true,
                     physics: AlwaysScrollableScrollPhysics(),
@@ -991,6 +1117,7 @@ Future<void> _navigateToMenus(String? invoiceNumber, items) async {
                 if (selectedIndex == 1 && inprogress.isNotEmpty)
                   Expanded(
                       child: ListView.builder(
+                        controller: _scrollController,
                     itemCount: inprogress.length,
                     shrinkWrap: true,
                     physics: AlwaysScrollableScrollPhysics(),
@@ -1331,6 +1458,7 @@ Future<void> _navigateToMenus(String? invoiceNumber, items) async {
                 if (selectedIndex == 2 && orderdelivered.isNotEmpty)
                   Expanded(
                       child: ListView.builder(
+                        controller: _scrollController,
                     itemCount: orderdelivered.length,
                     shrinkWrap: true,
                     physics: AlwaysScrollableScrollPhysics(),
@@ -1662,6 +1790,7 @@ Future<void> _navigateToMenus(String? invoiceNumber, items) async {
                 if (selectedIndex == 3 && canceledorder.isNotEmpty)
                   Expanded(
                       child: ListView.builder(
+                        controller: _scrollController,
                     itemCount: canceledorder.length,
                     shrinkWrap: true,
                     physics: AlwaysScrollableScrollPhysics(),

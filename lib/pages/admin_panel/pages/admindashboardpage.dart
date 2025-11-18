@@ -94,7 +94,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
     });
 
     try {
-      var result = await apiService.getallDashboardOrderdetailslist();
+      var result = await apiService.getallDashboardOrderlist();
       var response = orderListmodelFromJson(result);
 
       if (response.status == 'SUCCESS') {

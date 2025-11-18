@@ -30,12 +30,31 @@ class _TotalorderState extends State<Totalorder> {
 
   final NamFoodApiService apiService = NamFoodApiService();
 
-  @override
-  void initState() {
-    super.initState();
+ late ScrollController _scrollController;
 
-    getallOrderdetailslist();
+@override
+void initState() {
+  super.initState();
+  _scrollController = ScrollController();
+  _scrollController.addListener(_scrollListener);
+
+  getallOrderdetailslist(page: _page, limit: _limit);
+}
+
+void _scrollListener() {
+  if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
+    if (_hasMore && !_isFetchingMore) {
+      _page++;
+      getallOrderdetailslist(page: _page, limit: _limit, isLoadMore: true);
+    }
   }
+}
+
+@override
+void dispose() {
+  _scrollController.dispose();
+  super.dispose();
+}
 
 //   //totalorder
 //   List<OrderList> indivualorderpage = [];
@@ -85,37 +104,135 @@ class _TotalorderState extends State<Totalorder> {
 List<OrderList> indivualorderpage = [];
 List<OrderList> indivualorderpageAll = [];
 
-Future<void> getallOrderdetailslist() async {
-  setState(() {
-    isLoading1 = true;
-  });
+// Future<void> getallOrderdetailslist() async {
+//   setState(() {
+//     isLoading1 = true;
+//   });
+
+//   try {
+//     final result = await apiService.getallOrderdetailslist();
+
+//     print("Result Type: ${result.runtimeType}");
+//     final OrderListmodel response = orderListmodelFromJson(result);
+
+//     if (response.status == 'SUCCESS') {
+//       setState(() {
+//         indivualorderpage = response.list ?? [];
+//         indivualorderpageAll = response.list ?? [];
+//         isLoading1 = false;
+//       });
+//     } else {
+//       setState(() {
+//         indivualorderpage = [];
+//         indivualorderpageAll = [];
+//         isLoading1 = false;
+//       });
+//       showInSnackBar(context, response.message ?? 'Unknown error occurred');
+//     }
+//   } catch (e, stackTrace) {
+//     print("Error: $e\nStack Trace: $stackTrace");
+//     setState(() {
+//       indivualorderpage = [];
+//       indivualorderpageAll = [];
+//       isLoading1 = false;
+//     });
+//     showInSnackBar(context, 'Error: $e');
+//   }
+// }
+int _page = 1;
+final int _limit = 10;
+bool _hasMore = true;
+bool _isFetchingMore = false;
+
+// Future<void> getallOrderdetailslist({int page = 1, int limit = 10}) async {
+//   setState(() {
+//     isLoading1 = true;
+//   });
+
+//   try {
+//     final result = await apiService.getallOrderdetailslist( page, limit);
+
+//     print("Result Type: ${result.runtimeType}");
+//     final OrderListmodel response = orderListmodelFromJson(result);
+
+//     if (response.status == 'SUCCESS') {
+//       setState(() {
+//         indivualorderpage = response.list ?? [];
+//         indivualorderpageAll = response.list ?? [];
+//         isLoading1 = false;
+//       });
+//     } else {
+//       setState(() {
+//         indivualorderpage = [];
+//         indivualorderpageAll = [];
+//         isLoading1 = false;
+//       });
+//       showInSnackBar(context, response.message ?? 'Unknown error occurred');
+//     }
+//   } catch (e, stackTrace) {
+//     print("Error: $e\nStack Trace: $stackTrace");
+//     setState(() {
+//       indivualorderpage = [];
+//       indivualorderpageAll = [];
+//       isLoading1 = false;
+//     });
+//     showInSnackBar(context, 'Error: $e');
+//   }
+// }
+Future<void> getallOrderdetailslist({int page = 1, int limit = 10, bool isLoadMore = false}) async {
+  if (isLoadMore) {
+    setState(() {
+      _isFetchingMore = true;
+    });
+  } else {
+    setState(() {
+      isLoading1 = true;
+    });
+  }
 
   try {
-    final result = await apiService.getallOrderdetailslist();
-
-    print("Result Type: ${result.runtimeType}");
+    final result = await apiService.getallOrderdetailslist(page, limit);
     final OrderListmodel response = orderListmodelFromJson(result);
 
     if (response.status == 'SUCCESS') {
       setState(() {
-        indivualorderpage = response.list ?? [];
-        indivualorderpageAll = response.list ?? [];
-        isLoading1 = false;
+        if (isLoadMore) {
+          indivualorderpage.addAll(response.list ?? []);
+          indivualorderpageAll.addAll(response.list ?? []);
+          _isFetchingMore = false;
+        } else {
+          indivualorderpage = response.list ?? [];
+          indivualorderpageAll = response.list ?? [];
+          isLoading1 = false;
+        }
+
+        // check if more data exists
+        if (response.list == null || response.list!.length < limit) {
+          _hasMore = false;
+        }
       });
     } else {
       setState(() {
-        indivualorderpage = [];
-        indivualorderpageAll = [];
-        isLoading1 = false;
+        if (isLoadMore) {
+          _isFetchingMore = false;
+        } else {
+          indivualorderpage = [];
+          indivualorderpageAll = [];
+          isLoading1 = false;
+        }
       });
       showInSnackBar(context, response.message ?? 'Unknown error occurred');
     }
   } catch (e, stackTrace) {
     print("Error: $e\nStack Trace: $stackTrace");
     setState(() {
-      indivualorderpage = [];
-      indivualorderpageAll = [];
-      isLoading1 = false;
+      if (isLoadMore) {
+        _isFetchingMore = false;
+      } else {
+        indivualorderpage = [];
+        indivualorderpageAll = [];
+        isLoading1 = false;
+      }
     });
     showInSnackBar(context, 'Error: $e');
   }
@@ -609,6 +726,7 @@ Future<void> getallOrderdetailslist() async {
             ),
             Expanded(
               child: ListView.builder(
+                 controller: _scrollController,
                 itemCount: indivualorderpage.length,
                 itemBuilder: (context, index) {
                   final e = indivualorderpage[index];
